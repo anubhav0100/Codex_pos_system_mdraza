@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { FolderOpen } from 'lucide-react'
 import { cn } from '@/utils/utils'
 
