@@ -21,4 +21,46 @@ public class ScopeRepository(PosDbContext dbContext) : IScopeRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
+
+    public async Task<ScopeNode> AddAsync(ScopeNode scopeNode, CancellationToken cancellationToken = default)
+    {
+        dbContext.ScopeNodes.Add(scopeNode);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return scopeNode;
+    }
+
+    public async Task<ScopeNode> AddStateScopeAsync(ScopeNode scope, LocationState state, CancellationToken cancellationToken = default)
+    {
+        dbContext.LocationStates.Add(state);
+        // Ensure state is saved to get Id? Or EF Core handles graph.
+        // We need state Id for scope.StateId.
+        // It's better to add state, save, then scope. Or link navigation.
+        
+        scope.State = state;
+        dbContext.ScopeNodes.Add(scope);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return scope;
+    }
+
+    public async Task<ScopeNode> AddDistrictScopeAsync(ScopeNode scope, LocationDistrict district, CancellationToken cancellationToken = default)
+    {
+        scope.District = district;
+        dbContext.ScopeNodes.Add(scope);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return scope;
+    }
+
+    public async Task<ScopeNode> AddLocalScopeAsync(ScopeNode scope, LocationLocal local, CancellationToken cancellationToken = default)
+    {
+        scope.Local = local;
+        dbContext.ScopeNodes.Add(scope);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return scope;
+    }
+
+    public async Task UpdateAsync(ScopeNode scope, CancellationToken cancellationToken = default)
+    {
+        dbContext.ScopeNodes.Update(scope);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

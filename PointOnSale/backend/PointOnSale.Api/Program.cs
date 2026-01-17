@@ -125,6 +125,7 @@ app.MapControllers();
 app.UseAuthentication();
 app.UseMiddleware<ApiKeyAuthMiddleware>();
 app.UseAuthorization();
+app.UseMiddleware<SubscriptionMiddleware>();
 app.MapHealthChecks("/health");
 
 app.Run();

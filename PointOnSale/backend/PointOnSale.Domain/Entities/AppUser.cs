@@ -11,6 +11,7 @@ public class AppUser
     public string Phone { get; set; }
     public string PasswordHash { get; set; }
     public bool IsActive { get; set; }
+    public bool IsDeleted { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public int? ScopeNodeId { get; set; }

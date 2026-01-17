@@ -1,13 +1,10 @@
-using System;
+namespace PointOnSale.Application.DTOs.Companies;
 
-namespace PointOnSale.Domain.Entities;
-
-public class Company
+public class CompanyDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Gstin { get; set; }
     public bool IsActive { get; set; }
-    public bool IsDeleted { get; set; }
     public DateTime CreatedAt { get; set; }
 }

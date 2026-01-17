@@ -21,10 +21,14 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
         services.AddScoped<IScopeRepository, ScopeRepository>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
         services.AddScoped<IPermissionService, Services.PermissionService>();
         services.AddScoped<PointOnSale.Infrastructure.Data.DbInitializer>();
         services.AddScoped<DatabaseSeeder>();
         services.AddScoped<PointOnSale.Infrastructure.Seeding.RbacSeeder>();
+        services.AddScoped<PointOnSale.Infrastructure.Seeding.InitialDataSeeder>();
 
 
 
