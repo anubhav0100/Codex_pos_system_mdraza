@@ -13,4 +13,12 @@ public class RoleRepository(PosDbContext dbContext) : IRoleRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Code == code, cancellationToken);
     }
+
+    public async Task<List<Role>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Roles
+            .AsNoTracking()
+            .Where(r => ids.Contains(r.Id))
+            .ToListAsync(cancellationToken);
+    }
 }

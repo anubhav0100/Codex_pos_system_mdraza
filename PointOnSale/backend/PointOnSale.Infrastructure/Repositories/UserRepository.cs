@@ -53,4 +53,26 @@ public class UserRepository(PosDbContext dbContext) : IUserRepository
         dbContext.AppUsers.Update(user);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<List<AppUser>> GetAllByScopeIdAsync(int scopeId, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.AppUsers
+            .AsNoTracking()
+            .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+            .Where(u => !u.IsDeleted && u.ScopeNodeId == scopeId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task UpdateUserRolesAsync(int userId, IEnumerable<int> roleIds, CancellationToken cancellationToken = default)
+    {
+        var user = await dbContext.AppUsers.Include(u => u.UserRoles).FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user == null) return;
+
+        user.UserRoles.Clear();
+        foreach (var roleId in roleIds)
+        {
+            user.UserRoles.Add(new UserRole { RoleId = roleId });
+        }
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }
