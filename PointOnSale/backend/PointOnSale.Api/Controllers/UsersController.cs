@@ -38,7 +38,8 @@ public class UsersController(
 
     [HttpPost]
     [RequirePermission("USERS_CREATE")]
-    public async Task<ActionResult<ApiResponse<dynamic>>> Create([FromBody] CreateUserDto dto)
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<UserDto>>> Create([FromBody] CreateUserDto dto)
     {
         int myScopeId = GetUserScopeId();
         

@@ -122,6 +122,15 @@ public class StockRequestsController(
     }
 
     [HttpPost("{id}/fulfill")]
+    [RequirePermission("STOCK_REQUESTS_FULFILL")]
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<string>>> Fulfill(int id)
+    {
+        var req = await stockRequestRepository.GetByIdAsync(id);
+        if (req == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Request Not Found"), "Not Found"));
+        
+        int myScopeId = GetUserScopeId();
+        if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, req.ToScopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied"), "Forbidden"));
 
         try

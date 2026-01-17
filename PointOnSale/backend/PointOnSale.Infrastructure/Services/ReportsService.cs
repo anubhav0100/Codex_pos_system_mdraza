@@ -19,7 +19,7 @@ public class ReportsService(PosDbContext dbContext) : IReportsService
                 ProductId = sb.ProductId,
                 ProductName = sb.Product.Name,
                 CategoryName = sb.Product.Category.Name,
-                Quantity = sb.Quantity
+                Quantity = sb.QtyOnHand
             })
             .ToListAsync(cancellationToken);
     }
@@ -74,11 +74,19 @@ public class ReportsService(PosDbContext dbContext) : IReportsService
     {
         var wallets = await dbContext.WalletAccounts
             .AsNoTracking()
-            .Include(w => w.ScopeNode)
+            .Include(w => w.ScopeNode).ThenInclude(s => s.Company)
+            .Include(w => w.ScopeNode).ThenInclude(s => s.Local)
+            .Include(w => w.ScopeNode).ThenInclude(s => s.District)
+            .Include(w => w.ScopeNode).ThenInclude(s => s.State)
             .Where(w => w.ScopeNodeId == scopeNodeId)
             .ToListAsync(cancellationToken);
 
-        var scopeName = wallets.FirstOrDefault()?.ScopeNode?.Name ?? "Unknown";
+        var scope = wallets.FirstOrDefault()?.ScopeNode;
+        var scopeName = scope?.Local?.Name 
+                     ?? scope?.District?.Name 
+                     ?? scope?.State?.Name 
+                     ?? scope?.Company?.Name 
+                     ?? "Unknown";
 
         return new WalletSummaryDto
         {
@@ -99,7 +107,7 @@ public class ReportsService(PosDbContext dbContext) : IReportsService
             .AsNoTracking()
             .Where(r => r.FromScopeNodeId == scopeNodeId);
 
-        if (!string.IsNullOrEmpty(status) && Enum.TryParse<StockRequestStatus>(status, true, out var statusEnum))
+        if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, true, out var statusEnum))
         {
             query = query.Where(r => r.Status == statusEnum);
         }
@@ -108,7 +116,7 @@ public class ReportsService(PosDbContext dbContext) : IReportsService
         {
             RequestId = r.Id,
             Status = r.Status.ToString(),
-            CreatedAt = r.CreatedAt
+            CreatedAt = r.RequestedAt
         }).ToListAsync(cancellationToken);
     }
 }

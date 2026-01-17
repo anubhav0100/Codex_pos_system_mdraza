@@ -34,7 +34,8 @@ public class ProductsController(IProductRepository productRepository) : Controll
 
     [HttpPost]
     [RequirePermission("PRODUCTS_CREATE")]
-    public async Task<ActionResult<ApiResponse<string>>> Create([FromBody] CreateProductDto dto)
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<ProductDto>>> Create([FromBody] ProductDto dto) // Changed return type and parameter type
     {
         // Only validation needed: Category existence (optional)
         // SKU uniqueness? Handled by DB constraint usually, but we can check.

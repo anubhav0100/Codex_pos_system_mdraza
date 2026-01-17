@@ -27,8 +27,9 @@ public class ProductAssignmentsController(
 
     // Assign Product
     [HttpPost("product-assignments/assign")]
-    [RequirePermission("PRODUCT_ASSIGNMENTS_ASSIGN")]
-    public async Task<ActionResult<ApiResponse<string>>> Assign([FromBody] AssignProductDto dto)
+    [RequirePermission("PRODUCT_ASSIGNMENTS_MANAGE")]
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<string>>> Assign([FromBody] ProductAssignmentDto dto)
     {
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, dto.ScopeNodeId))

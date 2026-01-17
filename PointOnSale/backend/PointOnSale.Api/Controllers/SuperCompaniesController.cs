@@ -16,8 +16,9 @@ public class SuperCompaniesController(
     IScopeRepository scopeRepository) : ControllerBase
 {
     [HttpPost]
-    [RequirePermission("COMPANIES_CREATE")]
-    public async Task<ActionResult<ApiResponse<dynamic>>> Create([FromBody] CreateCompanyDto dto)
+    [RequirePermission("SUPER_COMPANIES_MANAGE")]
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<CompanyDto>>> Create([FromBody] CompanyDto dto)
     {
         var company = new Company
         {

@@ -29,7 +29,7 @@ public class AuditLogService(PosDbContext dbContext) : IAuditLogService
             {
                 Id = l.Id,
                 UserId = l.UserId,
-                UserName = l.User.Name,
+                UserName = l.User.FullName,
                 Action = l.Action,
                 Entity = l.Entity,
                 EntityId = l.EntityId,
