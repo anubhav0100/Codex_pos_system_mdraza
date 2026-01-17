@@ -1,38 +1,39 @@
 import axios from 'axios'
+import { useAuthStore } from '@/store/use-auth-store'
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/v1',
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/v1',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
-// Add a request interceptor to add the auth token to headers
+// Add a request interceptor
 apiClient.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('auth_token')
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`
-        }
-        return config
-    },
-    (error) => {
-        return Promise.reject(error)
-    },
+  (config) => {
+    const { accessToken } = useAuthStore.getState()
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
 )
 
-// Add a response interceptor to handle errors globally
+// Add a response interceptor
 apiClient.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            // Clear token and redirect to login if unauthorized
-            localStorage.removeItem('auth_token')
-            window.location.href = '/login'
-        }
-        return Promise.reject(error)
-    },
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout()
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login'
+      }
+    }
+    return Promise.reject(error)
+  },
 )
 
 export default apiClient
-

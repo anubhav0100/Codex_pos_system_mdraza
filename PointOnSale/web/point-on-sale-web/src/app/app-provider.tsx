@@ -3,14 +3,14 @@ import { Toaster } from 'sonner'
 import { QueryProvider } from './query-provider'
 
 interface AppProviderProps {
-    children: ReactNode
+  children: ReactNode
 }
 
 export function AppProvider({ children }: AppProviderProps) {
-    return (
-        <QueryProvider>
-            {children}
-            <Toaster position='top-right' expand={false} richColors />
-        </QueryProvider>
-    )
+  return (
+    <QueryProvider>
+      {children}
+      <Toaster position='top-right' expand={false} richColors />
+    </QueryProvider>
+  )
 }
