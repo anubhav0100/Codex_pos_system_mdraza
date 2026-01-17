@@ -3,8 +3,9 @@ import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/ui/page-header'
 import { CompanyForm } from '@/components/super/companies/CompanyForm'
-import { companyService } from '@/services/super/company-service'
+import { companyService } from '../../../services/super/company-service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
 export default function CompanyCreatePage() {
     const navigate = useNavigate()
@@ -17,8 +18,9 @@ export default function CompanyCreatePage() {
             toast.success('Company created successfully')
             navigate('/super/companies')
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Failed to create company')
+        onError: (error: Error | AxiosError) => {
+            const message = error instanceof AxiosError ? (error.response?.data as any)?.message : error.message
+            toast.error(message || 'Failed to create company')
         },
     })
 

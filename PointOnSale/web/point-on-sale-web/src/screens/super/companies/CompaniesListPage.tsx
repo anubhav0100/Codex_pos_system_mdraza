@@ -25,7 +25,7 @@ import {
 import { DataTable, DataTableRow, DataTableCell } from '@/components/ui/data-table'
 import { Badge } from '@/components/ui/badge'
 import { PermissionGate } from '@/components/auth/permission-gate'
-import { companyService, CompanyQueryParams } from '@/services/super/company-service'
+import { companyService, type CompanyQueryParams } from '../../../services/super/company-service'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 export default function CompaniesListPage() {
@@ -87,14 +87,14 @@ export default function CompaniesListPage() {
                     <Input
                         placeholder='Search by name or GSTIN...'
                         className='pl-9'
-                        value={params.search}
+                        value={params.search || ''}
                         onChange={(e) => setParams((prev) => ({ ...prev, search: e.target.value }))}
                     />
                 </form>
                 <div className='w-full sm:w-48'>
                     <Select
-                        value={params.status}
-                        onValueChange={(val) => setParams((prev) => ({ ...prev, status: val, page: 1 }))}
+                        value={params.status || 'ALL'}
+                        onValueChange={(val: string) => setParams((prev) => ({ ...prev, status: val, page: 1 }))}
                     >
                         <SelectTrigger>
                             <SelectValue placeholder='Filter by status' />
@@ -121,7 +121,7 @@ export default function CompaniesListPage() {
                 <tbody>
                     {isLoading ? (
                         <DataTableRow>
-                            <DataTableCell colSpan={5} className='text-center py-8'>Loading companies...</DataTableCell>
+                            <DataTableCell colSpan={5} className='text-center py-8 text-foreground'>Loading companies...</DataTableCell>
                         </DataTableRow>
                     ) : data?.items.length === 0 ? (
                         <DataTableRow>
@@ -132,14 +132,14 @@ export default function CompaniesListPage() {
                     ) : (
                         data?.items.map((company) => (
                             <DataTableRow key={company.id}>
-                                <DataTableCell className='font-medium'>{company.name}</DataTableCell>
-                                <DataTableCell>{company.gstin || 'N/A'}</DataTableCell>
+                                <DataTableCell className='font-medium text-foreground'>{company.name}</DataTableCell>
+                                <DataTableCell className='text-foreground'>{company.gstin || 'N/A'}</DataTableCell>
                                 <DataTableCell>
                                     <Badge variant={company.status === 'ACTIVE' ? 'default' : 'secondary'}>
                                         {company.status}
                                     </Badge>
                                 </DataTableCell>
-                                <DataTableCell>{new Date(company.createdAt).toLocaleDateString()}</DataTableCell>
+                                <DataTableCell className='text-foreground'>{new Date(company.createdAt).toLocaleDateString()}</DataTableCell>
                                 <DataTableCell className='text-right'>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -196,7 +196,7 @@ export default function CompaniesListPage() {
 
             <ConfirmDialog
                 open={!!deleteId}
-                onOpenChange={(open) => !open && setDeleteId(null)}
+                onOpenChange={(open) => (!open ? setDeleteId(null) : undefined)}
                 onConfirm={() => deleteId && deleteMutation.mutate(deleteId)}
                 title='Delete Company'
                 description='Are you sure you want to delete this company? This action cannot be undone and will affect all associated users and data.'

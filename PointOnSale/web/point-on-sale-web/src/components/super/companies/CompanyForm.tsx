@@ -19,7 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { CreateCompanyDto } from '@/services/super/company-service'
+import type { CreateCompanyDto } from '../../../services/super/company-service'
 
 const companySchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),

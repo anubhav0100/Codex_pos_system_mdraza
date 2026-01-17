@@ -1,10 +1,9 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Users } from 'lucide-react'
 
 export default function CompanyAdminsPage() {
-    const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
 
     return (

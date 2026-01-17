@@ -15,7 +15,7 @@ export interface CreateCompanyDto {
     status: 'ACTIVE' | 'INACTIVE'
 }
 
-export interface UpdateCompanyDto extends Partial<CreateCompanyDto> { }
+export type UpdateCompanyDto = Partial<CreateCompanyDto>
 
 export interface CompanyQueryParams {
     page?: number

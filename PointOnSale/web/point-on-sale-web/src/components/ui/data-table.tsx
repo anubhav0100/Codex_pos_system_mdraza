@@ -2,28 +2,16 @@ import { cn } from '@/utils/utils'
 import type { ReactNode } from 'react'
 
 interface DataTableProps {
-  headers?: string[]
   children: ReactNode
   className?: string
 }
 
-export function DataTable({ headers, children, className }: DataTableProps) {
+export function DataTable({ children, className }: DataTableProps) {
   return (
     <div className={cn('premium-card soft-shadow overflow-hidden', className)}>
       <div className='overflow-x-auto'>
         <table className='w-full text-sm text-left'>
-          {headers && (
-            <thead className='text-xs text-muted-foreground uppercase bg-secondary/50 border-b'>
-              <tr>
-                {headers.map((header, i) => (
-                  <th key={i} className='px-6 py-4 font-semibold text-foreground'>
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-          )}
-          <tbody className='divide-y text-foreground'>{children}</tbody>
+          {children}
         </table>
       </div>
     </div>
