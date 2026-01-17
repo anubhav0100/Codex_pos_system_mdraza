@@ -1,3 +1,3 @@
 namespace PointOnSale.Application.DTOs;
 
-public record ProductDto(Guid Id, string Name, decimal Price);
+public record ProductDto(int Id, string Name, decimal Price);

@@ -28,6 +28,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var initializer = scope.ServiceProvider.GetRequiredService<PointOnSale.Infrastructure.Data.DbInitializer>();
+        await initializer.InitializeAsync();
+    }
 }
 
 app.MapControllers();

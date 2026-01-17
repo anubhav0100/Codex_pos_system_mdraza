@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PointOnSale.Application.Interfaces;
 using PointOnSale.Infrastructure.Authentication;
-using PointOnSale.Infrastructure.Persistence;
+
 using PointOnSale.Infrastructure.Repositories;
 using PointOnSale.Infrastructure.Seeding;
 
@@ -13,12 +13,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<PointOnSaleDbContext>(options =>
-        {
-            options.UseInMemoryDatabase("PointOnSaleDb");
-        });
+        services.AddDbContext<PointOnSale.Infrastructure.Data.PosDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly(typeof(PointOnSale.Infrastructure.Data.PosDbContext).Assembly.FullName)));
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<PointOnSale.Infrastructure.Data.DbInitializer>();
         services.AddScoped<DatabaseSeeder>();
 
         var apiKey = configuration["Auth:ApiKey"] ?? "dev-key";

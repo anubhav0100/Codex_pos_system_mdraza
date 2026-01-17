@@ -10,12 +10,14 @@ public class ProductService(IProductRepository repository) : IProductService
     {
         var product = new Product
         {
-            Id = Guid.NewGuid(),
             Name = input.Name,
-            Price = input.Price
+            DefaultSalePrice = input.Price,
+            SKU = Guid.NewGuid().ToString().Substring(0, 8), // Temp unique SKU
+            HSN = "0000",
+            IsActive = true
         };
 
         var saved = await repository.AddAsync(product, cancellationToken);
-        return new ProductDto(saved.Id, saved.Name, saved.Price);
+        return new ProductDto(saved.Id, saved.Name, saved.DefaultSalePrice);
     }
 }

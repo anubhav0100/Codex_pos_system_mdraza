@@ -1,9 +1,9 @@
 using PointOnSale.Domain.Entities;
-using PointOnSale.Infrastructure.Persistence;
+using PointOnSale.Infrastructure.Data;
 
 namespace PointOnSale.Infrastructure.Seeding;
 
-public class DatabaseSeeder(PointOnSaleDbContext dbContext)
+public class DatabaseSeeder(PosDbContext dbContext)
 {
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
@@ -13,8 +13,8 @@ public class DatabaseSeeder(PointOnSaleDbContext dbContext)
         }
 
         dbContext.Products.AddRange(
-            new Product { Id = Guid.NewGuid(), Name = "Espresso", Price = 2.50m },
-            new Product { Id = Guid.NewGuid(), Name = "Cappuccino", Price = 3.75m }
+            new Product { Name = "Espresso", DefaultSalePrice = 2.50m, SKU = "ESP001", HSN = "9901", IsActive = true },
+            new Product { Name = "Cappuccino", DefaultSalePrice = 3.75m, SKU = "CAP001", HSN = "9901", IsActive = true }
         );
 
         await dbContext.SaveChangesAsync(cancellationToken);
