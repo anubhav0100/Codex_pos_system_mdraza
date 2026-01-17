@@ -39,6 +39,41 @@ public class ProductRepository(PosDbContext dbContext) : IProductRepository
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    // Assignments
+    public async Task<ProductAssignment?> GetAssignmentAsync(int scopeNodeId, int productId, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProductAssignments
+            .Include(pa => pa.Product)
+            .FirstOrDefaultAsync(pa => pa.ScopeNodeId == scopeNodeId && pa.ProductId == productId, cancellationToken);
+    }
+
+    public async Task<List<ProductAssignment>> GetAssignmentsByScopeAsync(int scopeNodeId, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ProductAssignments
+            .AsNoTracking()
+            .Include(pa => pa.Product)
+            .Where(pa => pa.ScopeNodeId == scopeNodeId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task AddAssignmentAsync(ProductAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        dbContext.ProductAssignments.Add(assignment);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateAssignmentAsync(ProductAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        dbContext.ProductAssignments.Update(assignment);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAssignmentAsync(ProductAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        dbContext.ProductAssignments.Remove(assignment);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     // Categories
     public async Task<List<ProductCategory>> GetAllCategoriesAsync(CancellationToken cancellationToken = default)
     {
