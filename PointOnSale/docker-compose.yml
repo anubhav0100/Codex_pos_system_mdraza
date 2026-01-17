@@ -1,0 +1,6 @@
+version: "3.9"
+
+services:
+  placeholder:
+    image: alpine:3.19
+    command: ["sh", "-c", "echo docker-compose placeholder"]
