@@ -100,7 +100,8 @@ public class WalletController(
 
     [HttpPost("transfer")]
     [RequirePermission("WALLETS_TRANSFER")]
-    public async Task<ActionResult<ApiResponse<string>>> Transfer([FromBody] WalletTransferDto dto)
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<string>>> ManualTransfer([FromBody] WalletTransferDto dto)
     {
         int myScopeId = GetUserScopeId();
         

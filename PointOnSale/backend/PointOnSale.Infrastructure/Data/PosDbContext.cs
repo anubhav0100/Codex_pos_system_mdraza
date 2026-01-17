@@ -48,6 +48,7 @@ public class PosDbContext : DbContext
     public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<InvoiceLine> InvoiceLines { get; set; }
+    public DbSet<InvoiceSequence> InvoiceSequences { get; set; }
 
     // Subscription
     public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
@@ -88,6 +89,9 @@ public class PosDbContext : DbContext
 
         // InvoiceLine
         modelBuilder.Entity<InvoiceLine>().HasKey(il => new { il.InvoiceId, il.ProductId });
+
+        // InvoiceSequence Unique(Company, FY)
+        modelBuilder.Entity<InvoiceSequence>().HasIndex(isq => new { isq.CompanyId, isq.FiscalYear }).IsUnique();
 
         // CompanySubscription
         modelBuilder.Entity<CompanySubscription>().HasKey(cs => new { cs.CompanyId, cs.PlanId });

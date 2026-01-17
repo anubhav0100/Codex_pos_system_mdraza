@@ -25,6 +25,7 @@ public class PosController(
 
     [HttpPost("sales")]
     [RequirePermission("POS_SALES_CREATE")]
+    [Filters.AuditLog]
     public async Task<ActionResult<ApiResponse<SalesOrderDto>>> CreateSale([FromBody] CreateSaleDto dto)
     {
         int myScopeId = GetUserScopeId();

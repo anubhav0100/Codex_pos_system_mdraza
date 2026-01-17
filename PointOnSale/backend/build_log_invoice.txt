@@ -1,0 +1,20 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  PointOnSale.Shared -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Shared\bin\Debug\net8.0\PointOnSale.Shared.dll
+  PointOnSale.Domain -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Domain\bin\Debug\net8.0\PointOnSale.Domain.dll
+  PointOnSale.Application -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Application\bin\Debug\net8.0\PointOnSale.Application.dll
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\WalletService.cs(45,139): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(44,28): error CS1061: 'Company' does not contain a definition for 'Code' and no accessible extension method 'Code' accepting a first argument of type 'Company' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(86,13): error CS1912: Duplicate initialization of member 'Subtotal' [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(78,21): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+
+Build FAILED.
+
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\WalletService.cs(45,139): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(78,21): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(44,28): error CS1061: 'Company' does not contain a definition for 'Code' and no accessible extension method 'Code' accepting a first argument of type 'Company' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\InvoiceService.cs(86,13): error CS1912: Duplicate initialization of member 'Subtotal' [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+    2 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.41
