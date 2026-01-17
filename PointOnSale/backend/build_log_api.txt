@@ -1,0 +1,23 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  PointOnSale.Domain -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Domain\bin\Debug\net8.0\PointOnSale.Domain.dll
+  PointOnSale.Shared -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Shared\bin\Debug\net8.0\PointOnSale.Shared.dll
+  PointOnSale.Application -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Application\bin\Debug\net8.0\PointOnSale.Application.dll
+  PointOnSale.Infrastructure -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\bin\Debug\net8.0\PointOnSale.Infrastructure.dll
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\ProductAssignmentsController.cs(15,22): warning CS9113: Parameter 'scopeRepository' is unread. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\ApiKeysController.cs(32,42): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\SuperCompanyAdminsController.cs(79,21): warning CS8601: Possible null reference assignment. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\StockRequestsController.cs(149,45): error CS1061: 'ScopeNode' does not contain a definition for 'Name' and no accessible extension method 'Name' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\StockRequestsController.cs(151,41): error CS1061: 'ScopeNode' does not contain a definition for 'Name' and no accessible extension method 'Name' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+
+Build FAILED.
+
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\ProductAssignmentsController.cs(15,22): warning CS9113: Parameter 'scopeRepository' is unread. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\ApiKeysController.cs(32,42): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\SuperCompanyAdminsController.cs(79,21): warning CS8601: Possible null reference assignment. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\StockRequestsController.cs(149,45): error CS1061: 'ScopeNode' does not contain a definition for 'Name' and no accessible extension method 'Name' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\Controllers\StockRequestsController.cs(151,41): error CS1061: 'ScopeNode' does not contain a definition for 'Name' and no accessible extension method 'Name' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Api\PointOnSale.Api.csproj]
+    3 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.36

@@ -8,6 +8,8 @@ public class SalesOrder
 {
     public int Id { get; set; }
     
+    public SalesStatus Status { get; set; }
+    
     public int ScopeNodeId { get; set; }
     public ScopeNode ScopeNode { get; set; }
     

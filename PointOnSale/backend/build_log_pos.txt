@@ -1,0 +1,18 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  PointOnSale.Domain -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Domain\bin\Debug\net8.0\PointOnSale.Domain.dll
+  PointOnSale.Shared -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Shared\bin\Debug\net8.0\PointOnSale.Shared.dll
+  PointOnSale.Application -> D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Application\bin\Debug\net8.0\PointOnSale.Application.dll
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\WalletService.cs(45,139): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\PricingService.cs(9,24): warning CS9113: Parameter 'productRepository' is unread. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\PosService.cs(23,19): error CS1061: 'ScopeNode' does not contain a definition for 'Type' and no accessible extension method 'Type' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+
+Build FAILED.
+
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\WalletService.cs(45,139): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\PricingService.cs(9,24): warning CS9113: Parameter 'productRepository' is unread. [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\Services\PosService.cs(23,19): error CS1061: 'ScopeNode' does not contain a definition for 'Type' and no accessible extension method 'Type' accepting a first argument of type 'ScopeNode' could be found (are you missing a using directive or an assembly reference?) [D:\AntigravityCodes\POS\Codex_pos_system_mdraza\PointOnSale\backend\PointOnSale.Infrastructure\PointOnSale.Infrastructure.csproj]
+    2 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.62
