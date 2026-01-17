@@ -134,7 +134,9 @@ public class UsersController(
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0)
         {
-             if (!await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId))
+             // If user has no scope, it's a data anomaly or system user, but we can't check scope access on null. 
+             // Assuming strict hierarchy, target user MUST have scope.
+             if (!user.ScopeNodeId.HasValue || !await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId.Value))
                  return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Cannot modify user in this scope"), "Forbidden"));
         }
 
@@ -155,7 +157,7 @@ public class UsersController(
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0)
         {
-             if (!await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId))
+             if (!user.ScopeNodeId.HasValue || !await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId.Value))
                  return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Cannot modify user in this scope"), "Forbidden"));
         }
 
@@ -177,7 +179,7 @@ public class UsersController(
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0)
         {
-             if (!await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId))
+             if (!user.ScopeNodeId.HasValue || !await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId.Value))
                  return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Cannot modify user in this scope"), "Forbidden"));
         }
 
@@ -199,11 +201,15 @@ public class UsersController(
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0)
         {
-             if (!await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId))
+             if (!user.ScopeNodeId.HasValue || !await scopeAccessService.CanAccessScopeAsync(myScopeId, user.ScopeNodeId.Value))
                  return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Cannot modify user in this scope"), "Forbidden"));
         }
 
-        var targetScope = await scopeRepository.GetByIdAsync(user.ScopeNodeId);
+        if (!user.ScopeNodeId.HasValue) 
+             return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "User has no scope assigned"), "Invalid User State"));
+
+        var targetScope = await scopeRepository.GetByIdAsync(user.ScopeNodeId.Value);
+        if (targetScope == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Scope not found"), "Scope not found"));
 
         // Validate Roles
         var roles = await roleRepository.GetByIdsAsync(dto.RoleIds);

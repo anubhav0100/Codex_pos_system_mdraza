@@ -7,7 +7,7 @@ public class UserDto
     public string Email { get; set; }
     public string? Phone { get; set; }
     public bool IsActive { get; set; }
-    public int ScopeNodeId { get; set; }
+    public int? ScopeNodeId { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public List<string> Roles { get; set; } = new();

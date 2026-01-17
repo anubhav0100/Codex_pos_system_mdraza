@@ -127,10 +127,12 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
         if (!parent.StateId.HasValue)
              return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("500", "Parent State ID missing"), "Data Error"));
 
+        int parentStateId = parent.StateId.Value;
+
         var district = new LocationDistrict
         {
             Name = dto.Name,
-            StateId = parent.StateId.Value
+            StateId = parentStateId
         };
 
         var scope = new ScopeNode
@@ -138,7 +140,7 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
             ScopeType = ScopeType.District,
             CompanyId = companyId,
             ParentScopeNodeId = parent.Id,
-            StateId = parent.StateId.Value, // Hierarchy denormalization if needed, or just strict parent linking
+            StateId = parentStateId,
             IsActive = true
         };
 
@@ -163,10 +165,13 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
         if (!parent.DistrictId.HasValue)
              return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("500", "Parent District ID missing"), "Data Error"));
 
+        int parentDistrictId = parent.DistrictId.Value;
+        int? parentStateId = parent.StateId; // Can be null if not denormalized, but usually we cascade.
+
         var local = new LocationLocal
         {
             Name = dto.Name,
-            DistrictId = parent.DistrictId.Value
+            DistrictId = parentDistrictId
         };
 
         var scope = new ScopeNode
@@ -174,8 +179,8 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
             ScopeType = ScopeType.Local,
             CompanyId = companyId,
             ParentScopeNodeId = parent.Id,
-            StateId = parent.StateId, 
-            DistrictId = parent.DistrictId.Value,
+            StateId = parentStateId, 
+            DistrictId = parentDistrictId,
             IsActive = true
         };
 
