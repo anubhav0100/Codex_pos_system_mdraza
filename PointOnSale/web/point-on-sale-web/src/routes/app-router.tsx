@@ -4,6 +4,8 @@ import DashboardPage from '@/screens/DashboardPage'
 import LoginPage from '@/screens/auth/LoginPage'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 
+import AccessDeniedPage from '@/screens/errors/AccessDeniedPage'
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <DashboardPage />,
+      },
+      {
+        path: '403',
+        element: <AccessDeniedPage />,
       },
     ],
   },
