@@ -5,6 +5,10 @@ import LoginPage from '@/screens/auth/LoginPage'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 
 import AccessDeniedPage from '@/screens/errors/AccessDeniedPage'
+import CompaniesListPage from '@/screens/super/companies/CompaniesListPage'
+import CompanyCreatePage from '@/screens/super/companies/CompanyCreatePage'
+import CompanyEditPage from '@/screens/super/companies/CompanyEditPage'
+import CompanyAdminsPage from '@/screens/super/companies/CompanyAdminsPage'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +26,43 @@ const router = createBrowserRouter([
       {
         path: '403',
         element: <AccessDeniedPage />,
+      },
+      {
+        path: 'super/companies',
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute requiredPermission='COMPANIES_VIEW'>
+                <CompaniesListPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new',
+            element: (
+              <ProtectedRoute requiredPermission='COMPANIES_CREATE'>
+                <CompanyCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/edit',
+            element: (
+              <ProtectedRoute requiredPermission='COMPANIES_EDIT'>
+                <CompanyEditPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/admins',
+            element: (
+              <ProtectedRoute requiredPermission='COMPANIES_EDIT'>
+                <CompanyAdminsPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
     ],
   },

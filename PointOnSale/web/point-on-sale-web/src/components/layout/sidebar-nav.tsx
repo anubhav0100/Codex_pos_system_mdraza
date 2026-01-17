@@ -1,34 +1,25 @@
 import { NavLink } from 'react-router-dom'
-import {
-  ShoppingCart,
-  Package,
-  Users,
-  BarChart3,
-  Receipt,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  LayoutDashboard,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useState } from 'react'
 import { useAuthStore } from '@/store/use-auth-store'
-
-const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
-  { icon: ShoppingCart, label: 'Sales', href: '/sales' },
-  { icon: Package, label: 'Inventory', href: '/inventory' },
-  { icon: Users, label: 'Customers', href: '/customers' },
-  { icon: Receipt, label: 'Invoices', href: '/invoices' },
-  { icon: BarChart3, label: 'Reports', href: '/reports' },
-  { icon: Settings, label: 'Settings', href: '/settings' },
-]
+import { MENU_ITEMS } from '@/config/menu-config'
 
 export function SidebarNav() {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const userProfile = useAuthStore((state) => state.userProfile)
+  const { userProfile, hasPermission } = useAuthStore()
+
+  const filteredMenuItems = MENU_ITEMS.filter((item) => {
+    if (userProfile && !item.allowedScopes.includes(userProfile.scopeType)) {
+      return false
+    }
+    if (item.requiredPermission && !hasPermission(item.requiredPermission)) {
+      return false
+    }
+    return true
+  })
 
   return (
     <aside
@@ -56,7 +47,7 @@ export function SidebarNav() {
 
       <ScrollArea className='flex-1 px-4'>
         <nav className='space-y-2 py-4'>
-          {navItems.map((item) => (
+          {filteredMenuItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
