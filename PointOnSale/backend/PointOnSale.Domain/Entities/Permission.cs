@@ -10,6 +10,8 @@ public class Permission
     public string Code { get; set; } // Unique
     public string Module { get; set; }
     public PermissionAction Action { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public ICollection<RolePermission> RolePermissions { get; set; }

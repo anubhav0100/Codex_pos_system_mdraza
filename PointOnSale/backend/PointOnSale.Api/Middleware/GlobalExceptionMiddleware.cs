@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using PointOnSale.Shared.Responses;
+using PointOnSale.Shared.Constants;
 
 namespace PointOnSale.Api.Middleware;
 
@@ -19,7 +20,8 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
 
-            var response = ApiResponse<string>.Fail("An unexpected error occurred.");
+            var errorDetail = new ErrorDetail(ErrorCodes.SERVER_ERROR, "An unexpected error occurred.");
+            var response = ApiResponse<object>.Fail(errorDetail);
             var payload = JsonSerializer.Serialize(response);
             await context.Response.WriteAsync(payload);
         }

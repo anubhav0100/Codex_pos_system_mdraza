@@ -9,6 +9,7 @@ public class Role
     public int Id { get; set; }
     public string Code { get; set; } // Unique
     public string Name { get; set; }
+    public string? Description { get; set; }
     public ScopeType ScopeType { get; set; }
     public bool IsSystem { get; set; }
     public DateTime CreatedAt { get; set; }

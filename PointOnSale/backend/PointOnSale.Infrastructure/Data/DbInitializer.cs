@@ -28,6 +28,10 @@ public class DbInitializer
             {
                 await context.Database.MigrateAsync();
             }
+
+            // Seed RBAC
+            var rbacSeeder = scope.ServiceProvider.GetRequiredService<PointOnSale.Infrastructure.Seeding.RbacSeeder>();
+            await rbacSeeder.SeedAsync();
         }
         catch (Exception ex)
         {

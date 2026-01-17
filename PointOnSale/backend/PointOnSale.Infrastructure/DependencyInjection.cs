@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PointOnSale.Application.Interfaces;
-using PointOnSale.Infrastructure.Authentication;
+
 
 using PointOnSale.Infrastructure.Repositories;
 using PointOnSale.Infrastructure.Seeding;
@@ -18,11 +18,15 @@ public static class DependencyInjection
                 b => b.MigrationsAssembly(typeof(PointOnSale.Infrastructure.Data.PosDbContext).Assembly.FullName)));
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
+        services.AddScoped<IScopeRepository, ScopeRepository>();
+        services.AddScoped<IPermissionService, Services.PermissionService>();
         services.AddScoped<PointOnSale.Infrastructure.Data.DbInitializer>();
         services.AddScoped<DatabaseSeeder>();
+        services.AddScoped<PointOnSale.Infrastructure.Seeding.RbacSeeder>();
 
-        var apiKey = configuration["Auth:ApiKey"] ?? "dev-key";
-        services.AddSingleton(new ApiKeyAuthenticator(apiKey));
+
 
         return services;
     }
