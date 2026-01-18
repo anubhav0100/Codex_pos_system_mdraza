@@ -9,6 +9,7 @@ import CompaniesListPage from '@/screens/super/companies/CompaniesListPage'
 import CompanyCreatePage from '@/screens/super/companies/CompanyCreatePage'
 import CompanyEditPage from '@/screens/super/companies/CompanyEditPage'
 import CompanyAdminsPage from '@/screens/super/companies/CompanyAdminsPage'
+import SubscriptionPlansPage from '@/screens/super/subscriptions/SubscriptionPlansPage'
 
 const router = createBrowserRouter([
   {
@@ -57,12 +58,20 @@ const router = createBrowserRouter([
           {
             path: ':id/admins',
             element: (
-              <ProtectedRoute requiredPermission='COMPANIES_EDIT'>
+              <ProtectedRoute requiredPermission='COMPANY_ADMINS_READ'>
                 <CompanyAdminsPage />
               </ProtectedRoute>
             ),
           },
         ],
+      },
+      {
+        path: 'super/subscription-plans',
+        element: (
+          <ProtectedRoute requiredPermission='SUBSCRIPTIONS_READ'>
+            <SubscriptionPlansPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

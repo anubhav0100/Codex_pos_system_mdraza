@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Search, MoreHorizontal, Edit, Trash2, ShieldCheck, Power, PowerOff } from 'lucide-react'
+import { Plus, Search, MoreHorizontal, Edit, Trash2, ShieldCheck, Power, PowerOff, CreditCard } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -27,6 +27,15 @@ import { Badge } from '@/components/ui/badge'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { companyService, type CompanyQueryParams } from '../../../services/super/company-service'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
+import { subscriptionPlanService } from '@/services/super/subscription-plan-service'
 
 export default function CompaniesListPage() {
     const navigate = useNavigate()
@@ -38,10 +47,20 @@ export default function CompaniesListPage() {
         status: 'ALL',
     })
     const [deleteId, setDeleteId] = useState<string | null>(null)
+    const [assignCompanyId, setAssignCompanyId] = useState<string | null>(null)
+    const [assignPlanId, setAssignPlanId] = useState<string>('')
+    const [assignStartDate, setAssignStartDate] = useState<string>('')
+    const [assignEndDate, setAssignEndDate] = useState<string>('')
 
     const { data, isLoading } = useQuery({
         queryKey: ['super-companies', params],
         queryFn: () => companyService.getCompanies(params),
+    })
+
+    const { data: plans = [] } = useQuery({
+        queryKey: ['subscription-plans'],
+        queryFn: () => subscriptionPlanService.getPlans(),
+        enabled: !!assignCompanyId,
     })
 
     const deleteMutation = useMutation({
@@ -62,10 +81,42 @@ export default function CompaniesListPage() {
         },
     })
 
+    const assignMutation = useMutation({
+        mutationFn: ({
+            companyId,
+            planId,
+            startDate,
+            endDate,
+        }: {
+            companyId: string
+            planId: number
+            startDate: string
+            endDate: string
+        }) =>
+            subscriptionPlanService.assignPlanToCompany(companyId, {
+                planId,
+                startDate,
+                endDate,
+            }),
+        onSuccess: () => {
+            toast.success('Subscription assigned successfully')
+            setAssignCompanyId(null)
+            setAssignPlanId('')
+            setAssignStartDate('')
+            setAssignEndDate('')
+        },
+        onError: () => {
+            toast.error('Failed to assign subscription')
+        },
+    })
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
         setParams((prev) => ({ ...prev, page: 1 }))
     }
+
+    const activePlans = useMemo(() => plans.filter((plan) => plan.isActive), [plans])
+    const canSubmitAssignment = assignCompanyId && assignPlanId && assignStartDate && assignEndDate
 
     return (
         <div className='space-y-6'>
@@ -158,6 +209,12 @@ export default function CompaniesListPage() {
                                                 <ShieldCheck className='h-4 w-4 mr-2' />
                                                 Manage Admins
                                             </DropdownMenuItem>
+                                            <PermissionGate perm='SUBSCRIPTIONS_UPDATE'>
+                                                <DropdownMenuItem onClick={() => setAssignCompanyId(company.id)}>
+                                                    <CreditCard className='h-4 w-4 mr-2' />
+                                                    Assign Plan
+                                                </DropdownMenuItem>
+                                            </PermissionGate>
                                             <DropdownMenuSeparator />
                                             <PermissionGate perm='COMPANIES_ACTIVATE'>
                                                 <DropdownMenuItem
@@ -202,6 +259,75 @@ export default function CompaniesListPage() {
                 description='Are you sure you want to delete this company? This action cannot be undone and will affect all associated users and data.'
                 loading={deleteMutation.isPending}
             />
+
+            <Dialog
+                open={!!assignCompanyId}
+                onOpenChange={(open) => (!open ? setAssignCompanyId(null) : undefined)}
+            >
+                <DialogContent className='sm:max-w-lg'>
+                    <DialogHeader>
+                        <DialogTitle>Assign Subscription Plan</DialogTitle>
+                        <DialogDescription>
+                            Select a subscription plan and define the active period for this company.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className='space-y-4'>
+                        <div className='space-y-2'>
+                            <label className='text-sm font-medium'>Plan</label>
+                            <select
+                                className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                                value={assignPlanId}
+                                onChange={(event) => setAssignPlanId(event.target.value)}
+                            >
+                                <option value=''>Select a plan</option>
+                                {activePlans.map((plan) => (
+                                    <option key={plan.id} value={plan.id}>
+                                        {plan.name} • ₹{plan.monthlyPrice.toFixed(2)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='grid gap-4 sm:grid-cols-2'>
+                            <div className='space-y-2'>
+                                <label className='text-sm font-medium'>Start Date</label>
+                                <Input
+                                    type='date'
+                                    value={assignStartDate}
+                                    onChange={(event) => setAssignStartDate(event.target.value)}
+                                />
+                            </div>
+                            <div className='space-y-2'>
+                                <label className='text-sm font-medium'>End Date</label>
+                                <Input
+                                    type='date'
+                                    value={assignEndDate}
+                                    onChange={(event) => setAssignEndDate(event.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type='button' variant='ghost' onClick={() => setAssignCompanyId(null)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            type='button'
+                            disabled={!canSubmitAssignment || assignMutation.isPending}
+                            onClick={() => {
+                                if (!assignCompanyId) return
+                                assignMutation.mutate({
+                                    companyId: assignCompanyId,
+                                    planId: Number(assignPlanId),
+                                    startDate: new Date(assignStartDate).toISOString(),
+                                    endDate: new Date(assignEndDate).toISOString(),
+                                })
+                            }}
+                        >
+                            {assignMutation.isPending ? 'Assigning...' : 'Assign Plan'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
