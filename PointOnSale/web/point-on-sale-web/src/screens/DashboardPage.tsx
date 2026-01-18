@@ -1,50 +1,90 @@
 import { PageHeader } from '@/components/ui/page-header'
 import { StatCard } from '@/components/ui/stat-card'
 import { Button } from '@/components/ui/button'
-import { ShoppingCart, Package, Users, BarChart3, Plus } from 'lucide-react'
+import { ShoppingCart, Package, Users, BarChart3, Plus, Building2, ShieldCheck } from 'lucide-react'
+import { useAuthStore } from '@/store/use-auth-store'
 
 export default function DashboardPage() {
+  const { userProfile } = useAuthStore()
+  const isSuperAdmin = userProfile?.scopeType === 0
+
   return (
     <>
       <PageHeader
-        title='Dashboard'
-        description='Welcome back to your POS system.'
+        title={isSuperAdmin ? 'SuperAdmin Dashboard' : 'Dashboard'}
+        description={isSuperAdmin ? 'Manage the entire POS ecosystem.' : 'Welcome back to your POS system.'}
         actions={
-          <Button className='gap-2'>
-            <Plus className='h-4 w-4' />
-            New Sale
-          </Button>
+          !isSuperAdmin && (
+            <Button className='gap-2'>
+              <Plus className='h-4 w-4' />
+              New Sale
+            </Button>
+          )
         }
       />
 
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
-        <StatCard
-          title='Total Sales'
-          value='$12,840'
-          icon={<ShoppingCart className='h-4 w-4' />}
-          trend={{ value: '+12%', positive: true }}
-          description='From last month'
-        />
-        <StatCard
-          title='Orders'
-          value='456'
-          icon={<Package className='h-4 w-4' />}
-          trend={{ value: '+5%', positive: true }}
-          description='From last month'
-        />
-        <StatCard
-          title='Customers'
-          value='2,345'
-          icon={<Users className='h-4 w-4' />}
-          trend={{ value: '+18%', positive: true }}
-          description='From last month'
-        />
-        <StatCard
-          title='Low Stock'
-          value='12'
-          icon={<BarChart3 className='h-4 w-4' />}
-          description='Items requiring attention'
-        />
+        {isSuperAdmin ? (
+          <>
+            <StatCard
+              title='Total Companies'
+              value='24'
+              icon={<Building2 className='h-4 w-4' />}
+              trend={{ value: '+2', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='Active Subscriptions'
+              value='18'
+              icon={<ShieldCheck className='h-4 w-4' />}
+              trend={{ value: '+5%', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='System Users'
+              value='1,240'
+              icon={<Users className='h-4 w-4' />}
+              trend={{ value: '+12%', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='Avg. Revenue'
+              value='$4,200'
+              icon={<BarChart3 className='h-4 w-4' />}
+              description='Per company'
+            />
+          </>
+        ) : (
+          <>
+            <StatCard
+              title='Total Sales'
+              value='$12,840'
+              icon={<ShoppingCart className='h-4 w-4' />}
+              trend={{ value: '+12%', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='Orders'
+              value='456'
+              icon={<Package className='h-4 w-4' />}
+              trend={{ value: '+5%', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='Customers'
+              value='2,345'
+              icon={<Users className='h-4 w-4' />}
+              trend={{ value: '+18%', positive: true }}
+              description='From last month'
+            />
+            <StatCard
+              title='Low Stock'
+              value='12'
+              icon={<BarChart3 className='h-4 w-4' />}
+              description='Items requiring attention'
+            />
+          </>
+        )}
       </div>
 
       <div className='mt-8 premium-card p-6 soft-shadow'>

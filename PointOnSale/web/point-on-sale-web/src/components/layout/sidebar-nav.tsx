@@ -76,7 +76,11 @@ export function SidebarNav() {
       <div className='p-4 border-t'>
         <div className={cn('flex items-center gap-3', isCollapsed ? 'justify-center' : 'px-2')}>
           <div className='w-8 h-8 rounded-full bg-secondary flex items-center justify-center font-bold text-xs uppercase'>
-            {userProfile?.fullName?.charAt(0) || 'JD'}
+            {userProfile?.fullName
+              ?.split(' ')
+              .map((n) => n[0])
+              .join('')
+              .toUpperCase() || 'JD'}
           </div>
           {!isCollapsed && (
             <div className='flex flex-col overflow-hidden'>

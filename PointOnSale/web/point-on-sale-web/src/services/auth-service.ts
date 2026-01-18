@@ -11,9 +11,23 @@ export interface LoginFormValues {
   password: string
 }
 
+interface ApiResponse<T> {
+  data: T
+  message?: string
+  success?: boolean
+}
+
+const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
+  const payload = response.data
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return (payload as ApiResponse<T>).data
+  }
+  return payload as T
+}
+
 export const authService = {
   login: async (credentials: LoginFormValues): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('auth/login', credentials)
-    return response.data
+    const response = await apiClient.post<ApiResponse<LoginResponse> | LoginResponse>('auth/login', credentials)
+    return unwrapResponse(response)
   },
 }

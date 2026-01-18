@@ -46,7 +46,7 @@ export function Topbar() {
         <div className='hidden lg:flex items-center gap-2'>
           <Badge variant='outline' className='bg-secondary/50 gap-1.5 font-medium py-1 px-3'>
             <Building2 className='h-3.5 w-3.5' />
-            Main Warehouse
+            {userProfile?.scopeType === 0 ? 'System Root' : userProfile?.scopeNodeId || 'Main Warehouse'}
           </Badge>
         </div>
 
@@ -67,7 +67,13 @@ export function Topbar() {
             <Button variant='ghost' className='h-9 w-9 rounded-full p-0'>
               <Avatar className='h-9 w-9'>
                 <AvatarImage src='' />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>
+                  {userProfile?.fullName
+                    ?.split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase() || 'JD'}
+                </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
