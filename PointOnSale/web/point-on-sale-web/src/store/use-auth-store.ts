@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>()(
       hasPermission: (permCode) => {
         const { userProfile } = get()
         if (!userProfile) return false
-        return userProfile.permissions.includes(permCode)
+        return userProfile.permissions.includes('SUPER_ADMIN') || userProfile.permissions.includes(permCode)
       },
       canAccessScope: (targetScopeNodeId) => {
         const { userProfile } = get()
