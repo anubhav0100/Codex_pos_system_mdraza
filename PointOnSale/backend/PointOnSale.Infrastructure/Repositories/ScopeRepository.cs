@@ -11,6 +11,10 @@ public class ScopeRepository(PosDbContext dbContext) : IScopeRepository
     {
         return await dbContext.ScopeNodes
             .AsNoTracking()
+            .Include(scope => scope.Company)
+            .Include(scope => scope.State)
+            .Include(scope => scope.District)
+            .Include(scope => scope.Local)
             .Where(x => x.CompanyId == companyId)
             .ToListAsync(cancellationToken);
     }
@@ -61,6 +65,12 @@ public class ScopeRepository(PosDbContext dbContext) : IScopeRepository
     public async Task UpdateAsync(ScopeNode scope, CancellationToken cancellationToken = default)
     {
         dbContext.ScopeNodes.Update(scope);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(ScopeNode scope, CancellationToken cancellationToken = default)
+    {
+        dbContext.ScopeNodes.Remove(scope);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

@@ -11,4 +11,5 @@ public interface IScopeRepository
     Task<ScopeNode> AddDistrictScopeAsync(ScopeNode scope, LocationDistrict district, CancellationToken cancellationToken = default);
     Task<ScopeNode> AddLocalScopeAsync(ScopeNode scope, LocationLocal local, CancellationToken cancellationToken = default);
     Task UpdateAsync(ScopeNode scope, CancellationToken cancellationToken = default);
+    Task DeleteAsync(ScopeNode scope, CancellationToken cancellationToken = default);
 }
