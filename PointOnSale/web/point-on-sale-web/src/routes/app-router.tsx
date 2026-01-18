@@ -22,6 +22,12 @@ import ProductCreatePage from '@/screens/company/products/ProductCreatePage'
 import ProductEditPage from '@/screens/company/products/ProductEditPage'
 import CategoriesPage from '@/screens/company/products/CategoriesPage'
 import ProductAssignmentsPage from '@/screens/company/assignments/ProductAssignmentsPage'
+import InventoryBalancePage from '@/screens/inventory/InventoryBalancePage'
+import InventoryLedgerPage from '@/screens/inventory/InventoryLedgerPage'
+import StockRequestsOutgoingPage from '@/screens/requests/StockRequestsOutgoingPage'
+import StockRequestsInboxPage from '@/screens/requests/StockRequestsInboxPage'
+import WalletsPage from '@/screens/wallets/WalletsPage'
+import WalletsLedgerPage from '@/screens/wallets/WalletsLedgerPage'
 
 const router = createBrowserRouter([
   {
@@ -199,6 +205,89 @@ const router = createBrowserRouter([
             <ProductAssignmentsPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'inventory',
+        children: [
+          {
+            index: true,
+            element: <Navigate to='balance' replace />,
+          },
+          {
+            path: 'balance',
+            element: (
+              <ProtectedRoute requiredPermission='INVENTORY_VIEW'>
+                <InventoryBalancePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'ledger/:productId',
+            element: (
+              <ProtectedRoute requiredPermission='INVENTORY_VIEW'>
+                <InventoryLedgerPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'adjust',
+            element: (
+              <ProtectedRoute requiredPermission='INVENTORY_ADJUST'>
+                <InventoryBalancePage initialAdjustOpen returnTo='/inventory/balance' />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: 'requests',
+        children: [
+          {
+            index: true,
+            element: <Navigate to='outgoing' replace />,
+          },
+          {
+            path: 'outgoing',
+            element: (
+              <ProtectedRoute requiredPermission='STOCK_REQUESTS_VIEW'>
+                <StockRequestsOutgoingPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'inbox',
+            element: (
+              <ProtectedRoute requiredPermission='STOCK_REQUESTS_VIEW'>
+                <StockRequestsInboxPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: 'stock-requests',
+        element: <Navigate to='/requests/outgoing' replace />,
+      },
+      {
+        path: 'wallets',
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+                <WalletsPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'ledger',
+            element: (
+              <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+                <WalletsLedgerPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
     ],
   },

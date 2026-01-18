@@ -43,8 +43,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: Package, label: 'Products', href: '/products', allowedScopes: [1], requiredPermission: 'PRODUCTS_READ' },
     { icon: Tags, label: 'Categories', href: '/categories', allowedScopes: [1], requiredPermission: 'PRODUCT_CATEGORIES_READ' },
     { icon: Layers, label: 'Assignments', href: '/assignments', allowedScopes: [1], requiredPermission: 'PRODUCT_ASSIGNMENTS_VIEW' },
-    { icon: Boxes, label: 'Inventory', href: '/inventory', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVENTORY_VIEW' },
-    { icon: Truck, label: 'Stock Requests', href: '/stock-requests', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_VIEW' },
+    { icon: Boxes, label: 'Inventory', href: '/inventory/balance', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVENTORY_VIEW' },
+    { icon: Truck, label: 'Stock Requests', href: '/requests/outgoing', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_VIEW' },
     { icon: Wallet, label: 'Wallets', href: '/wallets', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW' },
     { icon: FileText, label: 'Invoices', href: '/invoices', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVOICES_VIEW' },
 
