@@ -28,12 +28,12 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/', allowedScopes: [0, 1, 2, 3, 4] },
 
     // SuperAdmin Only
-    { icon: Building2, label: 'Companies', href: '/companies', allowedScopes: [0], requiredPermission: 'COMPANIES_READ' },
-    { icon: Users, label: 'Company Admins', href: '/company-admins', allowedScopes: [0], requiredPermission: 'COMPANY_ADMINS_READ' },
+    { icon: Building2, label: 'Companies', href: '/super/companies', allowedScopes: [0], requiredPermission: 'COMPANIES_READ' },
+    { icon: Users, label: 'Company Admins', href: '/super/companies', allowedScopes: [0], requiredPermission: 'COMPANY_ADMINS_READ' },
     { icon: ShieldCheck, label: 'Subscription Plans', href: '/super/subscription-plans', allowedScopes: [0], requiredPermission: 'SUBSCRIPTIONS_READ' },
 
     // Company Only
-    { icon: Map, label: 'Scopes', href: '/scopes', allowedScopes: [1], requiredPermission: 'SCOPES_READ' },
+    { icon: Map, label: 'Scopes', href: '/scopes', allowedScopes: [0, 1], requiredPermission: 'SCOPES_READ' },
     { icon: Users, label: 'Users', href: '/users', allowedScopes: [0, 1, 2, 3], requiredPermission: 'USERS_READ' },
 
     // POS (Local) Only

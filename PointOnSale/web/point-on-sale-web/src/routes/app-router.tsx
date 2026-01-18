@@ -28,6 +28,9 @@ import StockRequestsOutgoingPage from '@/screens/requests/StockRequestsOutgoingP
 import StockRequestsInboxPage from '@/screens/requests/StockRequestsInboxPage'
 import WalletsPage from '@/screens/wallets/WalletsPage'
 import WalletsLedgerPage from '@/screens/wallets/WalletsLedgerPage'
+import InvoicesPage from '@/screens/company/InvoicesPage'
+import ReportsPage from '@/screens/company/ReportsPage'
+import AuditLogsPage from '@/screens/company/AuditLogsPage'
 
 const router = createBrowserRouter([
   {
@@ -288,6 +291,30 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: 'invoices',
+        element: (
+          <ProtectedRoute requiredPermission='INVOICES_READ'>
+            <InvoicesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <ProtectedRoute requiredPermission='REPORTS_READ'>
+            <ReportsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'audit-logs',
+        element: (
+          <ProtectedRoute requiredPermission='AUDIT_LOGS_READ'>
+            <AuditLogsPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
