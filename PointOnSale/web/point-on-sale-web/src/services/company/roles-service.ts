@@ -24,9 +24,10 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const rolesService = {
   getRoles: async (scopeType?: number) => {
-    const response = await apiClient.get<ApiResponse<Role[]> | Role[]>('/roles', {
+    const response = await apiClient.get<ApiResponse<Role[]> | Role[]>('roles', {
       params: scopeType !== undefined ? { scopeType } : undefined,
     })
     return unwrapResponse(response)
   },
 }
+

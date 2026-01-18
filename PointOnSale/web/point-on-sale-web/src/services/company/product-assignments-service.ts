@@ -39,7 +39,7 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const productAssignmentsService = {
   assignProduct: async (payload: AssignProductPayload) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/product-assignments/assign', payload)
+    const response = await apiClient.post<ApiResponse<string> | string>('product-assignments/assign', payload)
     return unwrapResponse(response)
   },
   getScopeProducts: async (scopeNodeId: number) => {
@@ -57,3 +57,4 @@ export const productAssignmentsService = {
     return unwrapResponse(response)
   },
 }
+

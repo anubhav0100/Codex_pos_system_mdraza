@@ -21,6 +21,8 @@ services:
     build:
       context: ./web/point-on-sale-web
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/v1
     environment:
       - VITE_API_URL=/v1
     depends_on:

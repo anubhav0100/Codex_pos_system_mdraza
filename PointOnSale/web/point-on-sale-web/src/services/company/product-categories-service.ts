@@ -27,11 +27,11 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const productCategoriesService = {
   getCategories: async () => {
-    const response = await apiClient.get<ApiResponse<ProductCategory[]> | ProductCategory[]>('/product-categories')
+    const response = await apiClient.get<ApiResponse<ProductCategory[]> | ProductCategory[]>('product-categories')
     return unwrapResponse(response)
   },
   createCategory: async (data: CreateProductCategoryDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/product-categories', data)
+    const response = await apiClient.post<ApiResponse<string> | string>('product-categories', data)
     return unwrapResponse(response)
   },
   updateCategory: async (categoryId: number, data: UpdateProductCategoryDto) => {
@@ -43,3 +43,4 @@ export const productCategoriesService = {
     return unwrapResponse(response)
   },
 }
+

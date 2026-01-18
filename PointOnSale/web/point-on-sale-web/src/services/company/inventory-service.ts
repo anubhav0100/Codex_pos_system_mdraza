@@ -47,7 +47,7 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 export const inventoryService = {
   getBalance: async (scopeNodeId?: string) => {
     const response = await apiClient.get<ApiResponse<InventoryBalanceItem[]> | InventoryBalanceItem[]>(
-      '/inventory/balance',
+      'inventory/balance',
       {
         params: {
           scopeNodeId: scopeNodeId || undefined,
@@ -58,7 +58,7 @@ export const inventoryService = {
   },
   getLedger: async ({ scopeNodeId, productId }: { scopeNodeId?: string; productId: string }) => {
     const response = await apiClient.get<ApiResponse<InventoryLedgerEntry[]> | InventoryLedgerEntry[]>(
-      '/inventory/ledger',
+      'inventory/ledger',
       {
         params: {
           scopeNodeId: scopeNodeId || undefined,
@@ -69,7 +69,8 @@ export const inventoryService = {
     return unwrapResponse(response)
   },
   adjustInventory: async (payload: InventoryAdjustPayload) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/inventory/adjust', payload)
+    const response = await apiClient.post<ApiResponse<string> | string>('inventory/adjust', payload)
     return unwrapResponse(response)
   },
 }
+

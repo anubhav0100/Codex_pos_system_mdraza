@@ -41,7 +41,7 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 export const stockRequestsService = {
   getStockRequests: async ({ scope, status }: { scope: 'mine' | 'inbox'; status?: string }) => {
     const response = await apiClient.get<ApiResponse<StockRequestSummary[]> | StockRequestSummary[]>(
-      '/stock-requests',
+      'stock-requests',
       {
         params: {
           scope,
@@ -52,7 +52,7 @@ export const stockRequestsService = {
     return unwrapResponse(response)
   },
   createStockRequest: async (payload: CreateStockRequestDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/stock-requests', payload)
+    const response = await apiClient.post<ApiResponse<string> | string>('stock-requests', payload)
     return unwrapResponse(response)
   },
   approveStockRequest: async (requestId: string) => {
@@ -74,3 +74,4 @@ export const stockRequestsService = {
     return unwrapResponse(response)
   },
 }
+

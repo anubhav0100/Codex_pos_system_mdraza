@@ -41,12 +41,12 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const walletsService = {
   getWalletsMine: async () => {
-    const response = await apiClient.get<ApiResponse<WalletSummary[]> | WalletSummary[]>('/wallets/mine')
+    const response = await apiClient.get<ApiResponse<WalletSummary[]> | WalletSummary[]>('wallets/mine')
     return unwrapResponse(response)
   },
   getWalletLedger: async (walletId: string) => {
     const response = await apiClient.get<ApiResponse<WalletLedgerEntry[]> | WalletLedgerEntry[]>(
-      '/wallets/ledger',
+      'wallets/ledger',
       {
         params: {
           walletId,
@@ -56,7 +56,8 @@ export const walletsService = {
     return unwrapResponse(response)
   },
   transferWallets: async (payload: WalletTransferDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/wallets/transfer', payload)
+    const response = await apiClient.post<ApiResponse<string> | string>('wallets/transfer', payload)
     return unwrapResponse(response)
   },
 }
+

@@ -46,23 +46,23 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 export const scopesService = {
   getTree: async () => {
     const response = await apiClient.get<ApiResponse<ScopeNode[]> | ScopeNode[]>(
-      '/company/scopes/tree',
+      'company/scopes/tree',
     )
     return unwrapResponse(response)
   },
   createState: async (data: CreateScopeDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/company/scopes/state', data)
+    const response = await apiClient.post<ApiResponse<string> | string>('company/scopes/state', data)
     return unwrapResponse(response)
   },
   createDistrict: async (data: CreateScopeDto) => {
     const response = await apiClient.post<ApiResponse<string> | string>(
-      '/company/scopes/district',
+      'company/scopes/district',
       data,
     )
     return unwrapResponse(response)
   },
   createLocal: async (data: CreateScopeDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/company/scopes/local', data)
+    const response = await apiClient.post<ApiResponse<string> | string>('company/scopes/local', data)
     return unwrapResponse(response)
   },
   updateScope: async (id: number, data: UpdateScopeDto) => {
@@ -86,3 +86,4 @@ export const scopesService = {
     return unwrapResponse(response)
   },
 }
+

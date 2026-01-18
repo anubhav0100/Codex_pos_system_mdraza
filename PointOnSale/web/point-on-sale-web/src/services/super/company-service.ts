@@ -34,7 +34,7 @@ export interface PaginatedResponse<T> {
 
 export const companyService = {
     getCompanies: async (params: CompanyQueryParams) => {
-        const response = await apiClient.get<PaginatedResponse<Company>>('/super/companies', { params })
+        const response = await apiClient.get<PaginatedResponse<Company>>('super/companies', { params })
         return response.data
     },
 
@@ -61,4 +61,5 @@ export const companyService = {
         await apiClient.patch(`/super/companies/${id}/status`, { isActive })
     },
 }
+
 

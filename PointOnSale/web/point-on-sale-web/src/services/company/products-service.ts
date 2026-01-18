@@ -57,12 +57,12 @@ const normalizeProduct = (product: ProductSummary) => ({
 
 export const productsService = {
   getProducts: async () => {
-    const response = await apiClient.get<ApiResponse<ProductSummary[]> | ProductSummary[]>('/products')
+    const response = await apiClient.get<ApiResponse<ProductSummary[]> | ProductSummary[]>('products')
     const data = unwrapResponse(response)
     return data.map((product) => normalizeProduct(product))
   },
   createProduct: async (data: CreateProductDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('/products', data)
+    const response = await apiClient.post<ApiResponse<string> | string>('products', data)
     return unwrapResponse(response)
   },
   updateProduct: async (productId: number, data: UpdateProductDto) => {
@@ -82,3 +82,4 @@ export const productsService = {
     return unwrapResponse(response)
   },
 }
+

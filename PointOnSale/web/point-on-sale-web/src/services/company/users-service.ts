@@ -40,14 +40,14 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const usersService = {
   getUsers: async (scopeNodeId: number) => {
-    const response = await apiClient.get<ApiResponse<UserSummary[]> | UserSummary[]>('/users', {
+    const response = await apiClient.get<ApiResponse<UserSummary[]> | UserSummary[]>('users', {
       params: { scopeNodeId },
     })
     return unwrapResponse(response)
   },
   createUser: async (data: CreateUserDto) => {
     const response = await apiClient.post<ApiResponse<{ userId?: number; temporaryPassword?: string }> | any>(
-      '/users',
+      'users',
       data,
     )
     return unwrapResponse(response)
@@ -71,3 +71,4 @@ export const usersService = {
     return unwrapResponse(response)
   },
 }
+
