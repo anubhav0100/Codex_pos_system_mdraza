@@ -11,6 +11,24 @@ public class InitialDataSeeder(PosDbContext dbContext)
 {
     public async Task SeedAsync()
     {
+        // 0. Seed Default Company (Mandatory for ScopeNode)
+        var systemCompany = await dbContext.Companies
+            .FirstOrDefaultAsync(c => c.Code == "SYSTEM");
+
+        if (systemCompany == null)
+        {
+            systemCompany = new Company
+            {
+                Name = "System Root",
+                Code = "SYSTEM",
+                Gstin = "NA",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            dbContext.Companies.Add(systemCompany);
+            await dbContext.SaveChangesAsync();
+        }
+
         // 1. Seed SuperAdmin Scope
         var superAdminScope = await dbContext.ScopeNodes
             .FirstOrDefaultAsync(s => s.ScopeType == ScopeType.SuperAdmin);
@@ -21,7 +39,7 @@ public class InitialDataSeeder(PosDbContext dbContext)
             {
                 ScopeType = ScopeType.SuperAdmin,
                 IsActive = true,
-                // CreatedAt not present in ScopeNode
+                CompanyId = systemCompany.Id
             };
             dbContext.ScopeNodes.Add(superAdminScope);
             await dbContext.SaveChangesAsync();
