@@ -21,6 +21,7 @@ import ProductsListPage from '@/screens/company/products/ProductsListPage'
 import ProductCreatePage from '@/screens/company/products/ProductCreatePage'
 import ProductEditPage from '@/screens/company/products/ProductEditPage'
 import CategoriesPage from '@/screens/company/products/CategoriesPage'
+import ProductAssignmentsPage from '@/screens/company/assignments/ProductAssignmentsPage'
 
 const router = createBrowserRouter([
   {
@@ -188,6 +189,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredPermission='PRODUCT_CATEGORIES_READ'>
             <CategoriesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'assignments',
+        element: (
+          <ProtectedRoute requiredPermission='PRODUCT_ASSIGNMENTS_VIEW'>
+            <ProductAssignmentsPage />
           </ProtectedRoute>
         ),
       },
