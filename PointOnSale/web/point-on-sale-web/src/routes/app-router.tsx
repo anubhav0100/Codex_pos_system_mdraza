@@ -14,6 +14,9 @@ import ScopesTreePage from '@/screens/company/scopes/ScopesTreePage'
 import ScopeCreateStatePage from '@/screens/company/scopes/ScopeCreateStatePage'
 import ScopeCreateDistrictPage from '@/screens/company/scopes/ScopeCreateDistrictPage'
 import ScopeCreateLocalPage from '@/screens/company/scopes/ScopeCreateLocalPage'
+import UsersListPage from '@/screens/company/users/UsersListPage'
+import UserCreatePage from '@/screens/company/users/UserCreatePage'
+import UserEditPage from '@/screens/company/users/UserEditPage'
 
 const router = createBrowserRouter([
   {
@@ -113,6 +116,35 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute requiredPermission='SCOPES_CREATE'>
                 <ScopeCreateLocalPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: 'users',
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute requiredPermission='USERS_VIEW'>
+                <UsersListPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new',
+            element: (
+              <ProtectedRoute requiredPermission='USERS_CREATE'>
+                <UserCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/edit',
+            element: (
+              <ProtectedRoute requiredPermission='USERS_EDIT'>
+                <UserEditPage />
               </ProtectedRoute>
             ),
           },
