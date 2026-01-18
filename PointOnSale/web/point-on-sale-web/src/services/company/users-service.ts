@@ -53,19 +53,19 @@ export const usersService = {
     return unwrapResponse(response)
   },
   updateUser: async (userId: number, data: UpdateUserDto) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`/users/${userId}`, data)
+    const response = await apiClient.put<ApiResponse<string> | string>(`users/${userId}`, data)
     return unwrapResponse(response)
   },
   activateUser: async (userId: number) => {
-    const response = await apiClient.patch<ApiResponse<string> | string>(`/users/${userId}/activate`)
+    const response = await apiClient.patch<ApiResponse<string> | string>(`users/${userId}/activate`)
     return unwrapResponse(response)
   },
   deactivateUser: async (userId: number) => {
-    const response = await apiClient.patch<ApiResponse<string> | string>(`/users/${userId}/deactivate`)
+    const response = await apiClient.patch<ApiResponse<string> | string>(`users/${userId}/deactivate`)
     return unwrapResponse(response)
   },
   assignRoles: async (userId: number, roleIds: number[]) => {
-    const response = await apiClient.post<ApiResponse<string> | string>(`/users/${userId}/roles`, {
+    const response = await apiClient.post<ApiResponse<string> | string>(`users/${userId}/roles`, {
       roleIds,
     })
     return unwrapResponse(response)

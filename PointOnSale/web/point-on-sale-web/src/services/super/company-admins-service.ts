@@ -28,7 +28,7 @@ export interface CreateCompanyAdminResponse {
 
 export const companyAdminsService = {
     getCompanyAdmins: async (companyId: string) => {
-        const response = await apiClient.get<CompanyAdmin[]>(`/super/companies/${companyId}/admins`)
+        const response = await apiClient.get<CompanyAdmin[]>(`super/companies/${companyId}/admins`)
         return response.data
     },
 
@@ -41,17 +41,17 @@ export const companyAdminsService = {
     },
 
     updateCompanyAdmin: async (userId: number, data: UpdateCompanyAdminDto) => {
-        const response = await apiClient.put(`/super/company-admins/${userId}`, data)
+        const response = await apiClient.put(`super/company-admins/${userId}`, data)
         return response.data
     },
 
     activateCompanyAdmin: async (userId: number) => {
-        const response = await apiClient.patch(`/super/company-admins/${userId}/activate`)
+        const response = await apiClient.patch(`super/company-admins/${userId}/activate`)
         return response.data
     },
 
     deactivateCompanyAdmin: async (userId: number) => {
-        const response = await apiClient.patch(`/super/company-admins/${userId}/deactivate`)
+        const response = await apiClient.patch(`super/company-admins/${userId}/deactivate`)
         return response.data
     },
 }

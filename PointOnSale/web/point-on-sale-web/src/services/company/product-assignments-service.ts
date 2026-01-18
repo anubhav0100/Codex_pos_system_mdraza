@@ -49,11 +49,11 @@ export const productAssignmentsService = {
     return unwrapResponse(response)
   },
   updateAssignment: async (id: number, payload: UpdateAssignmentPayload) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`/product-assignments/${id}`, payload)
+    const response = await apiClient.put<ApiResponse<string> | string>(`product-assignments/${id}`, payload)
     return unwrapResponse(response)
   },
   deleteAssignment: async (id: number) => {
-    const response = await apiClient.delete<ApiResponse<string> | string>(`/product-assignments/${id}`)
+    const response = await apiClient.delete<ApiResponse<string> | string>(`product-assignments/${id}`)
     return unwrapResponse(response)
   },
 }

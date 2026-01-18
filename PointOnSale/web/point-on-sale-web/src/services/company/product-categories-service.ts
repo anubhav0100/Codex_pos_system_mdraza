@@ -9,7 +9,7 @@ export interface CreateProductCategoryDto {
   name: string
 }
 
-export interface UpdateProductCategoryDto extends CreateProductCategoryDto {}
+export interface UpdateProductCategoryDto extends CreateProductCategoryDto { }
 
 interface ApiResponse<T> {
   data: T
@@ -35,11 +35,11 @@ export const productCategoriesService = {
     return unwrapResponse(response)
   },
   updateCategory: async (categoryId: number, data: UpdateProductCategoryDto) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`/product-categories/${categoryId}`, data)
+    const response = await apiClient.put<ApiResponse<string> | string>(`product-categories/${categoryId}`, data)
     return unwrapResponse(response)
   },
   deleteCategory: async (categoryId: number) => {
-    const response = await apiClient.delete<ApiResponse<string> | string>(`/product-categories/${categoryId}`)
+    const response = await apiClient.delete<ApiResponse<string> | string>(`product-categories/${categoryId}`)
     return unwrapResponse(response)
   },
 }

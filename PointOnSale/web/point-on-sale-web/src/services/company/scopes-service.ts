@@ -66,7 +66,7 @@ export const scopesService = {
     return unwrapResponse(response)
   },
   updateScope: async (id: number, data: UpdateScopeDto) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`/company/scopes/${id}`, data)
+    const response = await apiClient.put<ApiResponse<string> | string>(`company/scopes/${id}`, data)
     return unwrapResponse(response)
   },
   activateScope: async (id: number) => {
@@ -82,7 +82,7 @@ export const scopesService = {
     return unwrapResponse(response)
   },
   deleteScope: async (id: number) => {
-    const response = await apiClient.delete<ApiResponse<string> | string>(`/company/scopes/${id}`)
+    const response = await apiClient.delete<ApiResponse<string> | string>(`company/scopes/${id}`)
     return unwrapResponse(response)
   },
 }

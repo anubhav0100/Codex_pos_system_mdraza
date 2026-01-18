@@ -23,7 +23,7 @@ export interface CreateProductDto {
   categoryId?: number | null
 }
 
-export interface UpdateProductDto extends CreateProductDto {}
+export interface UpdateProductDto extends CreateProductDto { }
 
 interface ApiResponse<T> {
   data: T
@@ -66,19 +66,19 @@ export const productsService = {
     return unwrapResponse(response)
   },
   updateProduct: async (productId: number, data: UpdateProductDto) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`/products/${productId}`, data)
+    const response = await apiClient.put<ApiResponse<string> | string>(`products/${productId}`, data)
     return unwrapResponse(response)
   },
   deleteProduct: async (productId: number) => {
-    const response = await apiClient.delete<ApiResponse<string> | string>(`/products/${productId}`)
+    const response = await apiClient.delete<ApiResponse<string> | string>(`products/${productId}`)
     return unwrapResponse(response)
   },
   activateProduct: async (productId: number) => {
-    const response = await apiClient.patch<ApiResponse<string> | string>(`/products/${productId}/activate`)
+    const response = await apiClient.patch<ApiResponse<string> | string>(`products/${productId}/activate`)
     return unwrapResponse(response)
   },
   deactivateProduct: async (productId: number) => {
-    const response = await apiClient.patch<ApiResponse<string> | string>(`/products/${productId}/deactivate`)
+    const response = await apiClient.patch<ApiResponse<string> | string>(`products/${productId}/deactivate`)
     return unwrapResponse(response)
   },
 }

@@ -39,7 +39,7 @@ export const companyService = {
     },
 
     getCompany: async (id: string) => {
-        const response = await apiClient.get<Company>(`/super/companies/${id}`)
+        const response = await apiClient.get<Company>(`super/companies/${id}`)
         return response.data
     },
 
@@ -49,16 +49,16 @@ export const companyService = {
     },
 
     updateCompany: async (id: string, data: UpdateCompanyDto) => {
-        const response = await apiClient.put<Company>(`/super/companies/${id}`, data)
+        const response = await apiClient.put<Company>(`super/companies/${id}`, data)
         return response.data
     },
 
     deleteCompany: async (id: string) => {
-        await apiClient.delete(`/super/companies/${id}`)
+        await apiClient.delete(`super/companies/${id}`)
     },
 
     toggleStatus: async (id: string, isActive: boolean) => {
-        await apiClient.patch(`/super/companies/${id}/status`, { isActive })
+        await apiClient.patch(`super/companies/${id}/status`, { isActive })
     },
 }
 
