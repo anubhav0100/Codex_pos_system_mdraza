@@ -10,6 +10,10 @@ import CompanyCreatePage from '@/screens/super/companies/CompanyCreatePage'
 import CompanyEditPage from '@/screens/super/companies/CompanyEditPage'
 import CompanyAdminsPage from '@/screens/super/companies/CompanyAdminsPage'
 import SubscriptionPlansPage from '@/screens/super/subscriptions/SubscriptionPlansPage'
+import ScopesTreePage from '@/screens/company/scopes/ScopesTreePage'
+import ScopeCreateStatePage from '@/screens/company/scopes/ScopeCreateStatePage'
+import ScopeCreateDistrictPage from '@/screens/company/scopes/ScopeCreateDistrictPage'
+import ScopeCreateLocalPage from '@/screens/company/scopes/ScopeCreateLocalPage'
 
 const router = createBrowserRouter([
   {
@@ -72,6 +76,47 @@ const router = createBrowserRouter([
             <SubscriptionPlansPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'scopes',
+        children: [
+          {
+            index: true,
+            element: <Navigate to='tree' replace />,
+          },
+          {
+            path: 'tree',
+            element: (
+              <ProtectedRoute requiredPermission='SCOPES_VIEW'>
+                <ScopesTreePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new-state',
+            element: (
+              <ProtectedRoute requiredPermission='SCOPES_CREATE'>
+                <ScopeCreateStatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new-district',
+            element: (
+              <ProtectedRoute requiredPermission='SCOPES_CREATE'>
+                <ScopeCreateDistrictPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new-local',
+            element: (
+              <ProtectedRoute requiredPermission='SCOPES_CREATE'>
+                <ScopeCreateLocalPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
     ],
   },

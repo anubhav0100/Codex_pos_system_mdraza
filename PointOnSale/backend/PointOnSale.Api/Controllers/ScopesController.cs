@@ -11,7 +11,7 @@ namespace PointOnSale.Api.Controllers;
 [ApiController]
 [Route("v1/company/scopes")]
 [RequirePermission("SCOPES_READ")] // Base permission
-public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
+public class ScopesController(IScopeRepository scopeRepository, ILocationRepository locationRepository) : ControllerBase
 {
     private int GetCompanyId()
     {
@@ -70,7 +70,11 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
         // It does NOT include navigation properties (State, District, Local).
         // So Name will be null unless I update Repository to Include them.
         // For now, I'll return "Scope {Id}" if null, but I should fix the Repo.
-        return $"Scope {node.Id} ({node.ScopeType})"; 
+        return node.Local?.Name
+            ?? node.District?.Name
+            ?? node.State?.Name
+            ?? node.Company?.Name
+            ?? $"Scope {node.Id} ({node.ScopeType})";
     }
 
     [HttpPost("state")]
@@ -217,5 +221,103 @@ public class ScopesController(IScopeRepository scopeRepository) : ControllerBase
             await scopeRepository.UpdateAsync(scope);
         }
         return Ok(ApiResponse<string>.Ok("Scope Deactivated"));
+    }
+
+    [HttpDelete("{id}")]
+    [RequirePermission("SCOPES_DELETE")]
+    public async Task<ActionResult<ApiResponse<string>>> Delete(int id)
+    {
+        int companyId = GetCompanyId();
+        if (companyId == 0)
+            return Unauthorized(ApiResponse<string>.Fail(new ErrorDetail("401", "Company context missing"), "Unauthorized"));
+
+        var scope = await scopeRepository.GetByIdAsync(id);
+        if (scope == null || scope.CompanyId != companyId)
+            return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Scope not found"), "Not Found"));
+
+        if (scope.ScopeType == ScopeType.Company)
+            return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "Company scope cannot be deleted"), "Invalid Scope"));
+
+        var allScopes = await scopeRepository.GetAllByCompanyIdAsync(companyId);
+        if (allScopes.Any(node => node.ParentScopeNodeId == scope.Id))
+            return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "Scope has child nodes"), "Deletion Failed"));
+
+        try
+        {
+            await scopeRepository.DeleteAsync(scope);
+
+            switch (scope.ScopeType)
+            {
+                case ScopeType.State when scope.StateId.HasValue:
+                    var state = await locationRepository.GetStateByIdAsync(scope.StateId.Value);
+                    if (state != null)
+                        await locationRepository.DeleteStateAsync(state);
+                    break;
+                case ScopeType.District when scope.DistrictId.HasValue:
+                    var district = await locationRepository.GetDistrictByIdAsync(scope.DistrictId.Value);
+                    if (district != null)
+                        await locationRepository.DeleteDistrictAsync(district);
+                    break;
+                case ScopeType.Local when scope.LocalId.HasValue:
+                    var local = await locationRepository.GetLocalByIdAsync(scope.LocalId.Value);
+                    if (local != null)
+                        await locationRepository.DeleteLocalAsync(local);
+                    break;
+            }
+        }
+        catch (Exception)
+        {
+            return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "Unable to delete scope"), "Deletion Failed"));
+        }
+
+        return Ok(ApiResponse<string>.Ok("Scope deleted successfully"));
+    }
+
+    [HttpPut("{id}")]
+    [RequirePermission("SCOPES_EDIT")]
+    public async Task<ActionResult<ApiResponse<string>>> Update(int id, [FromBody] UpdateScopeDto dto)
+    {
+        int companyId = GetCompanyId();
+        if (companyId == 0)
+            return Unauthorized(ApiResponse<string>.Fail(new ErrorDetail("401", "Company context missing"), "Unauthorized"));
+
+        var scope = await scopeRepository.GetByIdAsync(id);
+        if (scope == null || scope.CompanyId != companyId)
+            return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Scope not found"), "Not Found"));
+
+        switch (scope.ScopeType)
+        {
+            case ScopeType.State:
+                if (!scope.StateId.HasValue)
+                    return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "State reference missing"), "Invalid Scope"));
+                var state = await locationRepository.GetStateByIdAsync(scope.StateId.Value);
+                if (state == null)
+                    return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "State not found"), "Not Found"));
+                state.Name = dto.Name;
+                await locationRepository.UpdateStateAsync(state);
+                break;
+            case ScopeType.District:
+                if (!scope.DistrictId.HasValue)
+                    return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "District reference missing"), "Invalid Scope"));
+                var district = await locationRepository.GetDistrictByIdAsync(scope.DistrictId.Value);
+                if (district == null)
+                    return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "District not found"), "Not Found"));
+                district.Name = dto.Name;
+                await locationRepository.UpdateDistrictAsync(district);
+                break;
+            case ScopeType.Local:
+                if (!scope.LocalId.HasValue)
+                    return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "Local reference missing"), "Invalid Scope"));
+                var local = await locationRepository.GetLocalByIdAsync(scope.LocalId.Value);
+                if (local == null)
+                    return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Local not found"), "Not Found"));
+                local.Name = dto.Name;
+                await locationRepository.UpdateLocalAsync(local);
+                break;
+            default:
+                return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "Scope type cannot be edited"), "Invalid Scope"));
+        }
+
+        return Ok(ApiResponse<string>.Ok("Scope updated successfully"));
     }
 }
