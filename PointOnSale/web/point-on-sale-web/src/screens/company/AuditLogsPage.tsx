@@ -1,6 +1,6 @@
 import { PageHeader } from '@/components/ui/page-header'
 import { DataTable, DataTableCell, DataTableRow } from '@/components/ui/data-table'
-import { History, Shield, Clock } from 'lucide-react'
+import { Shield, Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 export default function AuditLogsPage() {
