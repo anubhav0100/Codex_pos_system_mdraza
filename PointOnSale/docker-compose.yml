@@ -1,31 +1,13 @@
 version: "3.9"
 
 services:
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourPassword123!
-    ports:
-      - "1433:1433"
-    healthcheck:
-      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourPassword123!' -Q 'SELECT 1' -b -C" ]
-      interval: 10s
-      timeout: 3s
-      retries: 10
-    networks:
-      - pos-network
-
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=db;Database=PointOnSaleDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=PointOnSaleDb;User Id=SZDB2;Password=SZDB212345678;TrustServerCertificate=True;MultipleActiveResultSets=true
       - ASPNETCORE_ENVIRONMENT=Development
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - pos-network
 
@@ -45,3 +27,4 @@ services:
 networks:
   pos-network:
     driver: bridge
+
