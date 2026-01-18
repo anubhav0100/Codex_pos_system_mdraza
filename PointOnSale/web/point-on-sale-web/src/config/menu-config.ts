@@ -13,6 +13,7 @@ import {
     ShieldCheck,
     Map,
     ShoppingCart,
+    Tags,
 } from 'lucide-react'
 
 export interface MenuItem {
@@ -39,7 +40,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: ShoppingCart, label: 'POS', href: '/pos', allowedScopes: [4], requiredPermission: 'POS_ACCESS' },
 
     // Shared Inventory & Operations
-    { icon: Package, label: 'Products', href: '/products', allowedScopes: [1], requiredPermission: 'PRODUCTS_VIEW' },
+    { icon: Package, label: 'Products', href: '/products', allowedScopes: [1], requiredPermission: 'PRODUCTS_READ' },
+    { icon: Tags, label: 'Categories', href: '/categories', allowedScopes: [1], requiredPermission: 'PRODUCT_CATEGORIES_READ' },
     { icon: Layers, label: 'Assignments', href: '/assignments', allowedScopes: [1], requiredPermission: 'ASSIGNMENTS_VIEW' },
     { icon: Boxes, label: 'Inventory', href: '/inventory', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVENTORY_VIEW' },
     { icon: Truck, label: 'Stock Requests', href: '/stock-requests', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_VIEW' },

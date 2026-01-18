@@ -17,6 +17,10 @@ import ScopeCreateLocalPage from '@/screens/company/scopes/ScopeCreateLocalPage'
 import UsersListPage from '@/screens/company/users/UsersListPage'
 import UserCreatePage from '@/screens/company/users/UserCreatePage'
 import UserEditPage from '@/screens/company/users/UserEditPage'
+import ProductsListPage from '@/screens/company/products/ProductsListPage'
+import ProductCreatePage from '@/screens/company/products/ProductCreatePage'
+import ProductEditPage from '@/screens/company/products/ProductEditPage'
+import CategoriesPage from '@/screens/company/products/CategoriesPage'
 
 const router = createBrowserRouter([
   {
@@ -149,6 +153,43 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute requiredPermission='PRODUCTS_READ'>
+                <ProductsListPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'new',
+            element: (
+              <ProtectedRoute requiredPermission='PRODUCTS_CREATE'>
+                <ProductCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/edit',
+            element: (
+              <ProtectedRoute requiredPermission='PRODUCTS_UPDATE'>
+                <ProductEditPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: 'categories',
+        element: (
+          <ProtectedRoute requiredPermission='PRODUCT_CATEGORIES_READ'>
+            <CategoriesPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
