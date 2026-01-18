@@ -5,9 +5,15 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
     environment:
-      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=PointOnSaleDb;User Id=SZDB2;Password=SZDB212345678;TrustServerCertificate=True;MultipleActiveResultSets=true
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5000
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal\SQLWIKACAL;Database=PointOnSaleDb;User Id=SZDB2;Password=SZDB212345678;TrustServerCertificate=True;MultipleActiveResultSets=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - pos-network
 
@@ -27,4 +33,3 @@ services:
 networks:
   pos-network:
     driver: bridge
-

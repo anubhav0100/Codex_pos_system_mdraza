@@ -44,7 +44,7 @@ export const companyService = {
     },
 
     createCompany: async (data: CreateCompanyDto) => {
-        const response = await apiClient.post<Company>('/super/companies', data)
+        const response = await apiClient.post<Company>('super/companies', data)
         return response.data
     },
 
@@ -61,3 +61,4 @@ export const companyService = {
         await apiClient.patch(`/super/companies/${id}/status`, { isActive })
     },
 }
+
