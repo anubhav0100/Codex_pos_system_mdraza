@@ -17,6 +17,8 @@ public enum PermissionAction
     Transfer,
     ConfirmPayment,
     Print,
+    View,
+    Manage,
     
     // System
     All

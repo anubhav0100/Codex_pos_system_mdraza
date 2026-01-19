@@ -23,6 +23,8 @@ public static class PermissionCatalog
             permissions.Add(Create(module, PermissionAction.Read));
             permissions.Add(Create(module, PermissionAction.Update));
             permissions.Add(Create(module, PermissionAction.Delete));
+            permissions.Add(Create(module, PermissionAction.View));
+            permissions.Add(Create(module, PermissionAction.Manage));
 
             // Special Actions
             switch (module)
@@ -57,8 +59,9 @@ public static class PermissionCatalog
             }
         }
         
-        // Super Admin special permission
+        // Super Admin special permissions
         permissions.Add(new Permission { Code = "SUPER_ADMIN", Module = "SYSTEM", Action = PermissionAction.All, Name = "Super Admin Access", Description = "Full System Access" });
+        permissions.Add(new Permission { Code = "SUPER_COMPANIES_MANAGE", Module = "SYSTEM", Action = PermissionAction.Manage, Name = "Manage Companies (Super)", Description = "Global Company Management" });
 
         return permissions;
     }

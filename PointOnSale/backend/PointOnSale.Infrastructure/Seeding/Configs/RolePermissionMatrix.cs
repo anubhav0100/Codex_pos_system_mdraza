@@ -11,7 +11,10 @@ public static class RolePermissionMatrix
         var matrix = new Dictionary<string, List<string>>();
 
         // SuperAdmin: ALL
-        matrix["SuperAdmin"] = new List<string> { "SUPER_ADMIN" }; // Or explicit list of all
+        var superPerms = GeneratePermissions(allModules.ToArray());
+        superPerms.Add("SUPER_ADMIN");
+        superPerms.Add("SUPER_COMPANIES_MANAGE");
+        matrix["SuperAdmin"] = superPerms;
 
         // CompanyAdmin: CRUD on Company-level modules
         matrix["CompanyAdmin"] = GeneratePermissions(new[] 
@@ -35,7 +38,7 @@ public static class RolePermissionMatrix
     private static List<string> GeneratePermissions(string[] modules, PermissionAction[]? actions = null)
     {
         var list = new List<string>();
-        var targetActions = actions ?? new[] { PermissionAction.Create, PermissionAction.Read, PermissionAction.Update, PermissionAction.Delete, PermissionAction.Activate, PermissionAction.Assign, PermissionAction.Approve, PermissionAction.Fulfill, PermissionAction.Reject, PermissionAction.Adjust, PermissionAction.Transfer, PermissionAction.ConfirmPayment, PermissionAction.Print };
+        var targetActions = actions ?? new[] { PermissionAction.Create, PermissionAction.Read, PermissionAction.Update, PermissionAction.Delete, PermissionAction.Activate, PermissionAction.Assign, PermissionAction.Approve, PermissionAction.Fulfill, PermissionAction.Reject, PermissionAction.Adjust, PermissionAction.Transfer, PermissionAction.ConfirmPayment, PermissionAction.Print, PermissionAction.View, PermissionAction.Manage };
 
         foreach (var module in modules)
         {

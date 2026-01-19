@@ -53,6 +53,42 @@ public class SuperSubscriptionController(ISubscriptionRepository subscriptionRep
         }, "Plan created successfully"));
     }
 
+    [HttpPut("subscription-plans/{id}")]
+    [RequirePermission("SUBSCRIPTIONS_UPDATE")]
+    public async Task<ActionResult<ApiResponse<SubscriptionPlanDto>>> UpdatePlan(int id, [FromBody] UpdateSubscriptionPlanDto dto)
+    {
+        var plan = await subscriptionRepository.GetPlanByIdAsync(id);
+        if (plan == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Plan not found"), "Plan not found"));
+
+        plan.Name = dto.Name;
+        plan.MonthlyPrice = dto.MonthlyPrice;
+        plan.LimitsJson = dto.LimitsJson;
+        plan.IsActive = dto.IsActive;
+
+        await subscriptionRepository.UpdatePlanAsync(plan);
+
+        return Ok(ApiResponse<SubscriptionPlanDto>.Ok(new SubscriptionPlanDto
+        {
+            Id = plan.Id,
+            Name = plan.Name,
+            MonthlyPrice = plan.MonthlyPrice,
+            LimitsJson = plan.LimitsJson,
+            IsActive = plan.IsActive
+        }, "Plan updated successfully"));
+    }
+
+    [HttpDelete("subscription-plans/{id}")]
+    [RequirePermission("SUBSCRIPTIONS_DELETE")]
+    public async Task<ActionResult<ApiResponse<string>>> DeletePlan(int id)
+    {
+        var plan = await subscriptionRepository.GetPlanByIdAsync(id);
+        if (plan == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Plan not found"), "Plan not found"));
+
+        await subscriptionRepository.DeletePlanAsync(plan);
+
+        return Ok(ApiResponse<string>.Ok("Plan deleted successfully"));
+    }
+
     [HttpPost("companies/{companyId}/subscription")]
     [RequirePermission("SUBSCRIPTIONS_UPDATE")] 
     public async Task<ActionResult<ApiResponse<string>>> AssignSubscription(int companyId, [FromBody] AssignSubscriptionDto dto)

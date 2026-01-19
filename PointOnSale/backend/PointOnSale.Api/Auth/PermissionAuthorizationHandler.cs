@@ -20,6 +20,13 @@ public class PermissionAuthorizationHandler(
             return;
         }
 
+        // 0. SuperAdmin bypass
+        if (context.User.IsInRole("SuperAdmin") || context.User.HasClaim("permission", "SUPER_ADMIN"))
+        {
+            context.Succeed(requirement);
+            return;
+        }
+
         using var scope = serviceProvider.CreateScope();
         var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
         var scopeAccessService = scope.ServiceProvider.GetRequiredService<IScopeAccessService>();

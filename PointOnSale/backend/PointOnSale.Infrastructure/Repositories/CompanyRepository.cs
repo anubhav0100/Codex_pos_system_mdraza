@@ -13,7 +13,7 @@ public class CompanyRepository(PosDbContext dbContext) : ICompanyRepository
             .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken);
     }
 
-    public async Task<List<Company>> GetAllAsync(bool? isActive, string? search, CancellationToken cancellationToken = default)
+    public async Task<(List<Company> Items, int TotalCount)> GetAllAsync(bool? isActive, string? search, int? page = null, int? pageSize = null, CancellationToken cancellationToken = default)
     {
         var query = dbContext.Companies.AsNoTracking().Where(x => !x.IsDeleted);
 
@@ -27,7 +27,15 @@ public class CompanyRepository(PosDbContext dbContext) : ICompanyRepository
             query = query.Where(x => x.Name.Contains(search) || x.Gstin.Contains(search));
         }
 
-        return await query.ToListAsync(cancellationToken);
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        if (page.HasValue && pageSize.HasValue)
+        {
+            query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+        }
+
+        var items = await query.ToListAsync(cancellationToken);
+        return (items, totalCount);
     }
 
     public async Task<Company> AddAsync(Company company, CancellationToken cancellationToken = default)

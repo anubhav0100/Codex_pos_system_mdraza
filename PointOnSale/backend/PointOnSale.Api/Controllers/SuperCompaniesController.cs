@@ -12,17 +12,19 @@ namespace PointOnSale.Api.Controllers;
 [Route("v1/super/companies")]
 [RequirePermission("SUPER_ADMIN")]
 public class SuperCompaniesController(
-    ICompanyRepository companyRepository, 
-    IScopeRepository scopeRepository) : ControllerBase
+    ICompanyRepository companyRepository,
+    IScopeRepository scopeRepository,
+    ILocationRepository locationRepository) : ControllerBase
 {
     [HttpPost]
     [RequirePermission("SUPER_COMPANIES_MANAGE")]
     [Filters.AuditLog]
-    public async Task<ActionResult<ApiResponse<CompanyDto>>> Create([FromBody] CompanyDto dto)
+    public async Task<ActionResult<ApiResponse<dynamic>>> Create([FromBody] CompanyDto dto)
     {
         var company = new Company
         {
             Name = dto.Name,
+            Code = dto.Code ?? dto.Name.Replace(" ", "").ToUpper(),
             Gstin = dto.Gstin,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
@@ -30,24 +32,87 @@ public class SuperCompaniesController(
 
         await companyRepository.AddAsync(company);
 
-        var rootScope = new ScopeNode
+        // Create Hierarchy: Company -> State -> District -> Local
+        var companyScope = new ScopeNode
         {
             ScopeType = ScopeType.Company,
             CompanyId = company.Id,
-            IsActive = true,
-            // Root scope has no parent
+            IsActive = true
         };
-        
-        await scopeRepository.AddAsync(rootScope);
+        await scopeRepository.AddAsync(companyScope);
 
-        return Ok(ApiResponse<dynamic>.Ok(new { CompanyId = company.Id, RootScopeNodeId = rootScope.Id }, "Company created successfully"));
+        // State
+        var state = new LocationState { Name = $"{company.Name} - Main State", CountryId = 1 };
+        await locationRepository.AddStateAsync(state);
+
+        var stateScope = new ScopeNode
+        {
+            ScopeType = ScopeType.State,
+            CompanyId = company.Id,
+            ParentScopeNodeId = companyScope.Id,
+            StateId = state.Id,
+            IsActive = true
+        };
+        await scopeRepository.AddAsync(stateScope);
+
+        // District
+        var district = new LocationDistrict { Name = $"{company.Name} - Main District", StateId = state.Id };
+        await locationRepository.AddDistrictAsync(district);
+
+        var districtScope = new ScopeNode
+        {
+            ScopeType = ScopeType.District,
+            CompanyId = company.Id,
+            ParentScopeNodeId = stateScope.Id,
+            StateId = state.Id,
+            DistrictId = district.Id,
+            IsActive = true
+        };
+        await scopeRepository.AddAsync(districtScope);
+
+        // Local
+        var local = new LocationLocal { Name = $"{company.Name} - Default Office", DistrictId = district.Id };
+        await locationRepository.AddLocalAsync(local);
+
+        var localScope = new ScopeNode
+        {
+            ScopeType = ScopeType.Local,
+            CompanyId = company.Id,
+            ParentScopeNodeId = districtScope.Id,
+            StateId = state.Id,
+            DistrictId = district.Id,
+            LocalId = local.Id,
+            IsActive = true
+        };
+        await scopeRepository.AddAsync(localScope);
+
+        return Ok(ApiResponse<dynamic>.Ok(new 
+        { 
+            Id = company.Id, 
+            CompanyScopeId = companyScope.Id,
+            StateScopeId = stateScope.Id,
+            DistrictScopeId = districtScope.Id,
+            LocalScopeId = localScope.Id
+        }, "Company and full scope hierarchy created successfully"));
     }
 
     [HttpGet]
     [RequirePermission("COMPANIES_READ")]
-    public async Task<ActionResult<ApiResponse<List<CompanyDto>>>> GetAll([FromQuery] bool? isActive, [FromQuery] string? search)
+    public async Task<ActionResult<ApiResponse<PaginatedResult<CompanyDto>>>> GetAll(
+        [FromQuery] string? status, 
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var companies = await companyRepository.GetAllAsync(isActive, search);
+        bool? isActive = status switch
+        {
+            "ACTIVE" => true,
+            "INACTIVE" => false,
+            _ => null
+        };
+
+        var (companies, totalCount) = await companyRepository.GetAllAsync(isActive, search, page, pageSize);
+        
         var dtos = companies.Select(c => new CompanyDto
         {
             Id = c.Id,
@@ -57,7 +122,8 @@ public class SuperCompaniesController(
             CreatedAt = c.CreatedAt
         }).ToList();
 
-        return Ok(ApiResponse<List<CompanyDto>>.Ok(dtos));
+        var result = new PaginatedResult<CompanyDto>(dtos, totalCount, page, pageSize);
+        return Ok(ApiResponse<PaginatedResult<CompanyDto>>.Ok(result));
     }
 
     [HttpPut("{id}")]
@@ -71,7 +137,7 @@ public class SuperCompaniesController(
         company.Gstin = dto.Gstin;
 
         await companyRepository.UpdateAsync(company);
-        return Ok(ApiResponse<string>.Ok("Company updated successfully"));
+        return Ok(ApiResponse<CompanyDto>.Ok(new CompanyDto { Id = company.Id, Name = company.Name, Gstin = company.Gstin, IsActive = company.IsActive }, "Company updated successfully"));
     }
 
     [HttpDelete("{id}")]
@@ -113,5 +179,20 @@ public class SuperCompaniesController(
             await companyRepository.UpdateAsync(company);
         }
         return Ok(ApiResponse<string>.Ok("Company deactivated successfully"));
+    }
+
+    public class StatusDto { public bool IsActive { get; set; } }
+
+    [HttpPatch("{id}/status")]
+    [RequirePermission("COMPANIES_ACTIVATE")]
+    public async Task<ActionResult<ApiResponse<string>>> UpdateStatus(int id, [FromBody] StatusDto dto)
+    {
+        var company = await companyRepository.GetByIdAsync(id);
+        if (company == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Company not found"), "Company not found"));
+
+        company.IsActive = dto.IsActive;
+        await companyRepository.UpdateAsync(company);
+        
+        return Ok(ApiResponse<string>.Ok($"Company {(dto.IsActive ? "activated" : "deactivated")} successfully"));
     }
 }
