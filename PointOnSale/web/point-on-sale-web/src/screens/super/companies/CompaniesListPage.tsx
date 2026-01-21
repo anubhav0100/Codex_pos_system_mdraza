@@ -294,6 +294,7 @@ export default function CompaniesListPage() {
                                     type='date'
                                     value={assignStartDate}
                                     onChange={(event) => setAssignStartDate(event.target.value)}
+                                    onClick={(e) => e.currentTarget.showPicker()}
                                 />
                             </div>
                             <div className='space-y-2'>
@@ -302,6 +303,7 @@ export default function CompaniesListPage() {
                                     type='date'
                                     value={assignEndDate}
                                     onChange={(event) => setAssignEndDate(event.target.value)}
+                                    onClick={(e) => e.currentTarget.showPicker()}
                                 />
                             </div>
                         </div>

@@ -19,7 +19,7 @@ public static class RolePermissionMatrix
         // CompanyAdmin: CRUD on Company-level modules
         matrix["CompanyAdmin"] = GeneratePermissions(new[] 
         { 
-            "USERS", "ROLES_PERMISSIONS", "LOCATIONS", "PRODUCT_CATEGORIES", "PRODUCTS", 
+            "USERS", "ROLES_PERMISSIONS", "LOCATIONS", "SCOPES", "PRODUCT_CATEGORIES", "PRODUCTS", 
             "PRODUCT_ASSIGNMENTS", "INVENTORY", "STOCK_REQUESTS", "WALLET_ACCOUNTS", 
             "POS_SALES", "INVOICES", "REPORTS", "AUDIT_LOGS", "DASHBOARD"
         });

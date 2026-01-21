@@ -14,7 +14,7 @@ public class ProductDto
     public bool IsActive { get; set; }
     
     public int? CategoryId { get; set; }
-    public string CategoryName { get; set; }
+    public string? CategoryName { get; set; }
 }
 
 public class CreateProductDto

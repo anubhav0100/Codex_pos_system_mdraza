@@ -1,4 +1,5 @@
 using PointOnSale.Domain.Enums;
+using PointOnSale.Domain.Entities;
 
 namespace PointOnSale.Infrastructure.Seeding.Configs;
 
