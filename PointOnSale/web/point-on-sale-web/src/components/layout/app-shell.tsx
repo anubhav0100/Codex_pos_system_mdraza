@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { SidebarNav } from './sidebar-nav'
 import { Topbar } from './topbar'
+import { SubscriptionExpiredDialog } from '@/components/company/SubscriptionExpiredDialog'
 
 export function AppShell() {
   return (
@@ -16,6 +17,7 @@ export function AppShell() {
           </div>
         </main>
       </div>
+      <SubscriptionExpiredDialog />
     </div>
   )
 }

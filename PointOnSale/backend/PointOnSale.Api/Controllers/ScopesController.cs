@@ -29,7 +29,10 @@ public class ScopesController(IScopeRepository scopeRepository, ILocationReposit
         int companyId = GetCompanyId();
         if (companyId == 0) return Unauthorized(ApiResponse<List<ScopeNodeDto>>.Fail(new ErrorDetail("401", "Company context missing"), "Unauthorized"));
 
-        var allNodes = await scopeRepository.GetAllByCompanyIdAsync(companyId);
+        // If it's the system company (Id: 1), show all nodes for a global tree
+        var allNodes = companyId == 1 
+            ? await scopeRepository.GetAllAsync()
+            : await scopeRepository.GetAllByCompanyIdAsync(companyId);
 
         // Build Tree
         var nodeMap = allNodes.ToDictionary(n => n.Id, n => new ScopeNodeDto

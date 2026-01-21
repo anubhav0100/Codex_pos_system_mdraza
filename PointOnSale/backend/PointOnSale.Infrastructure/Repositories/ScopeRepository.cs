@@ -19,6 +19,24 @@ public class ScopeRepository(PosDbContext dbContext) : IScopeRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<ScopeNode>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ScopeNodes
+            .AsNoTracking()
+            .Include(scope => scope.Company)
+            .Include(scope => scope.State)
+            .Include(scope => scope.District)
+            .Include(scope => scope.Local)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<ScopeNode?> GetRootScopeAsync(CancellationToken cancellationToken = default)
+    {
+        return await dbContext.ScopeNodes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.ScopeType == PointOnSale.Domain.Enums.ScopeType.SuperAdmin, cancellationToken);
+    }
+
     public async Task<ScopeNode?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await dbContext.ScopeNodes

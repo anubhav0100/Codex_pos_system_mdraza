@@ -29,7 +29,7 @@ export const MENU_ITEMS: MenuItem[] = [
 
     // SuperAdmin Only
     { icon: Building2, label: 'Companies', href: '/super/companies', allowedScopes: [0], requiredPermission: 'COMPANIES_READ' },
-    { icon: Users, label: 'Company Admins', href: '/super/companies', allowedScopes: [0], requiredPermission: 'COMPANY_ADMINS_READ' },
+    { icon: Users, label: 'Company Admins', href: '/super/company-admins', allowedScopes: [0], requiredPermission: 'COMPANY_ADMINS_READ' },
     { icon: ShieldCheck, label: 'Subscription Plans', href: '/super/subscription-plans', allowedScopes: [0], requiredPermission: 'SUBSCRIPTIONS_READ' },
 
     // Company Only

@@ -25,7 +25,7 @@ public class SuperCompaniesController(
         {
             Name = dto.Name,
             Code = dto.Code ?? dto.Name.Replace(" ", "").ToUpper(),
-            Gstin = dto.Gstin,
+            Gstin = string.IsNullOrWhiteSpace(dto.Gstin) ? "NA" : dto.Gstin,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -33,16 +33,25 @@ public class SuperCompaniesController(
         await companyRepository.AddAsync(company);
 
         // Create Hierarchy: Company -> State -> District -> Local
+        var rootScope = await scopeRepository.GetRootScopeAsync();
+        
         var companyScope = new ScopeNode
         {
             ScopeType = ScopeType.Company,
             CompanyId = company.Id,
+            ParentScopeNodeId = rootScope?.Id, // Link to System Root
             IsActive = true
         };
         await scopeRepository.AddAsync(companyScope);
 
         // State
-        var state = new LocationState { Name = $"{company.Name} - Main State", CountryId = 1 };
+        var countries = await locationRepository.GetAllCountriesAsync();
+        var defaultCountry = countries.FirstOrDefault();
+        
+        if (defaultCountry == null)
+            return BadRequest(ApiResponse<dynamic>.Fail(new ErrorDetail("400", "No countries found in master data. Please seed LocationCountries first."), "Setup incomplete"));
+
+        var state = new LocationState { Name = $"{company.Name} - Main State", CountryId = defaultCountry.Id };
         await locationRepository.AddStateAsync(state);
 
         var stateScope = new ScopeNode

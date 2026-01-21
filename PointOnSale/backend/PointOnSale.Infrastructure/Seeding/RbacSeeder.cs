@@ -38,6 +38,15 @@ public class RbacSeeder(PosDbContext dbContext, ILogger<RbacSeeder> logger)
                 existingRoles.Add(r.Code, r); // Add to local dict for next step
                 summary.Add($"Added Role: {r.Code}");
             }
+            else
+            {
+                var existingRole = existingRoles[r.Code];
+                if (existingRole.ScopeType != r.ScopeType)
+                {
+                    existingRole.ScopeType = r.ScopeType;
+                    summary.Add($"Updated Role ScopeType: {r.Code} -> {r.ScopeType}");
+                }
+            }
         }
         await dbContext.SaveChangesAsync();
 

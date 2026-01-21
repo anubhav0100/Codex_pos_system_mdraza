@@ -6,5 +6,5 @@ public class UpdateScopeDto
 {
     [Required]
     [MaxLength(120)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }

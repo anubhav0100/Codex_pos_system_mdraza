@@ -22,7 +22,8 @@ import {
 
 const companySchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
-    gstin: z.string().optional(),
+    code: z.string().optional().or(z.literal('')),
+    gstin: z.string().optional().or(z.literal('')),
     status: z.enum(['ACTIVE', 'INACTIVE']),
 })
 
@@ -39,6 +40,7 @@ export function CompanyForm({ initialValues, onSubmit, isLoading }: CompanyFormP
         resolver: zodResolver(companySchema),
         defaultValues: {
             name: initialValues?.name || '',
+            code: (initialValues as any)?.code || '',
             gstin: initialValues?.gstin || '',
             status: initialValues?.status || 'ACTIVE',
         },
@@ -56,6 +58,21 @@ export function CompanyForm({ initialValues, onSubmit, isLoading }: CompanyFormP
                             <FormControl>
                                 <Input placeholder='Enter company name' {...field} />
                             </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name='code'
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Company Code (Optional)</FormLabel>
+                            <FormControl>
+                                <Input placeholder='Enter code (e.g. MSFT)' {...field} />
+                            </FormControl>
+                            <FormDescription>Unique identifier for invoices. Auto-generated if blank.</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

@@ -51,7 +51,7 @@ const findScope = (nodes: ScopeNode[], id: number | null): ScopeNode | null => {
 const selectClassName =
   'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
 
-const scopeTypeIcons: Record<string, JSX.Element> = {
+const scopeTypeIcons: Record<string, React.JSX.Element> = {
   '1': <Boxes className='h-4 w-4 text-muted-foreground' />,
   '2': <Map className='h-4 w-4 text-muted-foreground' />,
   '3': <Map className='h-4 w-4 text-muted-foreground' />,
@@ -213,9 +213,8 @@ export default function ProductAssignmentsPage() {
       <button
         type='button'
         onClick={() => setSelectedScopeId(node.id)}
-        className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm transition ${
-          selectedScope?.id === node.id ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-secondary/50'
-        }`}
+        className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm transition ${selectedScope?.id === node.id ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-secondary/50'
+          }`}
         style={{ paddingLeft: `${depth * 16 + 12}px` }}
       >
         {scopeTypeIcons[String(node.scopeType)] ?? <Boxes className='h-4 w-4 text-muted-foreground' />}
@@ -425,8 +424,8 @@ export default function ProductAssignmentsPage() {
                 Effective price:{' '}
                 {formatAmount(
                   parsePriceOverride(assignPriceOverride) ??
-                    selectedProduct?.defaultSalePrice ??
-                    null,
+                  selectedProduct?.defaultSalePrice ??
+                  null,
                 )}
               </p>
             </div>

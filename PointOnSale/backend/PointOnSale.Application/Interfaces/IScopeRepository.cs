@@ -5,6 +5,8 @@ namespace PointOnSale.Application.Interfaces;
 public interface IScopeRepository
 {
     Task<List<ScopeNode>> GetAllByCompanyIdAsync(int companyId, CancellationToken cancellationToken = default);
+    Task<List<ScopeNode>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<ScopeNode?> GetRootScopeAsync(CancellationToken cancellationToken = default);
     Task<ScopeNode?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<ScopeNode> AddAsync(ScopeNode scopeNode, CancellationToken cancellationToken = default);
     Task<ScopeNode> AddStateScopeAsync(ScopeNode scope, LocationState state, CancellationToken cancellationToken = default);

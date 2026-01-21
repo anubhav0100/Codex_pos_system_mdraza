@@ -6,7 +6,7 @@ public class ScopeNodeDto
 {
     public int Id { get; set; }
     public ScopeType ScopeType { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     
     public int? ParentId { get; set; }

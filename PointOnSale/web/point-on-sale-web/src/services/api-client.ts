@@ -35,6 +35,11 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
+    // Check for Subscription Expired Error
+    if (error.response?.data?.error?.code === 'SUBSCRIPTION_EXPIRED') {
+      window.dispatchEvent(new Event('subscription-expired'))
+    }
+
     if (error.response?.status === 401) {
       useAuthStore.getState().logout()
       if (!window.location.pathname.includes('login')) {
