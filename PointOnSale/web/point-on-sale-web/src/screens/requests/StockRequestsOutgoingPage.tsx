@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { stockRequestsService, type CreateStockRequestDto, type StockRequestStatus } from '@/services/company/stock-requests-service'
+import { productsService } from '@/services/company/products-service'
 
 const selectClassName =
   'h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
@@ -51,6 +52,11 @@ export default function StockRequestsOutgoingPage() {
         scope: 'mine',
         status: statusFilter === 'ALL' ? undefined : statusFilter,
       }),
+  })
+
+  const { data: products = [] } = useQuery({
+    queryKey: ['products'],
+    queryFn: productsService.getProducts,
   })
 
   const createMutation = useMutation({
@@ -234,9 +240,9 @@ export default function StockRequestsOutgoingPage() {
           ) : (
             <div className='grid gap-4'>
               <div>
-                <label className='text-sm font-medium text-muted-foreground'>Product ID</label>
-                <Input
-                  placeholder='Product ID'
+                <label className='text-sm font-medium text-muted-foreground'>Product</label>
+                <select
+                  className={selectClassName}
                   value={requestForm.productId}
                   onChange={(event) =>
                     setRequestForm((prev) => ({
@@ -244,7 +250,14 @@ export default function StockRequestsOutgoingPage() {
                       productId: event.target.value,
                     }))
                   }
-                />
+                >
+                  <option value=''>Select Product</option>
+                  {products.map((product) => (
+                    <option key={product.id} value={product.id}>
+                      {product.name} ({product.sku})
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className='text-sm font-medium text-muted-foreground'>Quantity</label>

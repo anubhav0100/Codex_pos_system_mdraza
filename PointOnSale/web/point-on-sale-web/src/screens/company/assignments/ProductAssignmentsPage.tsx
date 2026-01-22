@@ -111,7 +111,14 @@ export default function ProductAssignmentsPage() {
     assignments.forEach((assignment) => {
       nextOverrides[assignment.id] = assignment.priceOverride?.toString() ?? ''
     })
-    setPriceOverrides(nextOverrides)
+
+    // Check if distinct before setting to prevent infinite loop
+    setPriceOverrides(prev => {
+      if (JSON.stringify(prev) === JSON.stringify(nextOverrides)) {
+        return prev
+      }
+      return nextOverrides
+    })
   }, [assignments])
 
   useEffect(() => {

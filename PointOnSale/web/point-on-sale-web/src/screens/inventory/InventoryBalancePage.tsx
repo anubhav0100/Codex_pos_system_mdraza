@@ -13,6 +13,11 @@ import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { inventoryService, type InventoryAdjustPayload } from '@/services/company/inventory-service'
+import { productsService } from '@/services/company/products-service'
+import { scopesService, type ScopeNode } from '@/services/company/scopes-service'
+
+const flattenScopes = (nodes: ScopeNode[]): ScopeNode[] =>
+  nodes.flatMap((node) => [node, ...(node.children ? flattenScopes(node.children) : [])])
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value)
@@ -52,6 +57,18 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
       scopeNodeId: scopeFilter,
     }))
   }, [scopeFilter])
+
+  const { data: tree = [] } = useQuery({
+    queryKey: ['scopes-tree'],
+    queryFn: scopesService.getTree,
+  })
+
+  const { data: products = [] } = useQuery({
+    queryKey: ['products'],
+    queryFn: productsService.getProducts,
+  })
+
+  const allScopes = useMemo(() => flattenScopes(tree), [tree])
 
   const { data: balances = [], isLoading } = useQuery({
     queryKey: ['inventory-balance', scopeFilter],
@@ -208,8 +225,8 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
           <div className='grid gap-4'>
             <div>
               <label className='text-sm font-medium text-muted-foreground'>Scope Node</label>
-              <Input
-                placeholder='Scope node ID'
+              <select
+                className={selectClassName}
                 value={adjustForm.scopeNodeId}
                 onChange={(event) =>
                   setAdjustForm((prev) => ({
@@ -217,12 +234,19 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
                     scopeNodeId: event.target.value,
                   }))
                 }
-              />
+              >
+                <option value=''>Select Scope</option>
+                {allScopes.map((node) => (
+                  <option key={node.id} value={node.id}>
+                    {node.name} ({node.scopeType})
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
-              <label className='text-sm font-medium text-muted-foreground'>Product ID</label>
-              <Input
-                placeholder='Product ID'
+              <label className='text-sm font-medium text-muted-foreground'>Product</label>
+              <select
+                className={selectClassName}
                 value={adjustForm.productId}
                 onChange={(event) =>
                   setAdjustForm((prev) => ({
@@ -230,7 +254,14 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
                     productId: event.target.value,
                   }))
                 }
-              />
+              >
+                <option value=''>Select Product</option>
+                {products.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name} ({product.sku})
+                  </option>
+                ))}
+              </select>
             </div>
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
