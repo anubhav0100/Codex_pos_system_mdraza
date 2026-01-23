@@ -28,52 +28,63 @@ export const Header: React.FC = () => {
                 left: 0,
                 right: 0,
                 zIndex: 50,
-                backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
+                backgroundColor: isScrolled ? 'rgba(255, 250, 245, 0.92)' : 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
                 boxShadow: isScrolled ? 'var(--shadow-md)' : 'none',
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 padding: isScrolled ? '0.75rem 0' : '1.5rem 0',
-                borderBottom: isScrolled ? '1px solid var(--glass-border)' : '1px solid transparent',
+                borderBottom: isScrolled ? '1px solid var(--accent-color)' : '1px solid transparent',
             }}
         >
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
+                        fontFamily: "'Playfair Display', serif",
+                        fontSize: '1.75rem',
+                        fontWeight: 700,
                         color: 'var(--primary-dark)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem'
+                        gap: '0.75rem',
+                        letterSpacing: '-0.02em'
                     }}
                 >
-                    {/* Simple Logo Icon */}
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M12 8V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    {/* Leaf/Ayurveda Logo Icon */}
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21C12 21 16 20 19 16C22 12 22 7 22 7C22 7 17 7 13 10C9 13 8 17 8 17" stroke="var(--primary-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M12 21C12 21 8 20 5 16C2 12 2 7 2 7C2 7 7 7 11 10C15 13 16 17 16 17" stroke="var(--primary-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Nirogya Health
+                    Nirogya <span style={{ color: 'var(--accent-color)', fontStyle: 'italic' }}>Ayurveda</span>
                 </div>
 
                 {/* Desktop Navigation */}
-                <nav style={{ display: 'none', gap: '2rem' }} className="desktop-nav">
+                <nav style={{ display: 'none', gap: '2.5rem' }} className="desktop-nav">
                     {['Home', 'Products', 'About', 'Contact'].map((item) => (
                         <button
                             key={item}
                             onClick={() => scrollToSection(item.toLowerCase())}
                             style={{
-                                background: 'none',
+                                background: 'transparent',
+                                border: 'none',
                                 fontSize: '1rem',
                                 color: 'var(--text-dark)',
-                                fontWeight: 500,
-                                transition: 'color 0.2s',
+                                fontWeight: 600,
+                                transition: 'all 0.2s ease',
+                                padding: '0.5rem 0',
+                                cursor: 'pointer',
+                                position: 'relative'
                             }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary-color)')}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-dark)')}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--primary-color)';
+                                e.currentTarget.style.transform = 'translateY(-1px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--text-dark)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }}
                         >
                             {item}
                         </button>
@@ -117,11 +128,14 @@ export const Header: React.FC = () => {
                             key={item}
                             onClick={() => scrollToSection(item.toLowerCase())}
                             style={{
-                                background: 'none',
+                                background: 'transparent',
+                                border: 'none',
                                 fontSize: '1.125rem',
                                 padding: '0.5rem',
                                 textAlign: 'left',
                                 color: 'var(--text-dark)',
+                                width: '100%',
+                                cursor: 'pointer'
                             }}
                         >
                             {item}

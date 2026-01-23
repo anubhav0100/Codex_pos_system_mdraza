@@ -1,39 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 :root {
-  --primary-color: #0ea5e9;
-  --primary-light: #e0f2fe;
-  --primary-dark: #0369a1;
-  --accent-color: #f43f5e;
-  --secondary-color: #f8fafc;
-  --text-dark: #0f172a;
-  --text-light: #64748b;
+  /* Ayurvedic Color Palette */
+  --primary-color: #15803d;
+  /* Natural Green */
+  --primary-light: #f0fdf4;
+  /* Pale Herbal Green */
+  --primary-dark: #14532d;
+  /* Deep Moss */
+  --accent-color: #b45309;
+  /* Antiqued Gold */
+  --secondary-color: #fcfaf8;
+  /* Warm Paper/Cream */
+  --text-dark: #292524;
+  /* Earth Brown */
+  --text-light: #57534e;
+  /* Stone Grey */
   --white: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Glassmorphism Variables modified for warmer tone */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(180, 83, 9, 0.15);
+  /* Subtle Gold border */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(41 37 36 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(41 37 36 / 0.1), 0 2px 4px -2px rgb(41 37 36 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(41 37 36 / 0.1), 0 4px 6px -4px rgb(41 37 36 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(41 37 36 / 0.1), 0 8px 10px -6px rgb(41 37 36 / 0.1);
+
+  font-family: 'Lato', sans-serif;
   line-height: 1.6;
   font-weight: 400;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: #fcfaf8;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(21, 128, 61, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(180, 83, 9, 0.05) 0px, transparent 50%);
   color: var(--text-dark);
   min-height: 100vh;
 }
 
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 0;
+}
+
 .section-title {
   text-align: center;
-  font-size: 3rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
   margin-bottom: 1.5rem;
-  color: var(--text-dark);
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-dark);
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title::after {
+  content: "❧";
+  display: block;
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-top: 0.5rem;
+  opacity: 0.8;
 }
 
 .glass-panel {
@@ -48,22 +102,25 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem 2rem;
+  padding: 1rem 2.5rem;
   font-weight: 600;
   border-radius: 9999px;
   transition: all 0.3s ease;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: 0.875rem;
+  font-family: 'Lato', sans-serif;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: var(--white);
-  box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.39);
+  box-shadow: 0 4px 14px 0 rgba(21, 128, 61, 0.39);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px 0 rgba(14, 165, 233, 0.23);
+  box-shadow: 0 6px 20px 0 rgba(21, 128, 61, 0.23);
+  background: linear-gradient(135deg, var(--accent-color), #9a3412);
 }

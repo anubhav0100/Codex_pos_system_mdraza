@@ -102,9 +102,9 @@ export const ProductList: React.FC = () => {
             }} />
 
             <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                <h2 className="section-title">Our Premium Collection</h2>
-                <p className="section-subtitle" style={{ maxWidth: '600px', margin: '0 auto 4rem' }}>
-                    Discover our range of scientifically formulated healthcare products designed for your well-being.
+                <h2 className="section-title">Nature's Finest Collection</h2>
+                <p className="section-subtitle" style={{ maxWidth: '600px', margin: '0 auto 4rem', fontFamily: "'Lato', sans-serif" }}>
+                    Explore our range of time-honored herbal remedies, crafted for balance and vitality.
                 </p>
 
                 <div style={{
@@ -198,26 +198,30 @@ export const ProductList: React.FC = () => {
                                 <div style={{ marginTop: 'auto' }}>
                                     <button style={{
                                         background: 'transparent',
-                                        border: '1px solid var(--primary-color)',
-                                        color: 'var(--primary-dark)',
+                                        border: '1px solid var(--accent-color)', // Gold border
+                                        color: 'var(--accent-color)', // Gold Text
                                         padding: '0.75rem 0',
                                         width: '100%',
                                         borderRadius: '0.75rem',
                                         fontWeight: 600,
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        fontSize: '0.9rem'
+                                        transition: 'all 0.3s ease',
+                                        fontSize: '0.9rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.05em'
                                     }}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.background = 'var(--primary-color)';
                                             e.currentTarget.style.color = 'white';
+                                            e.currentTarget.style.border = '1px solid var(--primary-color)';
                                         }}
                                         onMouseLeave={(e) => {
                                             e.currentTarget.style.background = 'transparent';
-                                            e.currentTarget.style.color = 'var(--primary-dark)';
+                                            e.currentTarget.style.color = 'var(--accent-color)';
+                                            e.currentTarget.style.border = '1px solid var(--accent-color)';
                                         }}
                                     >
-                                        View Details
+                                        Discover Benefits
                                     </button>
                                 </div>
                             </div>

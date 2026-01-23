@@ -3,21 +3,21 @@ import React, { useState, useEffect } from 'react';
 const slides = [
     {
         id: 1,
-        image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=2070',
-        title: 'Advanced Healthcare Solutions',
-        subtitle: 'Providing top-quality medical equipment for better patient care.',
+        image: 'https://images.unsplash.com/photo-1544367563-12123d8965cd?auto=format&fit=crop&q=80&w=2070',
+        title: 'Ancient Wisdom, Modern Healing',
+        subtitle: 'Experience the power of authentic Ayurveda for holistic wellness.',
     },
     {
         id: 2,
-        image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=2070',
-        title: 'Expert Medical Advice',
-        subtitle: 'Consult with our specialists for a healthier tomorrow.',
+        image: 'https://images.unsplash.com/photo-1628088306391-1631cdd36e7c?auto=format&fit=crop&q=80&w=2070',
+        title: 'Pure & Natural Ingredients',
+        subtitle: 'Hand-picked herbs carefully processed to preserve nature’s potency.',
     },
     {
         id: 3,
-        image: 'https://images.unsplash.com/photo-1584036561566-b9370001e95e?auto=format&fit=crop&q=80&w=2070',
-        title: 'Modern Diagnostic Tools',
-        subtitle: 'Precision and accuracy in every diagnosis.',
+        image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2070',
+        title: 'Holistic Wellness Journey',
+        subtitle: 'Restore balance to your body, mind, and soul with our premium formulations.',
     },
 ];
 
@@ -66,7 +66,7 @@ export const HeroSlider: React.FC = () => {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            background: 'linear-gradient(to right, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.4) 100%)',
+                            background: 'linear-gradient(to right, rgba(20, 83, 45, 0.9) 0%, rgba(20, 83, 45, 0.4) 100%)',
                         }} />
                     </div>
 
@@ -83,17 +83,24 @@ export const HeroSlider: React.FC = () => {
                         zIndex: 20,
                     }}>
                         <h1 style={{
-                            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                            fontFamily: "'Playfair Display', serif",
+                            fontSize: 'clamp(3rem, 6vw, 5rem)',
                             marginBottom: '1.5rem',
-                            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                            textShadow: '0 4px 8px rgba(0,0,0,0.4)',
+                            fontWeight: 700,
+                            letterSpacing: '-0.02em',
+                            color: '#fbbf24' /* Slight gold tint */
                         }}>
                             {slide.title}
                         </h1>
                         <p style={{
-                            fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
+                            fontFamily: "'Lato', sans-serif",
+                            fontSize: 'clamp(1.2rem, 2vw, 1.6rem)',
                             marginBottom: '2.5rem',
                             maxWidth: '800px',
-                            textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                            textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                            fontWeight: 300,
+                            letterSpacing: '0.05em'
                         }}>
                             {slide.subtitle}
                         </p>
