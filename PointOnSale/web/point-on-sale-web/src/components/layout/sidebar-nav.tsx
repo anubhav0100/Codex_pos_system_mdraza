@@ -1,15 +1,22 @@
 import { NavLink } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useState } from 'react'
 import { useAuthStore } from '@/store/use-auth-store'
 import { MENU_ITEMS } from '@/config/menu-config'
+import { useNavigate } from 'react-router-dom'
 
 export function SidebarNav() {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const { userProfile, hasPermission } = useAuthStore()
+  const { userProfile, hasPermission, logout } = useAuthStore()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
     if (userProfile && !item.allowedScopes.includes(userProfile.scopeType)) {
@@ -74,24 +81,36 @@ export function SidebarNav() {
       </ScrollArea>
 
       <div className='p-4 border-t'>
-        <div className={cn('flex items-center gap-3', isCollapsed ? 'justify-center' : 'px-2')}>
-          <div className='w-8 h-8 rounded-full bg-secondary flex items-center justify-center font-bold text-xs uppercase'>
-            {userProfile?.fullName
-              ?.split(' ')
-              .map((n) => n[0])
-              .join('')
-              .toUpperCase() || 'JD'}
-          </div>
-          {!isCollapsed && (
-            <div className='flex flex-col overflow-hidden'>
-              <span className='text-sm font-medium truncate'>
-                {userProfile?.fullName || 'John Doe'}
-              </span>
-              <span className='text-xs text-muted-foreground truncate'>
-                {userProfile?.roles?.[0] || 'User'}
-              </span>
+        <div className={cn('flex items-center justify-between', isCollapsed ? 'flex-col gap-4' : 'gap-3')}>
+          <div className={cn('flex items-center gap-3', isCollapsed && 'justify-center')}>
+            <div className='w-8 h-8 rounded-full bg-secondary flex items-center justify-center font-bold text-xs uppercase shrink-0'>
+              {userProfile?.fullName
+                ?.split(' ')
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase() || 'JD'}
             </div>
-          )}
+            {!isCollapsed && (
+              <div className='flex flex-col overflow-hidden'>
+                <span className='text-sm font-medium truncate'>
+                  {userProfile?.fullName || 'John Doe'}
+                </span>
+                <span className='text-xs text-muted-foreground truncate'>
+                  {userProfile?.roles?.[0] || 'User'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+            onClick={handleLogout}
+            title="Log out"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </aside>

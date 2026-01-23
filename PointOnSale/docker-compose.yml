@@ -32,6 +32,15 @@ services:
     networks:
       - pos-network
 
+  nirogya-website:
+    build:
+      context: ../nirogya-health-care
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    networks:
+      - pos-network
+
 networks:
   pos-network:
     driver: bridge
