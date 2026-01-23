@@ -124,3 +124,12 @@ button {
   box-shadow: 0 6px 20px 0 rgba(21, 128, 61, 0.23);
   background: linear-gradient(135deg, var(--accent-color), #9a3412);
 }
+
+.section {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.section+.section {
+  padding-top: 0;
+}
