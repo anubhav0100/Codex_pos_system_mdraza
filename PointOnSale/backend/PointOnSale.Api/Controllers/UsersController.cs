@@ -24,7 +24,7 @@ public class UsersController(
         // If not present, we might look up via user ID, but token should have context.
         // For SuperAdmin, this might vary.
         // Let's assume we extract "scopeId" claim.
-        var claim = User.Claims.FirstOrDefault(c => c.Type == "scopeId");
+        var claim = User.Claims.FirstOrDefault(c => c.Type == "ScopeNodeId");
         if (claim != null && int.TryParse(claim.Value, out int id))
         {
             return id;

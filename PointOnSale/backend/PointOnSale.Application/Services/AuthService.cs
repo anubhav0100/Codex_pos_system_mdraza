@@ -81,7 +81,7 @@ public class AuthService(
             new("companyId", companyId.ToString()),
         };
 
-        if (scopeNodeId.HasValue) claims.Add(new("scopeNodeId", scopeNodeId.Value.ToString()));
+        if (scopeNodeId.HasValue) claims.Add(new("ScopeNodeId", scopeNodeId.Value.ToString()));
         if (scopeType.HasValue) claims.Add(new("scopeType", scopeType.Value.ToString()));
 
         foreach (var role in roles)
