@@ -45,7 +45,7 @@ export default function FundTransferPage() {
             setSelectedRequestId(null)
             queryClient.invalidateQueries({ queryKey: ['fund-requests'] })
         },
-        onError: (err: any) => toast.error('Failed to reject request'),
+        onError: () => toast.error('Failed to reject request'),
     })
 
     const handleApprove = (id: number) => {

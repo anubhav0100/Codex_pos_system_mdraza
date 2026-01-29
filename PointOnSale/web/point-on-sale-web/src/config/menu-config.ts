@@ -13,7 +13,6 @@ import {
     ShieldCheck,
     Map,
     ShoppingCart,
-    ShoppingCart,
     Tags,
     ArrowRightLeft,
 } from 'lucide-react'

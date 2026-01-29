@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Plus } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
+
 import { toast } from 'sonner'
 
 import { PageHeader } from '@/components/ui/page-header'
@@ -17,7 +17,6 @@ const formatCurrency = (val: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val)
 
 export default function FundRequestsPage() {
-    const navigate = useNavigate()
     const queryClient = useQueryClient()
     const [createOpen, setCreateOpen] = useState(false)
 
@@ -41,6 +40,13 @@ export default function FundRequestsPage() {
         queryFn: () => fundRequestsService.getMyRequests(false),
     })
 
+    // export default function FundRequestsPage() {
+    //     const queryClient = useQueryClient()
+    // ... 
+    // Let's replace the whole function start or just the specific lines.
+    // Step 933 failed because it tried to replace a large chunk and missed context?
+    // I'll replace specific lines.
+
     const createMutation = useMutation({
         mutationFn: (payload: CreateFundRequestDto) => fundRequestsService.createRequest(payload),
         onSuccess: () => {
@@ -48,7 +54,7 @@ export default function FundRequestsPage() {
             setCreateOpen(false)
             queryClient.invalidateQueries({ queryKey: ['fund-requests'] })
         },
-        onError: (err) => toast.error('Failed to create request'),
+        onError: () => toast.error('Failed to create request'),
     })
 
     const handleSubmit = () => {

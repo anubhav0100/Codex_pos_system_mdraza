@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom'
+
 import { PageHeader } from '@/components/ui/page-header'
-import WalletsLedgerPage from './WalletsLedgerPage' // Reuse the ledger logic but we might need to filter it.
+
 
 // For now, let's reuse WalletsLedgerPage but wrap it or customize it.
 // Actually, WalletsLedgerPage fetches ledger for a "walletId". 

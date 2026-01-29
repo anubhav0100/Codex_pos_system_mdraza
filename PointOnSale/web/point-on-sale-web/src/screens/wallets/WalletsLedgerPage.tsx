@@ -39,7 +39,7 @@ export default function WalletsLedgerPage() {
 
   useEffect(() => {
     if (!selectedWalletId && wallets.length > 0) {
-      const initialWallet = wallets[0].walletId
+      const initialWallet = String(wallets[0].id)
       setSelectedWalletId(initialWallet)
       setSearchParams({ walletId: initialWallet }, { replace: true })
     }
@@ -83,24 +83,29 @@ export default function WalletsLedgerPage() {
             <DataTableCell isHeader>Date</DataTableCell>
             <DataTableCell isHeader>Type</DataTableCell>
             <DataTableCell isHeader>Amount</DataTableCell>
-            <DataTableCell isHeader>Balance</DataTableCell>
             <DataTableCell isHeader>Reference</DataTableCell>
+            <DataTableCell isHeader>Notes</DataTableCell>
           </DataTableRow>
         </thead>
         <tbody>
-          {ledger.map((entry) => (
-            <DataTableRow key={entry.id}>
-              <DataTableCell className='text-foreground'>{formatDate(entry.createdAt)}</DataTableCell>
-              <DataTableCell>
-                <Badge variant={entry.entryType === 'DEBIT' ? 'secondary' : 'default'}>
-                  {entry.entryType}
-                </Badge>
-              </DataTableCell>
-              <DataTableCell className='text-foreground'>{formatCurrency(entry.amount)}</DataTableCell>
-              <DataTableCell className='text-foreground'>{formatCurrency(entry.balance)}</DataTableCell>
-              <DataTableCell className='text-foreground'>{entry.reference || '-'}</DataTableCell>
-            </DataTableRow>
-          ))}
+          {ledger.map((entry) => {
+            const isDebit = entry.fromWalletId === Number(selectedWalletId)
+            const typeLabel = isDebit ? 'DEBIT' : 'CREDIT'
+
+            return (
+              <DataTableRow key={entry.id}>
+                <DataTableCell className='text-foreground'>{formatDate(entry.createdAt)}</DataTableCell>
+                <DataTableCell>
+                  <Badge variant={isDebit ? 'secondary' : 'default'}>
+                    {typeLabel}
+                  </Badge>
+                </DataTableCell>
+                <DataTableCell className='text-foreground'>{formatCurrency(entry.amount)}</DataTableCell>
+                <DataTableCell className='text-foreground'>{entry.refType} #{entry.refId}</DataTableCell>
+                <DataTableCell className='text-foreground'>{entry.notes || '-'}</DataTableCell>
+              </DataTableRow>
+            )
+          })}
         </tbody>
       </DataTable>
     )
@@ -125,7 +130,7 @@ export default function WalletsLedgerPage() {
               }}
             >
               {wallets.map((wallet) => (
-                <option key={wallet.walletId} value={wallet.walletId}>
+                <option key={wallet.id} value={wallet.id}>
                   {walletLabels[wallet.walletType] ?? wallet.walletType}
                 </option>
               ))}
