@@ -30,6 +30,13 @@ public class InventoryController(
     public async Task<ActionResult<ApiResponse<List<InventoryBalanceDto>>>> GetBalance([FromQuery] int scopeNodeId)
     {
         int myScopeId = GetUserScopeId();
+
+        // If no scope provided (0), and user has a scope (e.g. Company), default to their scope.
+        if (scopeNodeId == 0 && myScopeId != 0)
+        {
+            scopeNodeId = myScopeId;
+        }
+
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, scopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Scope"), "Forbidden"));
 
@@ -51,6 +58,12 @@ public class InventoryController(
     public async Task<ActionResult<ApiResponse<List<InventoryLedgerDto>>>> GetLedger([FromQuery] int scopeNodeId, [FromQuery] int? productId)
     {
         int myScopeId = GetUserScopeId();
+
+        if (scopeNodeId == 0 && myScopeId != 0)
+        {
+            scopeNodeId = myScopeId;
+        }
+
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, scopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Scope"), "Forbidden"));
 

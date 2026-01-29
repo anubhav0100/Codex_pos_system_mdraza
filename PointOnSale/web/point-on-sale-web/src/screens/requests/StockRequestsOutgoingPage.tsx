@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { stockRequestsService, type CreateStockRequestDto, type StockRequestStatus } from '@/services/company/stock-requests-service'
 import { productsService } from '@/services/company/products-service'
+import { scopesService, type ScopeNode } from '@/services/company/scopes-service'
 
 const selectClassName =
   'h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
@@ -31,6 +32,15 @@ const statusOptions: { label: string; value: StockRequestStatus | 'ALL' }[] = [
   { label: 'Fulfilled', value: 'FULFILLED' },
 ]
 
+const flattenScopes = (nodes: ScopeNode[]): ScopeNode[] =>
+  nodes.flatMap((node) => [node, ...(node.children ? flattenScopes(node.children) : [])])
+
+const scopeTypeMap: Record<string, number> = {
+  company: 1,
+  state: 2,
+  district: 3,
+}
+
 export default function StockRequestsOutgoingPage() {
   const queryClient = useQueryClient()
   const [statusFilter, setStatusFilter] = useState<StockRequestStatus | 'ALL'>('ALL')
@@ -44,6 +54,22 @@ export default function StockRequestsOutgoingPage() {
     quantity: '',
     notes: '',
   })
+
+  const { data: tree = [] } = useQuery({
+    queryKey: ['scopes-tree'],
+    queryFn: scopesService.getTree,
+  })
+
+  // Flatten scopes for easy filtering
+  const allScopes = useMemo(() => flattenScopes(tree), [tree])
+
+  // Filter scopes based on selected type
+  const availableSupplierScopes = useMemo(() => {
+    const targetType = scopeTypeMap[requestForm.supplierScopeType]
+    if (!targetType) return []
+    // Ensure loose comparison or string conversion match as scopeType might be string/number
+    return allScopes.filter(scope => Number(scope.scopeType) === targetType)
+  }, [allScopes, requestForm.supplierScopeType])
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['stock-requests', 'outgoing', statusFilter],
@@ -202,6 +228,7 @@ export default function StockRequestsOutgoingPage() {
                     setRequestForm((prev) => ({
                       ...prev,
                       supplierScopeType: event.target.value,
+                      supplierScopeNodeId: '', // Reset node on type change
                     }))
                   }
                 >
@@ -212,8 +239,8 @@ export default function StockRequestsOutgoingPage() {
               </div>
               <div>
                 <label className='text-sm font-medium text-muted-foreground'>Supplier Scope Node</label>
-                <Input
-                  placeholder='Supplier scope node ID'
+                <select
+                  className={selectClassName}
                   value={requestForm.supplierScopeNodeId}
                   onChange={(event) =>
                     setRequestForm((prev) => ({
@@ -221,7 +248,18 @@ export default function StockRequestsOutgoingPage() {
                       supplierScopeNodeId: event.target.value,
                     }))
                   }
-                />
+                >
+                  <option value=''>Select {requestForm.supplierScopeType}</option>
+                  {availableSupplierScopes.length === 0 ? (
+                    <option value='' disabled>No scopes found</option>
+                  ) : (
+                    availableSupplierScopes.map((scope) => (
+                      <option key={scope.id} value={scope.id}>
+                        {scope.name}
+                      </option>
+                    ))
+                  )}
+                </select>
               </div>
               <div>
                 <label className='text-sm font-medium text-muted-foreground'>Supplier Name</label>

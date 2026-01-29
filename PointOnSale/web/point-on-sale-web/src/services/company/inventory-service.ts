@@ -46,7 +46,7 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 
 export const inventoryService = {
   getBalance: async (scopeNodeId?: string) => {
-    const response = await apiClient.get<ApiResponse<InventoryBalanceItem[]> | InventoryBalanceItem[]>(
+    const response = await apiClient.get<ApiResponse<any[]> | any[]>(
       'inventory/balance',
       {
         params: {
@@ -54,7 +54,17 @@ export const inventoryService = {
         },
       },
     )
-    return unwrapResponse(response)
+    const rawData = unwrapResponse(response)
+    // Transform API response (camelCase/backend properties) to UI properties
+    return rawData.map((item: any) => ({
+      scopeNodeId: item.scopeNodeId,
+      productId: item.productId,
+      productName: item.productName,
+      sku: item.productSKU,        // Map productSKU -> sku
+      onHand: item.qtyOnHand,      // Map qtyOnHand -> onHand
+      reserved: 0,                 // Default to 0 as backend doesn't support it yet
+      available: item.qtyOnHand,   // Available = OnHand - Reserved (0)
+    })) as InventoryBalanceItem[]
   },
   getLedger: async ({ scopeNodeId, productId }: { scopeNodeId?: string; productId: string }) => {
     const response = await apiClient.get<ApiResponse<InventoryLedgerEntry[]> | InventoryLedgerEntry[]>(
