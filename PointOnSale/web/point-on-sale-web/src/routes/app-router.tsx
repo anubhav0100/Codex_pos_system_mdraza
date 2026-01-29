@@ -82,7 +82,7 @@ const router = createBrowserRouter([
           {
             path: ':id/admins',
             element: (
-              <ProtectedRoute requiredPermission='COMPANY_ADMINS_READ'>
+              <ProtectedRoute requiredPermission='COMPANY_ADMINS_VIEW'>
                 <CompanyAdminsPage />
               </ProtectedRoute>
             ),
@@ -92,7 +92,7 @@ const router = createBrowserRouter([
       {
         path: 'super/subscription-plans',
         element: (
-          <ProtectedRoute requiredPermission='SUBSCRIPTIONS_READ'>
+          <ProtectedRoute requiredPermission='SUBSCRIPTIONS_VIEW'>
             <SubscriptionPlansPage />
           </ProtectedRoute>
         ),
@@ -173,7 +173,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              <ProtectedRoute requiredPermission='PRODUCTS_READ'>
+              <ProtectedRoute requiredPermission='PRODUCTS_VIEW'>
                 <ProductsListPage />
               </ProtectedRoute>
             ),
@@ -199,7 +199,7 @@ const router = createBrowserRouter([
       {
         path: 'categories',
         element: (
-          <ProtectedRoute requiredPermission='PRODUCT_CATEGORIES_READ'>
+          <ProtectedRoute requiredPermission='PRODUCT_CATEGORIES_VIEW'>
             <CategoriesPage />
           </ProtectedRoute>
         ),
@@ -278,7 +278,7 @@ const router = createBrowserRouter([
       {
         path: 'wallets/fund',
         element: (
-          <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+          <ProtectedRoute requiredPermission='WALLET_ACCOUNTS_VIEW'>
             <FundWalletPage />
           </ProtectedRoute>
         ),
@@ -286,7 +286,7 @@ const router = createBrowserRouter([
       {
         path: 'wallets/income',
         element: (
-          <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+          <ProtectedRoute requiredPermission='WALLET_ACCOUNTS_VIEW'>
             <IncomeWalletPage />
           </ProtectedRoute>
         ),
@@ -294,7 +294,7 @@ const router = createBrowserRouter([
       {
         path: 'fund-requests',
         element: (
-          <ProtectedRoute requiredPermission='FUND_REQUESTS_CREATE'>
+          <ProtectedRoute requiredPermission='FUND_REQUESTS_VIEW'>
             <FundRequestsPage />
           </ProtectedRoute>
         ),
@@ -302,7 +302,7 @@ const router = createBrowserRouter([
       {
         path: 'fund-transfer',
         element: (
-          <ProtectedRoute requiredPermission='FUND_REQUESTS_APPROVE'>
+          <ProtectedRoute requiredPermission='FUND_REQUESTS_VIEW'>
             <FundTransferPage />
           </ProtectedRoute>
         ),
@@ -315,7 +315,7 @@ const router = createBrowserRouter([
       {
         path: 'invoices',
         element: (
-          <ProtectedRoute requiredPermission='INVOICES_READ'>
+          <ProtectedRoute requiredPermission='INVOICES_VIEW'>
             <InvoicesPage />
           </ProtectedRoute>
         ),
@@ -323,7 +323,7 @@ const router = createBrowserRouter([
       {
         path: 'reports',
         element: (
-          <ProtectedRoute requiredPermission='REPORTS_READ'>
+          <ProtectedRoute requiredPermission='REPORTS_VIEW'>
             <ReportsPage />
           </ProtectedRoute>
         ),
@@ -331,7 +331,7 @@ const router = createBrowserRouter([
       {
         path: 'audit-logs',
         element: (
-          <ProtectedRoute requiredPermission='AUDIT_LOGS_READ'>
+          <ProtectedRoute requiredPermission='AUDIT_LOGS_VIEW'>
             <AuditLogsPage />
           </ProtectedRoute>
         ),
