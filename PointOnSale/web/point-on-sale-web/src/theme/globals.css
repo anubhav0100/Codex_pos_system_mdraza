@@ -183,7 +183,11 @@
 /* Premium Effects */
 @layer components {
   .glass-card {
-    @apply bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
+    @apply bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl;
+  }
+
+  .premium-card {
+    @apply bg-white dark:bg-card rounded-2xl border border-border/50 shadow-xl shadow-black/5 dark:shadow-black/20 overflow-hidden;
   }
 
   .hover-scale {
@@ -196,7 +200,20 @@
   }
 
   .vibrant-button {
-    @apply transition-all duration-300 hover:scale-[1.05] active:scale-95 shadow-md hover:shadow-xl;
+    @apply transition-all duration-300 hover:scale-[1.05] active:scale-95 shadow-md hover:shadow-xl font-bold tracking-tight text-white;
+  }
+
+  /* Table Grid Lines */
+  .vivid-table {
+    @apply w-full border-collapse;
+  }
+
+  .vivid-table th {
+    @apply bg-muted/50 dark:bg-muted/20 border-b border-border;
+  }
+
+  .vivid-table td {
+    @apply border-b border-border/40;
   }
 }
 

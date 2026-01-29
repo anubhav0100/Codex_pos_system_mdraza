@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { cn } from '@/utils/utils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Boxes, CheckCircle2, Map, PackagePlus, Trash2, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -227,13 +228,22 @@ export default function ProductAssignmentsPage() {
       <button
         type='button'
         onClick={() => setSelectedScopeId(node.id)}
-        className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm transition ${selectedScope?.id === node.id ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-secondary/50'
+        className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm transition-all duration-300 group ${selectedScope?.id === node.id
+          ? 'bg-rainbow-blue/10 text-rainbow-blue shadow-[0_0_15px_rgba(var(--rainbow-blue),0.1)]'
+          : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
           }`}
         style={{ paddingLeft: `${depth * 16 + 12}px` }}
       >
-        {scopeTypeIcons[String(node.scopeType)] ?? <Boxes className='h-4 w-4 text-muted-foreground' />}
-        <span className='flex-1 truncate text-left'>{node.name}</span>
-        {!node.isActive && <Badge variant='secondary'>Inactive</Badge>}
+        <div className={cn(
+          'p-1.5 rounded-lg transition-colors',
+          selectedScope?.id === node.id ? 'bg-rainbow-blue text-white' : 'bg-secondary'
+        )}>
+          {scopeTypeIcons[String(node.scopeType)] ?? <Boxes className='h-4 w-4' />}
+        </div>
+        <span className={cn('flex-1 truncate text-left font-semibold', selectedScope?.id === node.id && 'text-rainbow-blue')}>
+          {node.name}
+        </span>
+        {!node.isActive && <Badge variant='secondary' className="opacity-50">Inactive</Badge>}
       </button>
       {node.children?.length ? node.children.map((child) => renderNode(child, depth + 1)) : null}
     </div>
@@ -242,8 +252,8 @@ export default function ProductAssignmentsPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Product Assignments'
-        description='Control which products are available and priced per scope.'
+        title={<span className="bg-gradient-to-r from-rainbow-blue via-rainbow-violet to-rainbow-red bg-clip-text text-transparent font-bold">Product Assignments</span>}
+        description='Control which products are available and priced per location/scope.'
       />
 
       <div className='grid gap-6 lg:grid-cols-[320px_1fr]'>
@@ -271,15 +281,15 @@ export default function ProductAssignmentsPage() {
         </Card>
 
         <Card className='premium-card'>
-          <CardHeader className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'>
+          <CardHeader className='flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between border-b border-border/10'>
             <div>
-              <CardTitle>Assigned Products</CardTitle>
+              <CardTitle className='text-rainbow-blue font-bold'>Assigned Products</CardTitle>
               <p className='text-sm text-muted-foreground'>
                 {selectedScope ? `Scope: ${selectedScope.name}` : 'Select a scope to view assignments.'}
               </p>
             </div>
             <PermissionGate perm='PRODUCT_ASSIGNMENTS_ASSIGN'>
-              <Button onClick={() => setAssignOpen(true)} disabled={!selectedScope}>
+              <Button onClick={() => setAssignOpen(true)} disabled={!selectedScope} className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20'>
                 <PackagePlus className='h-4 w-4 mr-2' />
                 Assign Product
               </Button>
@@ -297,7 +307,7 @@ export default function ProductAssignmentsPage() {
                 </tbody>
               </DataTable>
             ) : assignments.length === 0 ? (
-              <div className='p-6'>
+              <div className='p-6 text-center'>
                 <EmptyState
                   icon={<Boxes className='h-8 w-8 text-muted-foreground/50' />}
                   title='No Assignments'
@@ -305,7 +315,7 @@ export default function ProductAssignmentsPage() {
                 />
               </div>
             ) : (
-              <DataTable>
+              <DataTable className='border-0 shadow-none'>
                 <thead>
                   <DataTableRow>
                     <DataTableCell isHeader>Product</DataTableCell>
@@ -320,14 +330,14 @@ export default function ProductAssignmentsPage() {
                 <tbody>
                   {assignments.map((assignment) => (
                     <DataTableRow key={assignment.id}>
-                      <DataTableCell className='font-medium text-foreground'>{assignment.name}</DataTableCell>
-                      <DataTableCell className='text-foreground'>{assignment.sku}</DataTableCell>
-                      <DataTableCell className='text-foreground'>{formatAmount(assignment.defaultSalePrice)}</DataTableCell>
+                      <DataTableCell className='font-bold text-rainbow-blue'>{assignment.name}</DataTableCell>
+                      <DataTableCell className='text-rainbow-cyan font-semibold'>{assignment.sku}</DataTableCell>
+                      <DataTableCell className='text-muted-foreground'>₹{formatAmount(assignment.defaultSalePrice)}</DataTableCell>
                       <DataTableCell>
                         <div className='flex items-center gap-2'>
                           <Input
                             type='number'
-                            className='w-28'
+                            className='w-28 glass-card border-none ring-1 ring-border/50'
                             value={priceOverrides[assignment.id] ?? ''}
                             onChange={(event) =>
                               setPriceOverrides((prev) => ({
@@ -338,8 +348,9 @@ export default function ProductAssignmentsPage() {
                           />
                           <PermissionGate perm='PRODUCT_ASSIGNMENTS_EDIT'>
                             <Button
-                              size='sm'
                               variant='outline'
+                              size='sm'
+                              className='vibrant-button border-rainbow-cyan/30 text-rainbow-cyan'
                               onClick={() => handleSaveOverride(assignment)}
                               disabled={updateMutation.isPending}
                             >
@@ -348,17 +359,23 @@ export default function ProductAssignmentsPage() {
                           </PermissionGate>
                         </div>
                       </DataTableCell>
-                      <DataTableCell className='text-foreground'>{formatAmount(getEffectivePrice(assignment))}</DataTableCell>
+                      <DataTableCell className='font-black text-lg'>₹{formatAmount(getEffectivePrice(assignment))}</DataTableCell>
                       <DataTableCell>
-                        <Badge variant={assignment.isAllowed ? 'default' : 'secondary'}>
-                          {assignment.isAllowed ? 'ALLOWED' : 'BLOCKED'}
-                        </Badge>
+                        {assignment.isAllowed ? (
+                          <Badge className='bg-rainbow-green text-white shadow-sm'>ALLOWED</Badge>
+                        ) : (
+                          <Badge className='bg-rainbow-red text-white shadow-sm'>BLOCKED</Badge>
+                        )}
                       </DataTableCell>
                       <DataTableCell className='text-right space-x-2'>
                         <PermissionGate perm='PRODUCT_ASSIGNMENTS_EDIT'>
                           <Button
-                            variant='ghost'
+                            variant='outline'
                             size='sm'
+                            className={cn(
+                              'vibrant-button border-0 text-white',
+                              assignment.isAllowed ? 'bg-rainbow-orange shadow-rainbow-orange/20' : 'bg-rainbow-green shadow-rainbow-green/20'
+                            )}
                             onClick={() => handleToggleAllowed(assignment)}
                             disabled={updateMutation.isPending}
                           >
@@ -376,7 +393,7 @@ export default function ProductAssignmentsPage() {
                           </Button>
                         </PermissionGate>
                         <PermissionGate perm='PRODUCT_ASSIGNMENTS_DELETE'>
-                          <Button variant='ghost' size='sm' onClick={() => setDeleteTarget(assignment)}>
+                          <Button variant='ghost' size='sm' className='text-destructive hover:bg-destructive/10' onClick={() => setDeleteTarget(assignment)}>
                             <Trash2 className='h-4 w-4 mr-2' />
                             Remove
                           </Button>
@@ -392,109 +409,101 @@ export default function ProductAssignmentsPage() {
       </div>
 
       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
-        <DialogContent className='sm:max-w-[520px]'>
-          <DialogHeader>
-            <DialogTitle>Assign Products</DialogTitle>
-            <DialogDescription>Select products to assign to the chosen scope.</DialogDescription>
+        <DialogContent className='sm:max-w-[620px] glass-card border-none p-0 overflow-hidden'>
+          <DialogHeader className='p-6 bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white'>
+            <DialogTitle className='text-2xl font-bold'>Assign Products</DialogTitle>
+            <DialogDescription className='text-white/80'>Select products to assign to the chosen scope.</DialogDescription>
           </DialogHeader>
-          <div className='space-y-4'>
-            <div className='space-y-2'>
-              <div className="flex items-center justify-between">
-                <label className='text-sm font-medium text-foreground'>Search & Select</label>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => {
-                    const allIds = filteredProducts.map(p => p.id);
-                    setSelectedProductIds([...new Set([...selectedProductIds, ...allIds])]);
-                  }}>Select All</Button>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setSelectedProductIds([])}>Clear</Button>
-                </div>
+          <div className='p-6 space-y-6'>
+            <div className='grid gap-4 md:grid-cols-2'>
+              <div className='space-y-2'>
+                <label className='text-sm font-bold text-rainbow-blue uppercase tracking-wider'>Search Products</label>
+                <Input
+                  value={productSearch}
+                  onChange={(event) => setProductSearch(event.target.value)}
+                  placeholder='Name or SKU...'
+                  className='glass-card border-none ring-1 ring-border/50'
+                />
               </div>
-              <Input
-                value={productSearch}
-                onChange={(event) => setProductSearch(event.target.value)}
-                placeholder='Search by name or SKU'
-              />
+              <div className='flex items-end justify-end gap-2'>
+                <Button variant="outline" size="sm" className="vibrant-button border-rainbow-cyan/30 text-rainbow-cyan" onClick={() => {
+                  const allIds = filteredProducts.map(p => p.id);
+                  setSelectedProductIds([...new Set([...selectedProductIds, ...allIds])]);
+                }}>Select All</Button>
+                <Button variant="outline" size="sm" className="vibrant-button border-rainbow-red/30 text-rainbow-red" onClick={() => setSelectedProductIds([])}>Clear All</Button>
+              </div>
             </div>
 
-            <div className='space-y-2 border rounded-md p-2 h-60 overflow-y-auto'>
-              {filteredProducts.length === 0 ? (
-                <div className="text-center text-muted-foreground py-8 text-sm">No products found</div>
-              ) : (
-                filteredProducts.map((product) => {
-                  const isSelected = selectedProductIds.includes(product.id)
-                  return (
-                    <div key={product.id} className="p-2 hover:bg-secondary/50 rounded">
-                      <label className="flex items-start gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="mt-1 h-4 w-4 rounded border-primary"
-                          checked={isSelected}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedProductIds(prev => [...prev, product.id])
-                            } else {
-                              setSelectedProductIds(prev => prev.filter(id => id !== product.id))
-                              // Optional: cleanup override
-                              setDialogPriceOverrides(prev => {
-                                const next = { ...prev }
-                                delete next[product.id]
-                                return next
-                              })
-                            }
-                          }}
-                        />
-                        <div className="text-sm">
-                          <div className="font-medium">{product.name}</div>
-                          <div className="text-xs text-muted-foreground">SKU: {product.sku} — {formatAmount(product.defaultSalePrice)}</div>
-                        </div>
-                      </label>
-                      {isSelected && (
-                        <div className="ml-6 mt-2">
-                          <Input
-                            placeholder="Override Price (Optional)"
-                            className="h-8 text-xs w-full"
-                            type="number"
-                            value={dialogPriceOverrides[product.id] || ''}
-                            onChange={(e) => setDialogPriceOverrides(prev => ({ ...prev, [product.id]: e.target.value }))}
+            <ScrollArea className='h-[350px] pr-4 border rounded-2xl border-border/50'>
+              <div className='grid grid-cols-1 gap-2 p-1'>
+                {filteredProducts.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-12 text-sm italic">No products matched your search</div>
+                ) : (
+                  filteredProducts.map((product) => {
+                    const isSelected = selectedProductIds.includes(product.id)
+                    return (
+                      <div key={product.id} className={cn(
+                        "p-3 rounded-xl transition-all cursor-pointer group",
+                        isSelected ? "bg-rainbow-blue/10 border-rainbow-blue/20" : "hover:bg-secondary/50 border-transparent"
+                      )}>
+                        <label className="flex items-center gap-4 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="h-5 w-5 rounded-lg border-2 border-rainbow-blue accent-rainbow-blue"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedProductIds(prev => [...prev, product.id])
+                              } else {
+                                setSelectedProductIds(prev => prev.filter(id => id !== product.id))
+                                setDialogPriceOverrides(prev => {
+                                  const next = { ...prev }
+                                  delete next[product.id]
+                                  return next
+                                })
+                              }
+                            }}
                           />
-                        </div>
-                      )}
-                    </div>
-                  )
-                })
-              )}
-            </div>
-
-            <div className='flex items-center justify-between text-sm text-muted-foreground'>
-              <span>{selectedProductIds.length} products selected</span>
-            </div>
-
-            <div className='flex flex-col gap-3 py-2'>
-              <label className='flex items-center gap-2 text-sm text-foreground cursor-pointer'>
-                <input
-                  type='checkbox'
-                  checked={assignAllowed}
-                  onChange={(event) => setAssignAllowed(event.target.checked)}
-                  className='h-4 w-4 rounded border-border'
-                />
-                Allow products for this scope
-              </label>
-              <label className='flex items-center gap-2 text-sm text-foreground cursor-pointer'>
-                <input
-                  type='checkbox'
-                  checked={updateExisting}
-                  onChange={(event) => setUpdateExisting(event.target.checked)}
-                  className='h-4 w-4 rounded border-border'
-                />
-                Update existing items (if already assigned)
-              </label>
-            </div>
+                          <div className='flex-1 min-w-0'>
+                            <div className='flex items-center justify-between'>
+                              <span className='font-bold text-foreground truncate'>{product.name}</span>
+                              <span className='text-[10px] bg-secondary px-2 py-0.5 rounded font-mono'>{product.sku}</span>
+                            </div>
+                            <div className='flex items-center gap-2 mt-1'>
+                              <span className='text-xs text-muted-foreground'>MRP: ₹{formatAmount(product.mrp)}</span>
+                              <div className='h-1 w-1 rounded-full bg-border' />
+                              <span className='text-xs font-bold text-rainbow-green'>Base: ₹{formatAmount(product.defaultSalePrice)}</span>
+                            </div>
+                          </div>
+                        </label>
+                        {isSelected && (
+                          <div className='mt-3 pl-9 animate-in slide-in-from-top-2'>
+                            <div className='flex items-center gap-3'>
+                              <label className='text-[10px] font-black uppercase text-rainbow-orange'>Price Override</label>
+                              <Input
+                                type='number'
+                                placeholder='Leave empty for base'
+                                className='h-8 text-xs glass-card border-none ring-1 ring-border/50 w-32'
+                                value={dialogPriceOverrides[product.id] ?? ''}
+                                onChange={(e) => setDialogPriceOverrides(prev => ({ ...prev, [product.id]: e.target.value }))}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </ScrollArea>
           </div>
-          <DialogFooter className='gap-2 sm:gap-0'>
-            <Button variant='ghost' onClick={() => setAssignOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleAssign} disabled={assignMutation.isPending || selectedProductIds.length === 0}>
+          <DialogFooter className='p-6 bg-secondary/30'>
+            <Button variant='ghost' onClick={() => setAssignOpen(false)} className="rounded-xl">Cancel</Button>
+            <Button
+              onClick={handleAssign}
+              disabled={assignMutation.isPending || selectedProductIds.length === 0}
+              className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 px-8'
+            >
               {assignMutation.isPending ? 'Assigning...' : `Assign ${selectedProductIds.length} Products`}
             </Button>
           </DialogFooter>
@@ -511,7 +520,6 @@ export default function ProductAssignmentsPage() {
         variant='destructive'
         loading={deleteMutation.isPending}
       />
-
     </div>
   )
 }

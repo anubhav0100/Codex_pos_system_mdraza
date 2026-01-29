@@ -8,9 +8,9 @@ interface DataTableProps {
 
 export function DataTable({ children, className }: DataTableProps) {
   return (
-    <div className={cn('premium-card soft-shadow overflow-hidden', className)}>
+    <div className={cn('premium-card overflow-hidden', className)}>
       <div className='overflow-x-auto'>
-        <table className='w-full text-sm text-left'>
+        <table className='vivid-table w-full text-sm text-left'>
           {children}
         </table>
       </div>
@@ -19,7 +19,7 @@ export function DataTable({ children, className }: DataTableProps) {
 }
 
 export function DataTableRow({ children, className }: { children: ReactNode; className?: string }) {
-  return <tr className={cn('border-b border-border/10 hover:bg-secondary/30 transition-colors last:border-0', className)}>{children}</tr>
+  return <tr className={cn('hover:bg-secondary/20 dark:hover:bg-secondary/10 transition-colors', className)}>{children}</tr>
 }
 
 export function DataTableCell({
@@ -37,14 +37,14 @@ export function DataTableCell({
     return (
       <th
         colSpan={colSpan}
-        className={cn('px-6 py-4 font-bold text-foreground/80 uppercase text-xs tracking-wider border-b border-border/20', className)}
+        className={cn('px-6 py-5 font-bold text-foreground/70 uppercase text-xs tracking-widest border-b border-border', className)}
       >
         {children}
       </th>
     )
   }
   return (
-    <td colSpan={colSpan} className={cn('px-6 py-4 whitespace-nowrap', className)}>
+    <td colSpan={colSpan} className={cn('px-6 py-4 border-b border-border/40 text-foreground/90', className)}>
       {children}
     </td>
   )

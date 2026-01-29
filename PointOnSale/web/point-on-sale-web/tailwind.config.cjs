@@ -48,6 +48,13 @@ module.exports = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
+                "rainbow-red": "hsl(var(--rainbow-red))",
+                "rainbow-orange": "hsl(var(--rainbow-orange))",
+                "rainbow-yellow": "hsl(var(--rainbow-yellow))",
+                "rainbow-green": "hsl(var(--rainbow-green))",
+                "rainbow-cyan": "hsl(var(--rainbow-cyan))",
+                "rainbow-blue": "hsl(var(--rainbow-blue))",
+                "rainbow-violet": "hsl(var(--rainbow-violet))",
             },
             borderRadius: {
                 lg: "var(--radius)",

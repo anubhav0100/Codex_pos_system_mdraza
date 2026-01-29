@@ -15,8 +15,8 @@ export default function DashboardPage() {
         description={isSuperAdmin ? 'Manage the entire POS ecosystem.' : 'Welcome back to your POS system.'}
         actions={
           !isSuperAdmin && (
-            <Button className='gap-2'>
-              <Plus className='h-4 w-4' />
+            <Button className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20 px-6'>
+              <Plus className='h-4 w-4 mr-2' />
               New Sale
             </Button>
           )
@@ -62,41 +62,41 @@ export default function DashboardPage() {
           <>
             <StatCard
               title='Total Invoices'
-              value='$24,500'
+              value='₹24,500'
               icon={<ShoppingCart className='h-4 w-4 text-white/80' />}
               trend={{ value: '+12%', positive: true }}
               description='From last month'
-              className='bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-green to-rainbow-cyan text-white hover-scale'
             />
             <StatCard
               title='Total Pending'
-              value='$8,240'
+              value='₹8,240'
               icon={<Package className='h-4 w-4 text-white/80' />}
               trend={{ value: '+5%', positive: false }}
               description='Requires attention'
-              className='bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-yellow via-rainbow-orange to-rainbow-red text-white hover-scale'
             />
             <StatCard
               title='Overdue'
-              value='$2,100'
+              value='₹2,100'
               icon={<ShieldCheck className='h-4 w-4 text-white/80' />}
               trend={{ value: '-8%', positive: false }}
               description='Over 30 days'
-              className='bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-red via-rainbow-violet to-rainbow-blue text-white hover-scale'
             />
             <StatCard
               title='Avg Days Overdue'
               value='14'
               icon={<BarChart3 className='h-4 w-4 text-white/80' />}
               description='Improving'
-              className='bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500 text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-violet to-rainbow-blue text-white hover-scale'
             />
             <StatCard
               title='Subcontracting'
               value='3 Active'
               icon={<Users className='h-4 w-4 text-white/80' />}
               description='Work orders'
-              className='bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-cyan to-rainbow-blue text-white hover-scale'
             />
           </>
         )}

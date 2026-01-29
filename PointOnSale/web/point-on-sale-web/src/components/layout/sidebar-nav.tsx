@@ -60,10 +60,10 @@ export function SidebarNav() {
               to={item.href}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3 py-3 rounded-2xl transition-all group hover-scale',
+                  'flex items-center gap-3 px-3 py-3 rounded-2xl transition-all group hover-scale border border-transparent',
                   isActive
-                    ? `bg-${item.color || 'primary'} text-white shadow-lg shadow-${item.color || 'primary'}/20`
-                    : 'text-muted-foreground hover:bg-secondary/50',
+                    ? `bg-${item.color || 'primary'} text-white shadow-xl shadow-${item.color || 'primary'}/30 border-${item.color || 'primary'}/20`
+                    : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
                   isCollapsed && 'justify-center px-0',
                 )
               }
