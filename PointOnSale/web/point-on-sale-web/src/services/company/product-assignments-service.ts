@@ -8,6 +8,7 @@ interface ApiResponse<T> {
 
 export interface ScopeProductAssignment {
   id: number
+  scopeNodeId: number
   productId: number
   sku: string
   name: string
@@ -26,9 +27,9 @@ export interface AssignProductPayload {
 
 export interface BulkAssignProductPayload {
   scopeNodeId: number
-  productIds: number[]
+  assignments: { productId: number; priceOverride?: number | null }[]
   isAllowed: boolean
-  priceOverride?: number | null
+  updateExisting: boolean
 }
 
 export interface UpdateAssignmentPayload {
@@ -59,12 +60,12 @@ export const productAssignmentsService = {
     )
     return unwrapResponse(response)
   },
-  updateAssignment: async (id: number, payload: UpdateAssignmentPayload) => {
-    const response = await apiClient.put<ApiResponse<string> | string>(`product-assignments/${id}`, payload)
+  updateAssignment: async (scopeNodeId: number, productId: number, payload: UpdateAssignmentPayload) => {
+    const response = await apiClient.put<ApiResponse<string> | string>(`product-assignments/${scopeNodeId}/${productId}`, payload)
     return unwrapResponse(response)
   },
-  deleteAssignment: async (id: number) => {
-    const response = await apiClient.delete<ApiResponse<string> | string>(`product-assignments/${id}`)
+  deleteAssignment: async (scopeNodeId: number, productId: number) => {
+    const response = await apiClient.delete<ApiResponse<string> | string>(`product-assignments/${scopeNodeId}/${productId}`)
     return unwrapResponse(response)
   },
 }

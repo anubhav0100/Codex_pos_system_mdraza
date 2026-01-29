@@ -68,9 +68,10 @@ export default function ProductAssignmentsPage() {
   const [deleteTarget, setDeleteTarget] = useState<ScopeProductAssignment | null>(null)
   const [selectedProductIds, setSelectedProductIds] = useState<number[]>([])
   const [assignAllowed, setAssignAllowed] = useState(true)
-  const [assignPriceOverride, setAssignPriceOverride] = useState('')
   const [productSearch, setProductSearch] = useState('')
   const [priceOverrides, setPriceOverrides] = useState<Record<number, string>>({})
+  const [dialogPriceOverrides, setDialogPriceOverrides] = useState<Record<number, string>>({})
+  const [updateExisting, setUpdateExisting] = useState(false)
 
   const { data: tree = [], isLoading: isScopesLoading } = useQuery({
     queryKey: ['scopes-tree'],
@@ -122,7 +123,8 @@ export default function ProductAssignmentsPage() {
     if (assignOpen) {
       setSelectedProductIds([])
       setAssignAllowed(true)
-      setAssignPriceOverride('')
+      setDialogPriceOverrides({})
+      setUpdateExisting(false)
       setProductSearch('')
     }
   }, [assignOpen])
@@ -138,8 +140,8 @@ export default function ProductAssignmentsPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: { isAllowed: boolean; priceOverride?: number | null } }) =>
-      productAssignmentsService.updateAssignment(id, payload),
+    mutationFn: ({ scopeNodeId, productId, payload }: { scopeNodeId: number, productId: number; payload: { isAllowed: boolean; priceOverride?: number | null } }) =>
+      productAssignmentsService.updateAssignment(scopeNodeId, productId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scope-products'] })
       toast.success('Assignment updated')
@@ -148,7 +150,7 @@ export default function ProductAssignmentsPage() {
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => productAssignmentsService.deleteAssignment(id),
+    mutationFn: ({ scopeNodeId, productId }: { scopeNodeId: number, productId: number }) => productAssignmentsService.deleteAssignment(scopeNodeId, productId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scope-products'] })
       setDeleteTarget(null)
@@ -174,18 +176,25 @@ export default function ProductAssignmentsPage() {
       toast.error('Select a scope and at least one product')
       return
     }
+
+    const assignments = selectedProductIds.map(productId => ({
+      productId,
+      priceOverride: parsePriceOverride(dialogPriceOverrides[productId])
+    }))
+
     assignMutation.mutate({
       scopeNodeId: selectedScope.id,
-      productIds: selectedProductIds,
+      assignments,
       isAllowed: assignAllowed,
-      priceOverride: parsePriceOverride(assignPriceOverride),
+      updateExisting
     })
   }
 
   const handleToggleAllowed = (assignment: ScopeProductAssignment) => {
     const overrideValue = parsePriceOverride(priceOverrides[assignment.id])
     updateMutation.mutate({
-      id: assignment.id,
+      scopeNodeId: assignment.scopeNodeId ?? selectedScopeId!,
+      productId: assignment.productId,
       payload: {
         isAllowed: !assignment.isAllowed,
         priceOverride: overrideValue,
@@ -196,7 +205,8 @@ export default function ProductAssignmentsPage() {
   const handleSaveOverride = (assignment: ScopeProductAssignment) => {
     const overrideValue = parsePriceOverride(priceOverrides[assignment.id])
     updateMutation.mutate({
-      id: assignment.id,
+      scopeNodeId: assignment.scopeNodeId ?? selectedScopeId!,
+      productId: assignment.productId,
       payload: {
         isAllowed: assignment.isAllowed,
         priceOverride: overrideValue,
@@ -410,26 +420,48 @@ export default function ProductAssignmentsPage() {
               {filteredProducts.length === 0 ? (
                 <div className="text-center text-muted-foreground py-8 text-sm">No products found</div>
               ) : (
-                filteredProducts.map((product) => (
-                  <label key={product.id} className="flex items-start gap-2 p-2 hover:bg-secondary/50 rounded cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="mt-1 h-4 w-4 rounded border-primary"
-                      checked={selectedProductIds.includes(product.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedProductIds(prev => [...prev, product.id])
-                        } else {
-                          setSelectedProductIds(prev => prev.filter(id => id !== product.id))
-                        }
-                      }}
-                    />
-                    <div className="text-sm">
-                      <div className="font-medium">{product.name}</div>
-                      <div className="text-xs text-muted-foreground">SKU: {product.sku} — {formatAmount(product.defaultSalePrice)}</div>
+                filteredProducts.map((product) => {
+                  const isSelected = selectedProductIds.includes(product.id)
+                  return (
+                    <div key={product.id} className="p-2 hover:bg-secondary/50 rounded">
+                      <label className="flex items-start gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-4 w-4 rounded border-primary"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedProductIds(prev => [...prev, product.id])
+                            } else {
+                              setSelectedProductIds(prev => prev.filter(id => id !== product.id))
+                              // Optional: cleanup override
+                              setDialogPriceOverrides(prev => {
+                                const next = { ...prev }
+                                delete next[product.id]
+                                return next
+                              })
+                            }
+                          }}
+                        />
+                        <div className="text-sm">
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-xs text-muted-foreground">SKU: {product.sku} — {formatAmount(product.defaultSalePrice)}</div>
+                        </div>
+                      </label>
+                      {isSelected && (
+                        <div className="ml-6 mt-2">
+                          <Input
+                            placeholder="Override Price (Optional)"
+                            className="h-8 text-xs w-full"
+                            type="number"
+                            value={dialogPriceOverrides[product.id] || ''}
+                            onChange={(e) => setDialogPriceOverrides(prev => ({ ...prev, [product.id]: e.target.value }))}
+                          />
+                        </div>
+                      )}
                     </div>
-                  </label>
-                ))
+                  )
+                })
               )}
             </div>
 
@@ -437,27 +469,26 @@ export default function ProductAssignmentsPage() {
               <span>{selectedProductIds.length} products selected</span>
             </div>
 
-            <div className='space-y-2'>
-              <label className='text-sm font-medium text-foreground'>Price override (Optional)</label>
-              <Input
-                type='number'
-                value={assignPriceOverride}
-                onChange={(event) => setAssignPriceOverride(event.target.value)}
-                placeholder='Leave blank to use base price'
-              />
-              <p className='text-xs text-muted-foreground'>
-                Applied to all selected products.
-              </p>
+            <div className='flex flex-col gap-3 py-2'>
+              <label className='flex items-center gap-2 text-sm text-foreground cursor-pointer'>
+                <input
+                  type='checkbox'
+                  checked={assignAllowed}
+                  onChange={(event) => setAssignAllowed(event.target.checked)}
+                  className='h-4 w-4 rounded border-border'
+                />
+                Allow products for this scope
+              </label>
+              <label className='flex items-center gap-2 text-sm text-foreground cursor-pointer'>
+                <input
+                  type='checkbox'
+                  checked={updateExisting}
+                  onChange={(event) => setUpdateExisting(event.target.checked)}
+                  className='h-4 w-4 rounded border-border'
+                />
+                Update existing items (if already assigned)
+              </label>
             </div>
-            <label className='flex items-center gap-2 text-sm text-foreground'>
-              <input
-                type='checkbox'
-                checked={assignAllowed}
-                onChange={(event) => setAssignAllowed(event.target.checked)}
-                className='h-4 w-4 rounded border-border'
-              />
-              Allow products for this scope
-            </label>
           </div>
           <DialogFooter className='gap-2 sm:gap-0'>
             <Button variant='ghost' onClick={() => setAssignOpen(false)}>
@@ -473,7 +504,7 @@ export default function ProductAssignmentsPage() {
       <ConfirmDialog
         open={Boolean(deleteTarget)}
         onOpenChange={(open) => setDeleteTarget(open ? deleteTarget : null)}
-        onConfirm={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
+        onConfirm={() => deleteTarget && deleteMutation.mutate({ scopeNodeId: deleteTarget.scopeNodeId ?? selectedScopeId!, productId: deleteTarget.productId })}
         title='Remove assignment?'
         description='This product will no longer be available for the selected scope.'
         confirmText='Remove'

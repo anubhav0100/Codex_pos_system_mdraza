@@ -74,33 +74,42 @@ public class ProductAssignmentsController(
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, dto.ScopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Scope"), "Forbidden"));
 
-        if (dto.ProductIds == null || !dto.ProductIds.Any())
+        if (dto.Assignments == null || !dto.Assignments.Any())
              return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No products selected"), "No Products"));
 
         int successCount = 0;
         int failCount = 0;
+        int updatedCount = 0;
 
-        foreach (var productId in dto.ProductIds)
+        foreach (var item in dto.Assignments)
         {
             try 
             {
                 // Check if exists
-                var existing = await productRepository.GetAssignmentAsync(dto.ScopeNodeId, productId);
+                var existing = await productRepository.GetAssignmentAsync(dto.ScopeNodeId, item.ProductId);
                 if (existing == null)
                 {
                     var assignment = new ProductAssignment
                     {
                         ScopeNodeId = dto.ScopeNodeId,
-                        ProductId = productId,
+                        ProductId = item.ProductId,
                         IsAllowed = dto.IsAllowed,
-                        PriceOverride = dto.PriceOverride
+                        PriceOverride = item.PriceOverride
                     };
                     await productRepository.AddAssignmentAsync(assignment);
                     successCount++;
                 }
+                else if (dto.UpdateExisting)
+                {
+                    // Update existing assignment
+                    existing.IsAllowed = dto.IsAllowed;
+                    existing.PriceOverride = item.PriceOverride;
+                    await productRepository.UpdateAssignmentAsync(existing);
+                    updatedCount++;
+                }
                 else
                 {
-                    failCount++; // Already exists
+                    failCount++; // Already exists and update not requested
                 }
             }
             catch
@@ -109,7 +118,7 @@ public class ProductAssignmentsController(
             }
         }
 
-        return Ok(ApiResponse<string>.Ok($"Assigned {successCount} products successfully. {failCount} skipped/failed."));
+        return Ok(ApiResponse<string>.Ok($"Processed assignments. Created: {successCount}, Updated: {updatedCount}, Skipped/Failed: {failCount}."));
     }
 
     // List by Scope
@@ -126,11 +135,12 @@ public class ProductAssignmentsController(
         var dtos = assignments.Select(a => new ProductAssignmentDto
         {
             ScopeNodeId = a.ScopeNodeId,
+            Id = a.ProductId, // Use ProductId as Id
             ProductId = a.ProductId,
-            ProductName = a.Product?.Name ?? "Unknown",
-            ProductSKU = a.Product?.SKU ?? "",
+            Name = a.Product?.Name ?? "Unknown",
+            Sku = a.Product?.SKU ?? "",
             ProductMRP = a.Product?.MRP ?? 0,
-            ProductDefaultSalePrice = a.Product?.DefaultSalePrice ?? 0,
+            DefaultSalePrice = a.Product?.DefaultSalePrice ?? 0,
             IsAllowed = a.IsAllowed,
             PriceOverride = a.PriceOverride,
             EffectivePrice = a.PriceOverride ?? a.Product?.DefaultSalePrice ?? 0

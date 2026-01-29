@@ -69,7 +69,13 @@ export const inventoryService = {
     return unwrapResponse(response)
   },
   adjustInventory: async (payload: InventoryAdjustPayload) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('inventory/adjust', payload)
+    const apiPayload = {
+      scopeNodeId: Number(payload.scopeNodeId),
+      productId: Number(payload.productId),
+      qtyChange: payload.adjustmentType === 'DECREASE' ? -payload.quantity : payload.quantity,
+      notes: payload.reason || 'Manual Adjustment',
+    }
+    const response = await apiClient.post<ApiResponse<string> | string>('inventory/adjust', apiPayload)
     return unwrapResponse(response)
   },
 }
