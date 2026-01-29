@@ -19,7 +19,7 @@ export function DataTable({ children, className }: DataTableProps) {
 }
 
 export function DataTableRow({ children, className }: { children: ReactNode; className?: string }) {
-  return <tr className={cn('hover:bg-secondary/30 transition-colors', className)}>{children}</tr>
+  return <tr className={cn('border-b border-border/10 hover:bg-secondary/30 transition-colors last:border-0', className)}>{children}</tr>
 }
 
 export function DataTableCell({
@@ -37,7 +37,7 @@ export function DataTableCell({
     return (
       <th
         colSpan={colSpan}
-        className={cn('px-6 py-4 font-semibold text-foreground uppercase text-xs', className)}
+        className={cn('px-6 py-4 font-bold text-foreground/80 uppercase text-xs tracking-wider border-b border-border/20', className)}
       >
         {children}
       </th>

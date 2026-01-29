@@ -117,6 +117,10 @@
 
   .gradient-text {
     @apply bg-clip-text text-transparent gradient-heading;
+    -webkit-background-clip: text;
+    background-clip: text;
+    display: inline-block;
+    /* Often helps with clip */
   }
 
   /* Utility Classes for Rainbow Colors */
