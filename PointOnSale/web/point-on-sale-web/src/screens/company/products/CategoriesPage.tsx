@@ -88,7 +88,7 @@ export default function CategoriesPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Categories'
+        title={<span className="gradient-text">Categories</span>}
         description='Maintain product categories for your catalog.'
       />
 

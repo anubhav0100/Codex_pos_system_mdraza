@@ -297,7 +297,7 @@ export default function ScopesTreePage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Scopes'
+        title={<span className="bg-gradient-to-r from-rainbow-cyan via-rainbow-blue to-rainbow-violet bg-clip-text text-transparent font-bold">Scopes Hierarchy</span>}
         description='Organize your company hierarchy across states, districts, and local branches.'
       />
 

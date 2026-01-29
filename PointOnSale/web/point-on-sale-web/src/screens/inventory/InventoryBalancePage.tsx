@@ -183,7 +183,7 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
   return (
     <div className='space-y-6'>
       <PageHeader
-        title={<span className="gradient-text">Inventory Balance</span>}
+        title={<span className="bg-gradient-to-r from-rainbow-orange via-rainbow-yellow to-rainbow-red bg-clip-text text-transparent font-bold">Inventory Balance</span>}
         description='Track on-hand inventory across your scope.'
         actions={
           <div className='flex flex-wrap items-center gap-2'>
@@ -192,23 +192,25 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
                 placeholder='Scope node ID'
                 value={scopeDraft}
                 onChange={(event) => setScopeDraft(event.target.value)}
-                className='w-44'
+                className='w-44 glass-card border-none ring-1 ring-border/50'
               />
-              <Button variant='outline' onClick={handleApplyScope} className='gap-2'>
-                <Filter className='h-4 w-4' />
+              <Button variant='outline' onClick={handleApplyScope} className='gap-2 vibrant-button border-rainbow-cyan/30'>
+                <Filter className='h-4 w-4 text-rainbow-cyan' />
                 Apply
               </Button>
             </div>
             <Button
               variant='outline'
               onClick={() => queryClient.invalidateQueries({ queryKey: ['inventory-balance'] })}
-              className='gap-2'
+              className='gap-2 vibrant-button border-rainbow-blue/30'
             >
-              <RefreshCcw className='h-4 w-4' />
+              <RefreshCcw className='h-4 w-4 text-rainbow-blue' />
               Refresh
             </Button>
             <PermissionGate perm='INVENTORY_ADJUST'>
-              <Button onClick={() => navigate('/inventory/adjust')}>Adjust Inventory</Button>
+              <Button onClick={() => navigate('/inventory/adjust')} className="bg-gradient-to-br from-rainbow-orange to-rainbow-red text-white border-0 vibrant-button shadow-lg shadow-rainbow-orange/20">
+                Adjust Inventory
+              </Button>
             </PermissionGate>
           </div>
         }

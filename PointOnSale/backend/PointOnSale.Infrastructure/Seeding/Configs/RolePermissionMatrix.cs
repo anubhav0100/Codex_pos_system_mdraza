@@ -24,6 +24,15 @@ public static class RolePermissionMatrix
             "POS_SALES", "INVOICES", "REPORTS", "AUDIT_LOGS", "DASHBOARD"
         });
 
+        // StateAdmin: Same as CompanyAdmin but for their scope
+        matrix["Stateadmin"] = matrix["CompanyAdmin"];
+
+        // DistrictAdmin
+        matrix["Districtadmin"] = matrix["CompanyAdmin"];
+
+        // LocalAdmin
+        matrix["Localadmin"] = matrix["CompanyAdmin"];
+
         // Cmanager: limited
         matrix["Cmanager"] = GeneratePermissions(new[] 
         { 

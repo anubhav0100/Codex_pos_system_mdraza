@@ -53,25 +53,32 @@ export function SidebarNav() {
       </div>
 
       <ScrollArea className='flex-1 px-4'>
-        <nav className='space-y-2 py-4'>
+        <nav className='space-y-4 py-4'>
           {filteredMenuItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group',
+                  'flex items-center gap-3 px-3 py-3 rounded-2xl transition-all group hover-scale',
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-secondary hover:text-primary',
+                    ? `bg-${item.color || 'primary'} text-white shadow-lg shadow-${item.color || 'primary'}/20`
+                    : 'text-muted-foreground hover:bg-secondary/50',
                   isCollapsed && 'justify-center px-0',
                 )
               }
             >
-              <item.icon className={cn('h-5 w-5 shrink-0', !isCollapsed && 'mr-2')} />
-              {!isCollapsed && <span className='font-medium'>{item.label}</span>}
+              <item.icon className={cn(
+                'h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110',
+                !isCollapsed && 'mr-2',
+                !isCollapsed && `text-${item.color || 'primary'}`
+              )} />
+              {!isCollapsed && <span className='font-bold tracking-tight'>{item.label}</span>}
               {isCollapsed && (
-                <div className='absolute left-full ml-2 px-2 py-1 bg-primary text-primary-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50'>
+                <div className={cn(
+                  'absolute left-full ml-2 px-3 py-1.5 text-white text-xs font-bold rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all scale-95 group-hover:scale-100 whitespace-nowrap z-50 shadow-xl',
+                  `bg-${item.color || 'primary'}`
+                )}>
                   {item.label}
                 </div>
               )}

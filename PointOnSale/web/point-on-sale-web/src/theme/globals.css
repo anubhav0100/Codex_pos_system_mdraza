@@ -46,7 +46,7 @@
   }
 
   .dark {
-    /* Dark Mode Defaults (Preserved/Adapted) */
+    /* Dark Mode Defaults */
     --background: 240 10% 4%;
     --foreground: 210 40% 98%;
 
@@ -120,7 +120,6 @@
     -webkit-background-clip: text;
     background-clip: text;
     display: inline-block;
-    /* Often helps with clip */
   }
 
   /* Utility Classes for Rainbow Colors */
@@ -188,12 +187,16 @@
   }
 
   .hover-scale {
-    @apply transition-transform duration-300 hover:scale-[1.02];
+    @apply transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/25;
   }
 
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradient-move 3s ease infinite;
+  }
+
+  .vibrant-button {
+    @apply transition-all duration-300 hover:scale-[1.05] active:scale-95 shadow-md hover:shadow-xl;
   }
 }
 

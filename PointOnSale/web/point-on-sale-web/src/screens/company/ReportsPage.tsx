@@ -6,7 +6,7 @@ export default function ReportsPage() {
     return (
         <div className='space-y-6'>
             <PageHeader
-                title='Reports'
+                title={<span className="gradient-text">Reports</span>}
                 description='System-wide analytics and performance metrics.'
             />
 

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { cn } from '@/utils/utils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ClipboardList, Plus } from 'lucide-react'
 import { toast } from 'sonner'
@@ -11,6 +12,8 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { PermissionGate } from '@/components/auth/permission-gate'
+import { StatCard } from '@/components/ui/stat-card'
+import { Package, Clock, Truck, CheckCircle2 } from 'lucide-react'
 import { stockRequestsService, type CreateStockRequestDto, type StockRequestStatus } from '@/services/company/stock-requests-service'
 import { productsService } from '@/services/company/products-service'
 import { scopesService, type ScopeNode } from '@/services/company/scopes-service'
@@ -182,12 +185,12 @@ export default function StockRequestsOutgoingPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title={<span className="gradient-text">Outgoing Stock Requests</span>}
-        description='Manage requests sent to suppliers.'
+        title={<span className="bg-gradient-to-r from-rainbow-cyan via-rainbow-blue to-rainbow-violet bg-clip-text text-transparent font-bold">Stock Requests</span>}
+        description='Manage and track outgoing stock requests for your suppliers.'
         actions={
           <div className='flex flex-wrap items-center gap-2'>
             <select
-              className={selectClassName}
+              className={cn(selectClassName, 'glass-card border-none ring-1 ring-border/50')}
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as StockRequestStatus | 'ALL')}
             >
@@ -198,7 +201,7 @@ export default function StockRequestsOutgoingPage() {
               ))}
             </select>
             <PermissionGate perm='STOCK_REQUESTS_CREATE'>
-              <Button onClick={() => setWizardOpen(true)} className='gap-2'>
+              <Button onClick={() => setWizardOpen(true)} className='gap-2 bg-gradient-to-r from-rainbow-green to-rainbow-cyan text-white border-0 vibrant-button'>
                 <Plus className='h-4 w-4' />
                 New Request
               </Button>
@@ -206,6 +209,33 @@ export default function StockRequestsOutgoingPage() {
           </div>
         }
       />
+
+      <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
+        <StatCard
+          title='Total Requests'
+          value={requests.length.toString()}
+          icon={<Package className='h-4 w-4 text-white/80' />}
+          className='bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 text-white hover-scale'
+        />
+        <StatCard
+          title='Pending'
+          value={requests.filter(r => r.status === 'PENDING').length.toString()}
+          icon={<Clock className='h-4 w-4 text-white/80' />}
+          className='bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-500 text-white hover-scale'
+        />
+        <StatCard
+          title='Approved'
+          value={requests.filter(r => r.status === 'APPROVED').length.toString()}
+          icon={<CheckCircle2 className='h-4 w-4 text-white/80' />}
+          className='bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-500 text-white hover-scale'
+        />
+        <StatCard
+          title='Fulfilled'
+          value={requests.filter(r => r.status === 'FULFILLED').length.toString()}
+          icon={<Truck className='h-4 w-4 text-white/80' />}
+          className='bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 text-white hover-scale'
+        />
+      </div>
 
       {tableContent}
 

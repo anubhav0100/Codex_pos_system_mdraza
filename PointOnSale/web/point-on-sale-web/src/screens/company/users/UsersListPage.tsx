@@ -93,12 +93,12 @@ export default function UsersListPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Users'
+        title={<span className="bg-gradient-to-r from-rainbow-blue via-rainbow-violet to-rainbow-red bg-clip-text text-transparent font-bold">User Management</span>}
         description='Manage users assigned to your scope hierarchy.'
       >
         <PermissionGate perm='USERS_CREATE'>
-          <Button onClick={() => navigate('/users/new')}>
-            <UserPlus className='h-4 w-4 mr-2' />
+          <Button onClick={() => navigate('/users/new')} className='gap-2 bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20 vibrant-button'>
+            <UserPlus className='h-4 w-4' />
             Add User
           </Button>
         </PermissionGate>
@@ -178,7 +178,7 @@ export default function UsersListPage() {
                   {user.roles.length > 0 ? user.roles.join(', ') : 'Unassigned'}
                 </DataTableCell>
                 <DataTableCell>
-                  <Badge variant={user.isActive ? 'default' : 'secondary'}>
+                  <Badge className={user.isActive ? 'bg-rainbow-green text-white hover:bg-rainbow-green/90' : 'bg-rainbow-red text-white hover:bg-rainbow-red/90'}>
                     {user.isActive ? 'ACTIVE' : 'INACTIVE'}
                   </Badge>
                 </DataTableCell>

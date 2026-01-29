@@ -40,18 +40,18 @@ export default function ProductsListPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title={<span className="gradient-text">Products</span>}
+        title={<span className="bg-gradient-to-r from-rainbow-cyan via-rainbow-blue to-rainbow-violet bg-clip-text text-transparent font-bold">Product Catalog</span>}
         description='Maintain your product catalog and pricing.'
       >
         <div className='flex flex-wrap gap-2'>
           <PermissionGate perm='PRODUCT_CATEGORIES_READ'>
-            <Button variant='outline' onClick={() => navigate('/categories')} className="hover:border-rainbow-blue hover:text-rainbow-blue transition-colors">
-              <Layers className='h-4 w-4 mr-2' />
+            <Button variant='outline' onClick={() => navigate('/categories')} className="vibrant-button border-rainbow-cyan/30 hover:bg-rainbow-cyan/5">
+              <Layers className='h-4 w-4 mr-2 text-rainbow-cyan' />
               Categories
             </Button>
           </PermissionGate>
           <PermissionGate perm='PRODUCTS_CREATE'>
-            <Button onClick={() => navigate('/products/new')} className="bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 hover:opacity-90">
+            <Button onClick={() => navigate('/products/new')} className="bg-gradient-to-r from-rainbow-blue via-rainbow-violet to-rainbow-red text-white border-0 shadow-lg shadow-rainbow-blue/20 vibrant-button">
               <PackagePlus className='h-4 w-4 mr-2' />
               Add Product
             </Button>

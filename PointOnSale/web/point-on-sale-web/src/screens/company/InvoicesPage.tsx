@@ -9,10 +9,10 @@ export default function InvoicesPage() {
     return (
         <div className='space-y-6'>
             <PageHeader
-                title={<span className="bg-gradient-to-r from-[hsl(190,80%,55%)] via-[hsl(240,80%,60%)] to-[hsl(280,70%,65%)] bg-clip-text text-transparent">Invoices</span>}
+                title={<span className="bg-gradient-to-r from-rainbow-cyan via-rainbow-blue to-rainbow-violet bg-clip-text text-transparent font-bold">Invoices</span>}
                 description='View and manage system invoices.'
             >
-                <Button className='gap-2 bg-gradient-to-r from-[hsl(190,80%,55%)] to-[hsl(240,80%,60%)] text-white border-0'>
+                <Button className='gap-2 bg-gradient-to-r from-rainbow-cyan middle:via-rainbow-blue to-rainbow-violet text-white border-0 vibrant-button'>
                     <FileText className='h-4 w-4' />
                     Export All
                 </Button>
@@ -21,7 +21,7 @@ export default function InvoicesPage() {
             <div className='flex items-center gap-4'>
                 <div className='relative flex-1'>
                     <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                    <Input placeholder='Search invoices...' className='pl-9 glass-card' />
+                    <Input placeholder='Search invoices...' className='pl-9 glass-card border-none ring-1 ring-border/50' />
                 </div>
             </div>
 
@@ -38,23 +38,25 @@ export default function InvoicesPage() {
                 </thead>
                 <tbody>
                     <DataTableRow className="hover:bg-white/5 transition-colors">
-                        <DataTableCell className='font-medium text-rainbow-blue'>INV-001</DataTableCell>
+                        <DataTableCell className='font-bold text-rainbow-blue'>INV-001</DataTableCell>
                         <DataTableCell>TechCorp Solutions</DataTableCell>
-                        <DataTableCell>2024-03-20</DataTableCell>
-                        <DataTableCell className='font-bold'>₹12,450.00</DataTableCell>
-                        <DataTableCell><Badge className="bg-rainbow-green text-white hover:bg-rainbow-green/90">Paid</Badge></DataTableCell>
-                        <DataTableCell className='text-right'>
-                            <Button variant='ghost' size='sm' className="text-rainbow-blue hover:text-rainbow-violet">View</Button>
+                        <DataTableCell className="text-muted-foreground">2024-03-20</DataTableCell>
+                        <DataTableCell className='font-black text-lg'>₹12,450.00</DataTableCell>
+                        <DataTableCell><Badge className="bg-rainbow-green text-white border-0 shadow-lg shadow-rainbow-green/20">Paid</Badge></DataTableCell>
+                        <DataTableCell className='text-right space-x-2'>
+                            <Button variant='ghost' size='sm' className="vibrant-button bg-gradient-to-br from-rainbow-cyan to-rainbow-blue text-white border-0">View</Button>
+                            <Button variant='ghost' size='sm' className="vibrant-button bg-gradient-to-br from-rainbow-violet via-rainbow-violet to-rainbow-violet text-white border-0">Edit</Button>
                         </DataTableCell>
                     </DataTableRow>
                     <DataTableRow className="hover:bg-white/5 transition-colors">
-                        <DataTableCell className='font-medium text-rainbow-blue'>INV-002</DataTableCell>
+                        <DataTableCell className='font-bold text-rainbow-blue'>INV-002</DataTableCell>
                         <DataTableCell>RetailHub</DataTableCell>
-                        <DataTableCell>2024-03-18</DataTableCell>
-                        <DataTableCell className='font-bold'>₹8,200.00</DataTableCell>
-                        <DataTableCell><Badge className="bg-rainbow-yellow text-white hover:bg-rainbow-yellow/90">Pending</Badge></DataTableCell>
-                        <DataTableCell className='text-right'>
-                            <Button variant='ghost' size='sm' className="text-rainbow-blue hover:text-rainbow-violet">View</Button>
+                        <DataTableCell className="text-muted-foreground">2024-03-18</DataTableCell>
+                        <DataTableCell className='font-black text-lg'>₹8,200.00</DataTableCell>
+                        <DataTableCell><Badge className="bg-rainbow-yellow text-white border-0 shadow-lg shadow-rainbow-yellow/20">Pending</Badge></DataTableCell>
+                        <DataTableCell className='text-right space-x-2'>
+                            <Button variant='ghost' size='sm' className="vibrant-button bg-gradient-to-br from-rainbow-cyan to-rainbow-blue text-white border-0">View</Button>
+                            <Button variant='ghost' size='sm' className="vibrant-button bg-gradient-to-br from-rainbow-violet via-rainbow-violet to-rainbow-violet text-white border-0">Edit</Button>
                         </DataTableCell>
                     </DataTableRow>
                 </tbody>
