@@ -3,7 +3,7 @@ import { Button } from './button'
 import { ArrowLeft } from 'lucide-react'
 
 interface PageHeaderProps {
-  title: string
+  title: string | ReactNode
   description?: string
   actions?: ReactNode
   children?: ReactNode

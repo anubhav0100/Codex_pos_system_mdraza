@@ -17,8 +17,8 @@ export function StatCard({ title, value, description, icon, trend, className }: 
   return (
     <div className={cn('premium-card p-6 soft-shadow', className)}>
       <div className='flex items-center justify-between'>
-        <p className='text-sm font-medium text-muted-foreground'>{title}</p>
-        {icon && <div className='text-muted-foreground'>{icon}</div>}
+        <p className='text-sm font-medium opacity-90'>{title}</p>
+        {icon && <div className='opacity-90'>{icon}</div>}
       </div>
       <div className='flex items-baseline gap-2 mt-2'>
         <h4 className='text-2xl font-bold tracking-tight'>{value}</h4>
@@ -33,7 +33,7 @@ export function StatCard({ title, value, description, icon, trend, className }: 
           </span>
         )}
       </div>
-      {description && <p className='text-xs text-muted-foreground mt-1'>{description}</p>}
+      {description && <p className='text-xs opacity-75 mt-1'>{description}</p>}
     </div>
   )
 }

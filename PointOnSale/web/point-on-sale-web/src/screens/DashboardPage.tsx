@@ -57,31 +57,42 @@ export default function DashboardPage() {
         ) : (
           <>
             <StatCard
-              title='Total Sales'
-              value='$12,840'
-              icon={<ShoppingCart className='h-4 w-4' />}
+              title='Total Invoices'
+              value='$24,500'
+              icon={<ShoppingCart className='h-4 w-4 text-white/80' />}
               trend={{ value: '+12%', positive: true }}
               description='From last month'
+              className='bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 text-white'
             />
             <StatCard
-              title='Orders'
-              value='456'
-              icon={<Package className='h-4 w-4' />}
-              trend={{ value: '+5%', positive: true }}
-              description='From last month'
+              title='Total Pending'
+              value='$8,240'
+              icon={<Package className='h-4 w-4 text-white/80' />}
+              trend={{ value: '+5%', positive: false }}
+              description='Requires attention'
+              className='bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white'
             />
             <StatCard
-              title='Customers'
-              value='2,345'
-              icon={<Users className='h-4 w-4' />}
-              trend={{ value: '+18%', positive: true }}
-              description='From last month'
+              title='Overdue'
+              value='$2,100'
+              icon={<ShieldCheck className='h-4 w-4 text-white/80' />}
+              trend={{ value: '-8%', positive: false }}
+              description='Over 30 days'
+              className='bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 text-white'
             />
             <StatCard
-              title='Low Stock'
-              value='12'
-              icon={<BarChart3 className='h-4 w-4' />}
-              description='Items requiring attention'
+              title='Avg Days Overdue'
+              value='14'
+              icon={<BarChart3 className='h-4 w-4 text-white/80' />}
+              description='Improving'
+              className='bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500 text-white'
+            />
+            <StatCard
+              title='Subcontracting'
+              value='3 Active'
+              icon={<Users className='h-4 w-4 text-white/80' />}
+              description='Work orders'
+              className='bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 text-white'
             />
           </>
         )}

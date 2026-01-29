@@ -40,18 +40,18 @@ export default function ProductsListPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Products'
+        title={<span className="gradient-text">Products</span>}
         description='Maintain your product catalog and pricing.'
       >
         <div className='flex flex-wrap gap-2'>
           <PermissionGate perm='PRODUCT_CATEGORIES_READ'>
-            <Button variant='outline' onClick={() => navigate('/categories')}>
+            <Button variant='outline' onClick={() => navigate('/categories')} className="hover:border-rainbow-blue hover:text-rainbow-blue transition-colors">
               <Layers className='h-4 w-4 mr-2' />
               Categories
             </Button>
           </PermissionGate>
           <PermissionGate perm='PRODUCTS_CREATE'>
-            <Button onClick={() => navigate('/products/new')}>
+            <Button onClick={() => navigate('/products/new')} className="bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 hover:opacity-90">
               <PackagePlus className='h-4 w-4 mr-2' />
               Add Product
             </Button>
@@ -91,15 +91,15 @@ export default function ProductsListPage() {
           </thead>
           <tbody>
             {products.map((product) => (
-              <DataTableRow key={product.id}>
-                <DataTableCell className='font-medium text-foreground'>{product.sku}</DataTableCell>
+              <DataTableRow key={product.id} className="hover:bg-white/5 transition-colors">
+                <DataTableCell className='font-medium text-rainbow-cyan'>{product.sku}</DataTableCell>
                 <DataTableCell className='text-foreground'>{product.name}</DataTableCell>
                 <DataTableCell className='text-foreground'>{product.hsn || '-'}</DataTableCell>
                 <DataTableCell className='text-foreground'>{product.gstPercent ?? 0}%</DataTableCell>
                 <DataTableCell className='text-foreground'>{formatAmount(product.mrp)}</DataTableCell>
                 <DataTableCell className='text-foreground'>{formatAmount(product.defaultSalePrice)}</DataTableCell>
                 <DataTableCell>
-                  <Badge variant={product.isActive ? 'default' : 'secondary'}>
+                  <Badge className={product.isActive ? 'bg-rainbow-green text-white hover:bg-rainbow-green/90' : 'bg-rainbow-red text-white hover:bg-rainbow-red/90'}>
                     {product.isActive ? 'ACTIVE' : 'INACTIVE'}
                   </Badge>
                 </DataTableCell>

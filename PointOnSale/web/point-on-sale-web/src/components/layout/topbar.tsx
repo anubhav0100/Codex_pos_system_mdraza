@@ -15,6 +15,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { SidebarNav } from './sidebar-nav'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/use-auth-store'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export function Topbar() {
   const navigate = useNavigate()
@@ -57,6 +58,7 @@ export function Topbar() {
       </div>
 
       <div className='flex items-center gap-2'>
+        <ThemeToggle />
         <Button variant='ghost' size='icon' className='h-9 w-9 relative'>
           <Bell className='h-5 w-5' />
           <span className='absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full' />

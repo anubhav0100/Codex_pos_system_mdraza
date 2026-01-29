@@ -183,7 +183,7 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Inventory Balance'
+        title={<span className="gradient-text">Inventory Balance</span>}
         description='Track on-hand inventory across your scope.'
         actions={
           <div className='flex flex-wrap items-center gap-2'>

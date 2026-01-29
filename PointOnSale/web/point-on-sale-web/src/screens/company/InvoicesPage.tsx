@@ -9,10 +9,10 @@ export default function InvoicesPage() {
     return (
         <div className='space-y-6'>
             <PageHeader
-                title='Invoices'
+                title={<span className="bg-gradient-to-r from-[hsl(190,80%,55%)] via-[hsl(240,80%,60%)] to-[hsl(280,70%,65%)] bg-clip-text text-transparent">Invoices</span>}
                 description='View and manage system invoices.'
             >
-                <Button variant='outline' className='gap-2'>
+                <Button className='gap-2 bg-gradient-to-r from-[hsl(190,80%,55%)] to-[hsl(240,80%,60%)] text-white border-0'>
                     <FileText className='h-4 w-4' />
                     Export All
                 </Button>
@@ -21,7 +21,7 @@ export default function InvoicesPage() {
             <div className='flex items-center gap-4'>
                 <div className='relative flex-1'>
                     <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                    <Input placeholder='Search invoices...' className='pl-9' />
+                    <Input placeholder='Search invoices...' className='pl-9 glass-card' />
                 </div>
             </div>
 
@@ -37,24 +37,24 @@ export default function InvoicesPage() {
                     </DataTableRow>
                 </thead>
                 <tbody>
-                    <DataTableRow>
-                        <DataTableCell className='font-medium'>INV-001</DataTableCell>
+                    <DataTableRow className="hover:bg-white/5 transition-colors">
+                        <DataTableCell className='font-medium text-rainbow-blue'>INV-001</DataTableCell>
                         <DataTableCell>TechCorp Solutions</DataTableCell>
                         <DataTableCell>2024-03-20</DataTableCell>
-                        <DataTableCell>₹12,450.00</DataTableCell>
-                        <DataTableCell><Badge>Paid</Badge></DataTableCell>
+                        <DataTableCell className='font-bold'>₹12,450.00</DataTableCell>
+                        <DataTableCell><Badge className="bg-rainbow-green text-white hover:bg-rainbow-green/90">Paid</Badge></DataTableCell>
                         <DataTableCell className='text-right'>
-                            <Button variant='ghost' size='sm'>View</Button>
+                            <Button variant='ghost' size='sm' className="text-rainbow-blue hover:text-rainbow-violet">View</Button>
                         </DataTableCell>
                     </DataTableRow>
-                    <DataTableRow>
-                        <DataTableCell className='font-medium'>INV-002</DataTableCell>
+                    <DataTableRow className="hover:bg-white/5 transition-colors">
+                        <DataTableCell className='font-medium text-rainbow-blue'>INV-002</DataTableCell>
                         <DataTableCell>RetailHub</DataTableCell>
                         <DataTableCell>2024-03-18</DataTableCell>
-                        <DataTableCell>₹8,200.00</DataTableCell>
-                        <DataTableCell><Badge variant='secondary'>Pending</Badge></DataTableCell>
+                        <DataTableCell className='font-bold'>₹8,200.00</DataTableCell>
+                        <DataTableCell><Badge className="bg-rainbow-yellow text-white hover:bg-rainbow-yellow/90">Pending</Badge></DataTableCell>
                         <DataTableCell className='text-right'>
-                            <Button variant='ghost' size='sm'>View</Button>
+                            <Button variant='ghost' size='sm' className="text-rainbow-blue hover:text-rainbow-violet">View</Button>
                         </DataTableCell>
                     </DataTableRow>
                 </tbody>

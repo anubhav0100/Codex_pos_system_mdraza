@@ -160,7 +160,13 @@ export default function StockRequestsOutgoingPage() {
                 {request.supplierName} ({request.supplierScopeType})
               </DataTableCell>
               <DataTableCell>
-                <Badge variant={request.status === 'PENDING' ? 'secondary' : 'default'}>
+                <Badge className={
+                  request.status === 'PENDING' ? 'bg-rainbow-orange text-white' :
+                    request.status === 'APPROVED' ? 'bg-rainbow-green text-white' :
+                      request.status === 'REJECTED' ? 'bg-destructive text-white' :
+                        request.status === 'FULFILLED' ? 'bg-rainbow-cyan text-white' :
+                          'bg-secondary'
+                }>
                   {request.status}
                 </Badge>
               </DataTableCell>
@@ -176,7 +182,7 @@ export default function StockRequestsOutgoingPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Outgoing Stock Requests'
+        title={<span className="gradient-text">Outgoing Stock Requests</span>}
         description='Manage requests sent to suppliers.'
         actions={
           <div className='flex flex-wrap items-center gap-2'>
