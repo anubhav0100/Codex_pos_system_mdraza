@@ -4,20 +4,63 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Base Theme Colors (Light Mode) */
+    --background: 220 20% 98%;
+    --foreground: 220 15% 15%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 263.4 70% 50.4%; /* Vibrant Purple */
+    --primary: 240 80% 60%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 217.2 91.2% 59.8%; /* Electric Blue */
+    --secondary: 220 15% 96%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 45%;
+
+    --accent: 280 70% 65%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 240 80% 60%;
+
+    --radius: 0.75rem;
+
+    /* Rainbow Spectrum Colors */
+    --rainbow-red: 0 85% 65%;
+    --rainbow-orange: 30 90% 60%;
+    --rainbow-yellow: 55 90% 60%;
+    --rainbow-green: 140 70% 55%;
+    --rainbow-cyan: 190 80% 55%;
+    --rainbow-blue: 240 80% 60%;
+    --rainbow-violet: 280 70% 65%;
+  }
+
+  .dark {
+    /* Dark Mode Defaults (Preserved/Adapted) */
+    --background: 240 10% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 240 10% 4%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 240 10% 4%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
@@ -31,13 +74,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 263.4 70% 50.4%;
-
-    --radius: 1rem;
-    
-    /* Vibrant Tokens */
-    --vibrant-1: 263 70% 50%;
-    --vibrant-2: 217 91% 60%;
-    --vibrant-3: 15 95% 60%;
   }
 }
 
@@ -45,44 +81,128 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
-    background-image: radial-gradient(at 0% 0%, hsla(263, 70%, 50%, 0.15) 0, transparent 50%), 
-                      radial-gradient(at 100% 0%, hsla(217, 91%, 60%, 0.15) 0, transparent 50%);
-    background-attachment: fixed;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
 }
 
-/* Premium Utilities */
-.glass-panel {
-  @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+/* Custom Gradients */
+@layer utilities {
+  .gradient-soft {
+    background: linear-gradient(135deg, hsl(220 20% 98%) 0%, hsl(240 30% 96%) 100%);
+  }
+
+  .dark .gradient-soft {
+    background: linear-gradient(135deg, hsl(240 10% 4%) 0%, hsl(240 10% 8%) 100%);
+  }
+
+  .gradient-rainbow {
+    background: linear-gradient(90deg,
+        hsl(var(--rainbow-red)) 0%,
+        hsl(var(--rainbow-orange)) 14%,
+        hsl(var(--rainbow-yellow)) 28%,
+        hsl(var(--rainbow-green)) 42%,
+        hsl(var(--rainbow-cyan)) 57%,
+        hsl(var(--rainbow-blue)) 71%,
+        hsl(var(--rainbow-violet)) 100%);
+  }
+
+  .gradient-heading {
+    background: linear-gradient(120deg,
+        hsl(var(--rainbow-blue)) 0%,
+        hsl(var(--rainbow-violet)) 50%,
+        hsl(var(--rainbow-red)) 100%);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent gradient-heading;
+  }
+
+  /* Utility Classes for Rainbow Colors */
+  .text-rainbow-red {
+    color: hsl(var(--rainbow-red));
+  }
+
+  .text-rainbow-orange {
+    color: hsl(var(--rainbow-orange));
+  }
+
+  .text-rainbow-yellow {
+    color: hsl(var(--rainbow-yellow));
+  }
+
+  .text-rainbow-green {
+    color: hsl(var(--rainbow-green));
+  }
+
+  .text-rainbow-cyan {
+    color: hsl(var(--rainbow-cyan));
+  }
+
+  .text-rainbow-blue {
+    color: hsl(var(--rainbow-blue));
+  }
+
+  .text-rainbow-violet {
+    color: hsl(var(--rainbow-violet));
+  }
+
+  .bg-rainbow-red {
+    background-color: hsl(var(--rainbow-red));
+  }
+
+  .bg-rainbow-orange {
+    background-color: hsl(var(--rainbow-orange));
+  }
+
+  .bg-rainbow-yellow {
+    background-color: hsl(var(--rainbow-yellow));
+  }
+
+  .bg-rainbow-green {
+    background-color: hsl(var(--rainbow-green));
+  }
+
+  .bg-rainbow-cyan {
+    background-color: hsl(var(--rainbow-cyan));
+  }
+
+  .bg-rainbow-blue {
+    background-color: hsl(var(--rainbow-blue));
+  }
+
+  .bg-rainbow-violet {
+    background-color: hsl(var(--rainbow-violet));
+  }
 }
 
-.bg-gradient-vibrant {
-  background: linear-gradient(135deg, hsl(263, 70%, 50%) 0%, hsl(217, 91%, 60%) 100%);
+/* Premium Effects */
+@layer components {
+  .glass-card {
+    @apply bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-[1.02];
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-move 3s ease infinite;
+  }
 }
 
-.bg-gradient-warm {
-  background: linear-gradient(135deg, hsl(15, 95%, 60%) 0%, hsl(330, 80%, 60%) 100%);
-}
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
 
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(263,70%,50%)] to-[hsl(217,91%,60%)];
-}
+  50% {
+    background-position: 100% 50%;
+  }
 
-.hover-lift {
-  @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl;
-}
-
-.glow-primary {
-  box-shadow: 0 0 20px hsla(263, 70%, 50%, 0.3);
-}
-
-.vibrant-button {
-  @apply bg-gradient-vibrant text-white font-semibold shadow-lg hover:shadow-primary/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
-}
-
-.premium-card {
-  @apply glass-panel rounded-2xl p-6 transition-all duration-300 hover:border-white/20;
+  100% {
+    background-position: 0% 50%;
+  }
 }
