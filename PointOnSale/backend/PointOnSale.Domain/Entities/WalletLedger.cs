@@ -17,4 +17,9 @@ public class WalletLedger
     public string RefId { get; set; }
     public DateTime CreatedAt { get; set; }
     public string Notes { get; set; }
+    
+    // Breakdown for Income Transactions
+    public decimal AdminCharges { get; set; }
+    public decimal TDS { get; set; }
+    public decimal Commission { get; set; }
 }

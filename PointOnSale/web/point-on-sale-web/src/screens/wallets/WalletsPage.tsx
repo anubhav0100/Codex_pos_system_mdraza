@@ -76,10 +76,10 @@ export default function WalletsPage() {
       <div className='grid gap-6 md:grid-cols-3'>
         {wallets.map((wallet) => (
           <StatCard
-            key={wallet.walletId}
+            key={wallet.id}
             title={walletLabels[wallet.walletType] ?? wallet.walletType}
             value={formatCurrency(wallet.balance)}
-            description={wallet.updatedAt ? `Updated ${wallet.updatedAt}` : undefined}
+            description={undefined}
             icon={<Wallet className='h-4 w-4' />}
           />
         ))}
@@ -144,7 +144,7 @@ export default function WalletsPage() {
               >
                 <option value=''>Select wallet</option>
                 {wallets.map((wallet) => (
-                  <option key={wallet.walletId} value={wallet.walletId}>
+                  <option key={wallet.id} value={wallet.id}>
                     {walletLabels[wallet.walletType] ?? wallet.walletType}
                   </option>
                 ))}
@@ -164,7 +164,7 @@ export default function WalletsPage() {
               >
                 <option value=''>Select wallet</option>
                 {wallets.map((wallet) => (
-                  <option key={wallet.walletId} value={wallet.walletId}>
+                  <option key={wallet.id} value={wallet.id}>
                     {walletLabels[wallet.walletType] ?? wallet.walletType}
                   </option>
                 ))}

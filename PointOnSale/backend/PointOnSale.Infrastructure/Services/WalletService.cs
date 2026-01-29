@@ -42,7 +42,7 @@ public class WalletService(
         return wallet!;
     }
 
-    public async Task ProcessTransferAsync(int fromWalletId, int toWalletId, decimal amount, string refType, string refId, string notes = null, CancellationToken cancellationToken = default)
+    public async Task ProcessTransferAsync(int fromWalletId, int toWalletId, decimal amount, string refType, string refId, string notes = null, decimal adminCharges = 0, decimal tds = 0, decimal commission = 0, CancellationToken cancellationToken = default)
     {
         using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
@@ -56,7 +56,10 @@ public class WalletService(
                 RefType = refType,
                 RefId = refId,
                 CreatedAt = DateTime.UtcNow,
-                Notes = notes
+                Notes = notes,
+                AdminCharges = adminCharges,
+                TDS = tds,
+                Commission = commission
             };
             await walletRepository.AddLedgerEntryAsync(ledger, cancellationToken);
 

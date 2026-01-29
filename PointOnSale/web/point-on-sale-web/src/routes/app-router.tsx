@@ -28,6 +28,10 @@ import StockRequestsOutgoingPage from '@/screens/requests/StockRequestsOutgoingP
 import StockRequestsInboxPage from '@/screens/requests/StockRequestsInboxPage'
 import WalletsPage from '@/screens/wallets/WalletsPage'
 import WalletsLedgerPage from '@/screens/wallets/WalletsLedgerPage'
+import FundWalletPage from '@/screens/wallets/FundWalletPage'
+import IncomeWalletPage from '@/screens/wallets/IncomeWalletPage'
+import FundRequestsPage from '@/screens/wallets/FundRequestsPage'
+import FundTransferPage from '@/screens/wallets/FundTransferPage'
 import InvoicesPage from '@/screens/company/InvoicesPage'
 import ReportsPage from '@/screens/company/ReportsPage'
 import AuditLogsPage from '@/screens/company/AuditLogsPage'
@@ -271,26 +275,43 @@ const router = createBrowserRouter([
         path: 'stock-requests',
         element: <Navigate to='/requests/outgoing' replace />,
       },
+      // New Wallet Routes as per transactions menu
+      {
+        path: 'wallets/fund',
+        element: (
+          <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+            <FundWalletPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'wallets/income',
+        element: (
+          <ProtectedRoute requiredPermission='WALLETS_VIEW'>
+            <IncomeWalletPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'fund-requests',
+        element: (
+          <ProtectedRoute requiredPermission='FUND_REQUESTS_CREATE'>
+            <FundRequestsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'fund-transfer',
+        element: (
+          <ProtectedRoute requiredPermission='FUND_REQUESTS_APPROVE'>
+            <FundTransferPage />
+          </ProtectedRoute>
+        ),
+      },
+      // Keep generic wallets route for backward compatibility if anyone types it, or redirect
       {
         path: 'wallets',
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute requiredPermission='WALLETS_VIEW'>
-                <WalletsPage />
-              </ProtectedRoute>
-            ),
-          },
-          {
-            path: 'ledger',
-            element: (
-              <ProtectedRoute requiredPermission='WALLETS_VIEW'>
-                <WalletsLedgerPage />
-              </ProtectedRoute>
-            ),
-          },
-        ],
+        element: <Navigate to='/wallets/fund' replace />,
       },
       {
         path: 'invoices',

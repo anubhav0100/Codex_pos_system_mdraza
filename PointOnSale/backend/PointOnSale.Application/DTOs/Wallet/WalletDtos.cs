@@ -21,6 +21,9 @@ public class WalletLedgerDto
     public string RefId { get; set; }
     public DateTime CreatedAt { get; set; }
     public string Notes { get; set; }
+    public decimal AdminCharges { get; set; }
+    public decimal TDS { get; set; }
+    public decimal Commission { get; set; }
 }
 
 public class WalletTransferDto

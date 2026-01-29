@@ -42,6 +42,7 @@ public class PosDbContext : DbContext
     // Wallet
     public DbSet<WalletAccount> WalletAccounts { get; set; }
     public DbSet<WalletLedger> WalletLedgers { get; set; }
+    public DbSet<FundRequest> FundRequests { get; set; }
 
     // POS + Invoice
     public DbSet<SalesOrder> SalesOrders { get; set; }

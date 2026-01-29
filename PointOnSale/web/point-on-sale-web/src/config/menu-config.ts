@@ -13,7 +13,9 @@ import {
     ShieldCheck,
     Map,
     ShoppingCart,
+    ShoppingCart,
     Tags,
+    ArrowRightLeft,
 } from 'lucide-react'
 
 export interface MenuItem {
@@ -45,7 +47,11 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: Layers, label: 'Assignments', href: '/assignments', allowedScopes: [1], requiredPermission: 'PRODUCT_ASSIGNMENTS_READ' },
     { icon: Boxes, label: 'Inventory', href: '/inventory/balance', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVENTORY_READ' },
     { icon: Truck, label: 'Stock Requests', href: '/requests/outgoing', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_READ' },
-    { icon: Wallet, label: 'Wallets', href: '/wallets', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW' },
+    // Transactions
+    { icon: Wallet, label: 'Fund Wallet', href: '/wallets/fund', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW' },
+    { icon: Wallet, label: 'Income Wallet', href: '/wallets/income', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW' },
+    { icon: ArrowRightLeft, label: 'Fund Requests', href: '/fund-requests', allowedScopes: [2, 3, 4], requiredPermission: 'FUND_REQUESTS_CREATE' }, // Lower scopes REQUEST funds
+    { icon: ArrowRightLeft, label: 'Fund Transfer', href: '/fund-transfer', allowedScopes: [1], requiredPermission: 'FUND_REQUESTS_APPROVE' }, // Company TRANSFERS funds
     { icon: FileText, label: 'Invoices', href: '/invoices', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'INVOICES_READ' },
 
     // Reporting & Logs

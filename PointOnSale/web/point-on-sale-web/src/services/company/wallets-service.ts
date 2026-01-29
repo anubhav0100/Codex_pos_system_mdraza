@@ -1,21 +1,26 @@
 import apiClient from '@/services/api-client'
 
 export interface WalletSummary {
-  walletId: string
+  id: number
+  scopeNodeId: number
   walletType: 'FUND' | 'INCOME' | 'INCENTIVE'
   balance: number
-  currency: string
-  updatedAt?: string
+  // currency: string // Backend doesn't send currency yet, assume schema default
+  // updatedAt?: string
 }
 
 export interface WalletLedgerEntry {
-  id: string
-  walletId: string
-  entryType: 'CREDIT' | 'DEBIT' | 'TRANSFER'
+  id: number
+  fromWalletId?: number
+  toWalletId?: number
   amount: number
-  balance: number
-  reference?: string
+  refType: string
+  refId: string
   createdAt: string
+  notes?: string
+  adminCharges?: number
+  tds?: number
+  commission?: number
 }
 
 export interface WalletTransferDto {

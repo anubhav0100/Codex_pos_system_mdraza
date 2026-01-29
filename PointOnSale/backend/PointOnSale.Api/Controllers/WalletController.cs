@@ -92,7 +92,10 @@ public class WalletController(
             RefType = l.RefType,
             RefId = l.RefId,
             CreatedAt = l.CreatedAt,
-            Notes = l.Notes
+            Notes = l.Notes,
+            AdminCharges = l.AdminCharges,
+            TDS = l.TDS,
+            Commission = l.Commission
         }).ToList();
 
         return Ok(ApiResponse<List<WalletLedgerDto>>.Ok(dtos));
