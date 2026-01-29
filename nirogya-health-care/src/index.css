@@ -1,38 +1,108 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
-  /* Ayurvedic Color Palette */
-  --primary-color: #15803d;
-  /* Natural Green */
-  --primary-light: #f0fdf4;
-  /* Pale Herbal Green */
-  --primary-dark: #14532d;
-  /* Deep Moss */
-  --accent-color: #b45309;
-  /* Antiqued Gold */
-  --secondary-color: #fcfaf8;
-  /* Warm Paper/Cream */
-  --text-dark: #292524;
-  /* Earth Brown */
-  --text-light: #57534e;
-  /* Stone Grey */
-  --white: #ffffff;
+  /* =========================================
+     1. Core Design System Colors
+     ========================================= */
 
-  /* Glassmorphism Variables modified for warmer tone */
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(180, 83, 9, 0.15);
-  /* Subtle Gold border */
+  /* Base Theme Colors (Light Mode) */
+  --background: 220 20% 98%;
+  --foreground: 220 15% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --primary: 240 80% 60%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 220 15% 96%;
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 220 15% 95%;
+  --muted-foreground: 215 16% 47%;
+
+  --accent: 280 70% 65%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 70% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 220 15% 88%;
+  --input: 220 15% 88%;
+  --ring: 240 80% 60%;
+
+  /* Rainbow Spectrum Colors */
+  --rainbow-red: 0 85% 65%;
+  --rainbow-orange: 30 90% 60%;
+  --rainbow-yellow: 55 90% 60%;
+  --rainbow-green: 140 70% 55%;
+  --rainbow-cyan: 190 80% 55%;
+  --rainbow-blue: 240 80% 60%;
+  --rainbow-violet: 280 70% 65%;
+
+  /* =========================================
+     2. CSS Gradient Variables
+     ========================================= */
+
+  /* Soft Background Gradient */
+  --gradient-soft: linear-gradient(135deg, hsl(220 20% 98%) 0%, hsl(240 30% 96%) 100%);
+
+  /* Full Rainbow Gradient */
+  --gradient-rainbow: linear-gradient(90deg,
+      hsl(var(--rainbow-red)) 0%,
+      hsl(var(--rainbow-orange)) 14%,
+      hsl(var(--rainbow-yellow)) 28%,
+      hsl(var(--rainbow-green)) 42%,
+      hsl(var(--rainbow-cyan)) 57%,
+      hsl(var(--rainbow-blue)) 71%,
+      hsl(var(--rainbow-violet)) 100%);
+
+  /* Heading Gradient */
+  --gradient-heading: linear-gradient(120deg,
+      hsl(var(--rainbow-blue)) 0%,
+      hsl(var(--rainbow-violet)) 50%,
+      hsl(var(--rainbow-red)) 100%);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(41 37 36 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(41 37 36 / 0.1), 0 2px 4px -2px rgb(41 37 36 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(41 37 36 / 0.1), 0 4px 6px -4px rgb(41 37 36 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(41 37 36 / 0.1), 0 8px 10px -6px rgb(41 37 36 / 0.1);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
   font-family: 'Lato', sans-serif;
   line-height: 1.6;
-  font-weight: 400;
 }
+
+/* Dark Mode Overrides */
+[data-theme='dark'] {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 217 33% 17%;
+  --card-foreground: 210 40% 98%;
+
+  --primary: 240 80% 70%;
+  --primary-foreground: 222 47% 11%;
+
+  --secondary: 217 19% 27%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217 19% 27%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 280 70% 65%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217 19% 27%;
+  --input: 217 19% 27%;
+
+  --gradient-soft: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(217 33% 15%) 100%);
+}
+
+/* =========================================
+   3. Global Resets & Base Styles
+   ========================================= */
 
 * {
   box-sizing: border-box;
@@ -41,12 +111,10 @@
 }
 
 body {
-  background: #fcfaf8;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(21, 128, 61, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(180, 83, 9, 0.05) 0px, transparent 50%);
-  color: var(--text-dark);
+  background: var(--gradient-soft);
+  color: hsl(var(--foreground));
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -54,12 +122,6 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding: 0 2rem;
-  }
 }
 
 button {
@@ -70,66 +132,133 @@ button {
   padding: 0;
 }
 
-.section-title {
-  text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--primary-dark);
-  font-weight: 700;
-  position: relative;
-  padding-bottom: 1rem;
+/* =========================================
+   4. Utility Classes
+   ========================================= */
+
+/* Text Colors */
+.text-rainbow-red {
+  color: hsl(var(--rainbow-red));
 }
 
-.section-title::after {
-  content: "❧";
-  display: block;
-  font-size: 2rem;
-  color: var(--accent-color);
-  margin-top: 0.5rem;
-  opacity: 0.8;
+.text-rainbow-orange {
+  color: hsl(var(--rainbow-orange));
 }
 
-.glass-panel {
-  background: var(--glass-bg);
+.text-rainbow-yellow {
+  color: hsl(var(--rainbow-yellow));
+}
+
+.text-rainbow-green {
+  color: hsl(var(--rainbow-green));
+}
+
+.text-rainbow-cyan {
+  color: hsl(var(--rainbow-cyan));
+}
+
+.text-rainbow-blue {
+  color: hsl(var(--rainbow-blue));
+}
+
+.text-rainbow-violet {
+  color: hsl(var(--rainbow-violet));
+}
+
+/* Gradients */
+.gradient-text {
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.gradient-rainbow {
+  background: var(--gradient-rainbow);
+}
+
+/* Animation */
+@keyframes gradient-xy {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-xy 3s ease infinite;
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Glass Components */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: var(--shadow-lg);
 }
 
+[data-theme='dark'] .glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2.5rem;
+  padding: 0.75rem 1.5rem;
   font-weight: 600;
   border-radius: 9999px;
   transition: all 0.3s ease;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   font-size: 0.875rem;
-  font-family: 'Lato', sans-serif;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  color: var(--white);
-  box-shadow: 0 4px 14px 0 rgba(21, 128, 61, 0.39);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--rainbow-violet)));
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px 0 rgba(21, 128, 61, 0.23);
-  background: linear-gradient(135deg, var(--accent-color), #9a3412);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Titles */
+.section-title {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 1rem;
 }
 
 .section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   position: relative;
-}
-
-.section+.section {
-  padding-top: 0;
 }

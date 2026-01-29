@@ -3,10 +3,10 @@ import React from 'react';
 export const Footer: React.FC = () => {
     return (
         <footer style={{
-            background: 'linear-gradient(to bottom, #14532d 0%, #052e16 100%)',
-            color: '#f0fdf4',
+            background: 'linear-gradient(to bottom, hsl(var(--foreground)) 0%, #1e1b4b 100%)', // Dark rich gradient
+            color: 'hsl(var(--primary-foreground))',
             padding: '6rem 0 3rem',
-            borderTop: '4px solid var(--accent-color)'
+            borderTop: '4px solid hsl(var(--accent))'
         }}>
             <div className="container">
                 <div style={{
@@ -26,28 +26,30 @@ export const Footer: React.FC = () => {
                             alignItems: 'center',
                             gap: '0.5rem'
                         }}>
-                            <span style={{ color: 'var(--primary-color)' }}>✦</span> Nirogya Health
+                            <span className="text-rainbow-green">✦</span> Nirogya Health
                         </div>
-                        <p style={{ color: '#94a3b8', lineHeight: 1.7, maxWidth: '300px' }}>
+                        <p style={{ color: 'hsl(var(--muted))', lineHeight: 1.7, maxWidth: '300px' }}>
                             Empowering lives through world-class medical innovation. Trusted by professionals, loved by families.
                         </p>
                     </div>
 
                     <div>
-                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#64748b', letterSpacing: '0.05em', fontWeight: 700 }}>Quick Navigation</h4>
+                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: 'hsl(var(--muted))', letterSpacing: '0.05em', fontWeight: 700 }}>Quick Navigation</h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {['Home', 'Products', 'About', 'Contact'].map((item) => (
                                 <a
                                     key={item}
                                     href={`#${item.toLowerCase()}`}
-                                    style={{ color: '#e2e8f0', transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                                    style={{ color: 'hsl(var(--primary-foreground))', transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', opacity: 0.8 }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.color = 'var(--primary-color)';
+                                        e.currentTarget.style.color = 'hsl(var(--primary))';
                                         e.currentTarget.style.paddingLeft = '5px';
+                                        e.currentTarget.style.opacity = '1';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.color = '#e2e8f0';
+                                        e.currentTarget.style.color = 'hsl(var(--primary-foreground))';
                                         e.currentTarget.style.paddingLeft = '0';
+                                        e.currentTarget.style.opacity = '0.8';
                                     }}
                                 >
                                     › {item}
@@ -57,8 +59,8 @@ export const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#64748b', letterSpacing: '0.05em', fontWeight: 700 }}>Our Expertise</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#e2e8f0' }}>
+                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: 'hsl(var(--muted))', letterSpacing: '0.05em', fontWeight: 700 }}>Our Expertise</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'hsl(var(--primary-foreground))', opacity: 0.8 }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>• Medical Supply Chain</span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>• Advanced Diagnostics</span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>• Healthcare Consulting</span>
@@ -67,7 +69,7 @@ export const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#64748b', letterSpacing: '0.05em', fontWeight: 700 }}>Connect With Us</h4>
+                        <h4 style={{ fontSize: '1rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: 'hsl(var(--muted))', letterSpacing: '0.05em', fontWeight: 700 }}>Connect With Us</h4>
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((social) => (
                                 <a
@@ -76,7 +78,7 @@ export const Footer: React.FC = () => {
                                     style={{
                                         width: '40px',
                                         height: '40px',
-                                        background: 'rgba(255,255,255,0.08)',
+                                        background: 'rgba(255,255,255,0.1)',
                                         border: '1px solid rgba(255,255,255,0.1)',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -88,13 +90,13 @@ export const Footer: React.FC = () => {
                                         textDecoration: 'none'
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = 'var(--primary-color)';
+                                        e.currentTarget.style.background = 'hsl(var(--primary))';
                                         e.currentTarget.style.transform = 'translateY(-3px)';
-                                        e.currentTarget.style.borderColor = 'var(--primary-color)';
+                                        e.currentTarget.style.borderColor = 'hsl(var(--primary))';
                                         e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(14, 165, 233, 0.3)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                                        e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
                                         e.currentTarget.style.transform = 'translateY(0)';
                                         e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
                                         e.currentTarget.style.boxShadow = 'none';
@@ -111,7 +113,6 @@ export const Footer: React.FC = () => {
                             <button className="btn btn-primary" style={{
                                 padding: '0.75rem 1.5rem',
                                 fontSize: '0.9rem',
-                                background: 'linear-gradient(to right, var(--primary-color), var(--primary-dark))',
                                 border: 'none'
                             }}>
                                 Subscribe to Newsletter
@@ -128,7 +129,7 @@ export const Footer: React.FC = () => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     gap: '1rem',
-                    color: '#64748b',
+                    color: 'hsl(var(--muted))',
                     fontSize: '0.9rem'
                 }}>
                     <p>&copy; {new Date().getFullYear()} Nirogya Health Care. All rights reserved.</p>

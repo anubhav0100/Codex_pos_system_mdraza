@@ -66,7 +66,7 @@ export const HeroSlider: React.FC = () => {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            background: 'linear-gradient(to right, rgba(20, 83, 45, 0.9) 0%, rgba(20, 83, 45, 0.4) 100%)',
+                            background: 'linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%)', // Darker overlay for better text contrast
                         }} />
                     </div>
 
@@ -86,25 +86,26 @@ export const HeroSlider: React.FC = () => {
                             fontFamily: "'Playfair Display', serif",
                             fontSize: 'clamp(3rem, 6vw, 5rem)',
                             marginBottom: '1.5rem',
-                            textShadow: '0 4px 8px rgba(0,0,0,0.4)',
+                            textShadow: '0 4px 8px rgba(0,0,0,0.5)',
                             fontWeight: 700,
                             letterSpacing: '-0.02em',
-                            color: '#fbbf24' /* Slight gold tint */
+                            background: 'linear-gradient(90deg, #fff, #fbbf24)', // slight gold gradient text
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            color: 'transparent'
                         }}>
                             {slide.title}
                         </h1>
                         <p style={{
-                            fontFamily: "'Lato', sans-serif",
                             fontSize: 'clamp(1.2rem, 2vw, 1.6rem)',
                             marginBottom: '2.5rem',
                             maxWidth: '800px',
                             textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                            fontWeight: 300,
-                            letterSpacing: '0.05em'
+                            opacity: 0.9,
                         }}>
                             {slide.subtitle}
                         </p>
-                        <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+                        <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2.5rem' }}>
                             View Collection
                         </button>
                     </div>
@@ -129,8 +130,9 @@ export const HeroSlider: React.FC = () => {
                             width: '12px',
                             height: '12px',
                             borderRadius: '50%',
-                            backgroundColor: index === currentSlide ? 'var(--primary-color)' : 'rgba(255,255,255,0.5)',
-                            transition: 'background-color 0.3s',
+                            backgroundColor: index === currentSlide ? 'hsl(var(--primary))' : 'rgba(255,255,255,0.3)',
+                            border: index === currentSlide ? 'none' : '1px solid white',
+                            transition: 'all 0.3s ease',
                         }}
                     />
                 ))}
