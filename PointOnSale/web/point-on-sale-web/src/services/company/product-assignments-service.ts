@@ -24,6 +24,13 @@ export interface AssignProductPayload {
   priceOverride?: number | null
 }
 
+export interface BulkAssignProductPayload {
+  scopeNodeId: number
+  productIds: number[]
+  isAllowed: boolean
+  priceOverride?: number | null
+}
+
 export interface UpdateAssignmentPayload {
   isAllowed: boolean
   priceOverride?: number | null
@@ -40,6 +47,10 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 export const productAssignmentsService = {
   assignProduct: async (payload: AssignProductPayload) => {
     const response = await apiClient.post<ApiResponse<string> | string>('product-assignments/assign', payload)
+    return unwrapResponse(response)
+  },
+  assignProducts: async (payload: BulkAssignProductPayload) => {
+    const response = await apiClient.post<ApiResponse<string> | string>('product-assignments/assign-bulk', payload)
     return unwrapResponse(response)
   },
   getScopeProducts: async (scopeNodeId: number) => {

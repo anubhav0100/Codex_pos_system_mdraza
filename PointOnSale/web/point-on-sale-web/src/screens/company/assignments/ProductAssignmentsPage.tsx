@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { scopesService, type ScopeNode } from '@/services/company/scopes-service'
-import { productsService, type ProductSummary } from '@/services/company/products-service'
+import { productsService } from '@/services/company/products-service'
 import {
   productAssignmentsService,
   type ScopeProductAssignment,
@@ -48,9 +48,6 @@ const findScope = (nodes: ScopeNode[], id: number | null): ScopeNode | null => {
   return null
 }
 
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-
 const scopeTypeIcons: Record<string, React.JSX.Element> = {
   '1': <Boxes className='h-4 w-4 text-muted-foreground' />,
   '2': <Map className='h-4 w-4 text-muted-foreground' />,
@@ -69,7 +66,7 @@ export default function ProductAssignmentsPage() {
   const [selectedScopeId, setSelectedScopeId] = useState<number | null>(null)
   const [assignOpen, setAssignOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<ScopeProductAssignment | null>(null)
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
+  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([])
   const [assignAllowed, setAssignAllowed] = useState(true)
   const [assignPriceOverride, setAssignPriceOverride] = useState('')
   const [productSearch, setProductSearch] = useState('')
@@ -123,7 +120,7 @@ export default function ProductAssignmentsPage() {
 
   useEffect(() => {
     if (assignOpen) {
-      setSelectedProductId(null)
+      setSelectedProductIds([])
       setAssignAllowed(true)
       setAssignPriceOverride('')
       setProductSearch('')
@@ -131,13 +128,13 @@ export default function ProductAssignmentsPage() {
   }, [assignOpen])
 
   const assignMutation = useMutation({
-    mutationFn: productAssignmentsService.assignProduct,
+    mutationFn: productAssignmentsService.assignProducts,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scope-products'] })
       setAssignOpen(false)
-      toast.success('Product assigned successfully')
+      toast.success('Products assigned successfully')
     },
-    onError: () => toast.error('Failed to assign product'),
+    onError: () => toast.error('Failed to assign products'),
   })
 
   const updateMutation = useMutation({
@@ -170,16 +167,16 @@ export default function ProductAssignmentsPage() {
     )
   }, [productSearch, products])
 
-  const selectedProduct = products.find((product) => product.id === selectedProductId) ?? null
+  // const selectedProduct = products.find((product) => product.id === selectedProductId) ?? null
 
   const handleAssign = () => {
-    if (!selectedScope || !selectedProductId) {
-      toast.error('Select a scope and product first')
+    if (!selectedScope || selectedProductIds.length === 0) {
+      toast.error('Select a scope and at least one product')
       return
     }
     assignMutation.mutate({
       scopeNodeId: selectedScope.id,
-      productId: selectedProductId,
+      productIds: selectedProductIds,
       isAllowed: assignAllowed,
       priceOverride: parsePriceOverride(assignPriceOverride),
     })
@@ -387,40 +384,61 @@ export default function ProductAssignmentsPage() {
       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
         <DialogContent className='sm:max-w-[520px]'>
           <DialogHeader>
-            <DialogTitle>Assign Product</DialogTitle>
-            <DialogDescription>Select a product to assign to the chosen scope.</DialogDescription>
+            <DialogTitle>Assign Products</DialogTitle>
+            <DialogDescription>Select products to assign to the chosen scope.</DialogDescription>
           </DialogHeader>
           <div className='space-y-4'>
             <div className='space-y-2'>
-              <label className='text-sm font-medium text-foreground'>Search products</label>
+              <div className="flex items-center justify-between">
+                <label className='text-sm font-medium text-foreground'>Search & Select</label>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => {
+                    const allIds = filteredProducts.map(p => p.id);
+                    setSelectedProductIds([...new Set([...selectedProductIds, ...allIds])]);
+                  }}>Select All</Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setSelectedProductIds([])}>Clear</Button>
+                </div>
+              </div>
               <Input
                 value={productSearch}
                 onChange={(event) => setProductSearch(event.target.value)}
                 placeholder='Search by name or SKU'
               />
             </div>
-            <div className='space-y-2'>
-              <label className='text-sm font-medium text-foreground'>Product</label>
-              <select
-                className={selectClassName}
-                value={selectedProductId ?? ''}
-                onChange={(event) => setSelectedProductId(Number(event.target.value) || null)}
-              >
-                <option value=''>Select a product</option>
-                {filteredProducts.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} ({product.sku})
-                  </option>
-                ))}
-              </select>
+
+            <div className='space-y-2 border rounded-md p-2 h-60 overflow-y-auto'>
+              {filteredProducts.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8 text-sm">No products found</div>
+              ) : (
+                filteredProducts.map((product) => (
+                  <label key={product.id} className="flex items-start gap-2 p-2 hover:bg-secondary/50 rounded cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 rounded border-primary"
+                      checked={selectedProductIds.includes(product.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedProductIds(prev => [...prev, product.id])
+                        } else {
+                          setSelectedProductIds(prev => prev.filter(id => id !== product.id))
+                        }
+                      }}
+                    />
+                    <div className="text-sm">
+                      <div className="font-medium">{product.name}</div>
+                      <div className="text-xs text-muted-foreground">SKU: {product.sku} — {formatAmount(product.defaultSalePrice)}</div>
+                    </div>
+                  </label>
+                ))
+              )}
             </div>
-            {selectedProduct ? (
-              <div className='rounded-lg border border-border bg-secondary/30 p-3 text-sm text-muted-foreground'>
-                Base price: {formatAmount(selectedProduct.defaultSalePrice)}
-              </div>
-            ) : null}
+
+            <div className='flex items-center justify-between text-sm text-muted-foreground'>
+              <span>{selectedProductIds.length} products selected</span>
+            </div>
+
             <div className='space-y-2'>
-              <label className='text-sm font-medium text-foreground'>Price override</label>
+              <label className='text-sm font-medium text-foreground'>Price override (Optional)</label>
               <Input
                 type='number'
                 value={assignPriceOverride}
@@ -428,12 +446,7 @@ export default function ProductAssignmentsPage() {
                 placeholder='Leave blank to use base price'
               />
               <p className='text-xs text-muted-foreground'>
-                Effective price:{' '}
-                {formatAmount(
-                  parsePriceOverride(assignPriceOverride) ??
-                  selectedProduct?.defaultSalePrice ??
-                  null,
-                )}
+                Applied to all selected products.
               </p>
             </div>
             <label className='flex items-center gap-2 text-sm text-foreground'>
@@ -443,15 +456,15 @@ export default function ProductAssignmentsPage() {
                 onChange={(event) => setAssignAllowed(event.target.checked)}
                 className='h-4 w-4 rounded border-border'
               />
-              Allow product for this scope
+              Allow products for this scope
             </label>
           </div>
           <DialogFooter className='gap-2 sm:gap-0'>
             <Button variant='ghost' onClick={() => setAssignOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAssign} disabled={assignMutation.isPending || !selectedProductId}>
-              {assignMutation.isPending ? 'Assigning...' : 'Assign Product'}
+            <Button onClick={handleAssign} disabled={assignMutation.isPending || selectedProductIds.length === 0}>
+              {assignMutation.isPending ? 'Assigning...' : `Assign ${selectedProductIds.length} Products`}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -40,3 +40,17 @@ public class UpdateProductAssignmentDto
     [Range(0, double.MaxValue)]
     public decimal? PriceOverride { get; set; }
 }
+
+public class BulkAssignProductDto
+{
+    [Required]
+    public int ScopeNodeId { get; set; }
+    
+    [Required]
+    public List<int> ProductIds { get; set; } = new();
+    
+    public bool IsAllowed { get; set; } = true;
+    
+    [Range(0, double.MaxValue)]
+    public decimal? PriceOverride { get; set; }
+}

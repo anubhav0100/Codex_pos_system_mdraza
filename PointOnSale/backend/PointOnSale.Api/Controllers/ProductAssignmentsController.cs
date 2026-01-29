@@ -64,6 +64,54 @@ public class ProductAssignmentsController(
         return Ok(ApiResponse<string>.Ok("Product assigned successfully"));
     }
 
+    // Bulk Assign Products
+    [HttpPost("product-assignments/assign-bulk")]
+    [RequirePermission("PRODUCT_ASSIGNMENTS_MANAGE")]
+    [Filters.AuditLog]
+    public async Task<ActionResult<ApiResponse<string>>> AssignBulk([FromBody] BulkAssignProductDto dto)
+    {
+        int myScopeId = GetUserScopeId();
+        if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, dto.ScopeNodeId))
+             return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Scope"), "Forbidden"));
+
+        if (dto.ProductIds == null || !dto.ProductIds.Any())
+             return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No products selected"), "No Products"));
+
+        int successCount = 0;
+        int failCount = 0;
+
+        foreach (var productId in dto.ProductIds)
+        {
+            try 
+            {
+                // Check if exists
+                var existing = await productRepository.GetAssignmentAsync(dto.ScopeNodeId, productId);
+                if (existing == null)
+                {
+                    var assignment = new ProductAssignment
+                    {
+                        ScopeNodeId = dto.ScopeNodeId,
+                        ProductId = productId,
+                        IsAllowed = dto.IsAllowed,
+                        PriceOverride = dto.PriceOverride
+                    };
+                    await productRepository.AddAssignmentAsync(assignment);
+                    successCount++;
+                }
+                else
+                {
+                    failCount++; // Already exists
+                }
+            }
+            catch
+            {
+                failCount++;
+            }
+        }
+
+        return Ok(ApiResponse<string>.Ok($"Assigned {successCount} products successfully. {failCount} skipped/failed."));
+    }
+
     // List by Scope
     [HttpGet("scopes/{scopeNodeId}/products")]
     [RequirePermission("PRODUCT_ASSIGNMENTS_READ")]
