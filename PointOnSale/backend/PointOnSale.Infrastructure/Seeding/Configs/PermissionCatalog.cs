@@ -9,7 +9,7 @@ public static class PermissionCatalog
     {
         "COMPANIES", "COMPANY_ADMINS", "SUBSCRIPTIONS", "SCOPES", "USERS", "ROLES_PERMISSIONS",
         "LOCATIONS", "PRODUCT_CATEGORIES", "PRODUCTS", "PRODUCT_ASSIGNMENTS", "INVENTORY",
-        "STOCK_REQUESTS", "WALLET_ACCOUNTS", "POS_SALES", "INVOICES", "REPORTS", "AUDIT_LOGS", "DASHBOARD"
+        "STOCK_REQUESTS", "WALLET_ACCOUNTS", "FUND_REQUESTS", "POS_SALES", "INVOICES", "REPORTS", "AUDIT_LOGS", "DASHBOARD"
     };
 
     public static List<Permission> GetPermissions()
@@ -40,9 +40,13 @@ public static class PermissionCatalog
                     permissions.Add(Create(module, PermissionAction.Assign));
                     break;
                 case "STOCK_REQUESTS":
+                case "FUND_REQUESTS":
                     permissions.Add(Create(module, PermissionAction.Approve));
-                    permissions.Add(Create(module, PermissionAction.Fulfill));
-                    permissions.Add(Create(module, PermissionAction.Reject));
+                    if (module == "STOCK_REQUESTS")
+                    {
+                        permissions.Add(Create(module, PermissionAction.Fulfill));
+                        permissions.Add(Create(module, PermissionAction.Reject));
+                    }
                     break;
                 case "INVENTORY":
                     permissions.Add(Create(module, PermissionAction.Adjust));

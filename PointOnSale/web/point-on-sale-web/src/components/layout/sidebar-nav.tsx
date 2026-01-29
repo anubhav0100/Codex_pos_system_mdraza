@@ -58,28 +58,55 @@ export function SidebarNav() {
             <NavLink
               key={item.href}
               to={item.href}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 px-3 py-3 rounded-2xl transition-all group hover-scale border border-transparent',
-                  isActive
-                    ? `bg-${item.color || 'primary'} text-white shadow-xl shadow-${item.color || 'primary'}/30 border-${item.color || 'primary'}/20`
-                    : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
-                  isCollapsed && 'justify-center px-0',
-                )
-              }
+              className="block"
             >
-              <item.icon className={cn(
-                'h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110',
-                !isCollapsed && 'mr-2',
-                !isCollapsed && `text-${item.color || 'primary'}`
-              )} />
-              {!isCollapsed && <span className='font-bold tracking-tight'>{item.label}</span>}
-              {isCollapsed && (
-                <div className={cn(
-                  'absolute left-full ml-2 px-3 py-1.5 text-white text-xs font-bold rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all scale-95 group-hover:scale-100 whitespace-nowrap z-50 shadow-xl',
-                  `bg-${item.color || 'primary'}`
-                )}>
-                  {item.label}
+              {({ isActive }) => (
+                <div
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-3 rounded-2xl transition-all group hover-scale border border-transparent relative overflow-hidden',
+                    isActive
+                      ? 'text-white border-white/20'
+                      : 'text-muted-foreground hover:text-foreground',
+                    isCollapsed && 'justify-center px-0'
+                  )}
+                  style={isActive ? {
+                    backgroundColor: `hsl(var(--${item.color || 'primary'}))`,
+                    boxShadow: `0 10px 20px -5px hsla(var(--${item.color || 'primary'}), 0.4)`
+                  } : {
+                    // Subtle hover color background
+                    '--hover-bg': `hsla(var(--${item.color || 'primary'}), 0.1)`
+                  } as React.CSSProperties}
+                  onMouseEnter={(e) => {
+                    if (!isActive) e.currentTarget.style.backgroundColor = `hsla(var(--${item.color || 'primary'}), 0.1)`
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'
+                  }}
+                >
+                  <item.icon
+                    className={cn(
+                      'h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110 relative z-10',
+                      !isCollapsed && 'mr-2'
+                    )}
+                    style={{
+                      color: isActive ? 'white' : `hsl(var(--${item.color || 'primary'}))`
+                    }}
+                  />
+
+                  {!isCollapsed && (
+                    <span className='font-bold tracking-tight relative z-10'>
+                      {item.label}
+                    </span>
+                  )}
+
+                  {isCollapsed && (
+                    <div
+                      className='absolute left-full ml-2 px-3 py-1.5 text-white text-xs font-bold rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all scale-95 group-hover:scale-100 whitespace-nowrap z-50 shadow-xl'
+                      style={{ backgroundColor: `hsl(var(--${item.color || 'primary'}))` }}
+                    >
+                      {item.label}
+                    </div>
+                  )}
                 </div>
               )}
             </NavLink>

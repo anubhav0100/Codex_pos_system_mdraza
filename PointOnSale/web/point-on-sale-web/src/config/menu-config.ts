@@ -49,8 +49,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: Truck, label: 'Stock Requests', href: '/requests/outgoing', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_READ', color: 'rainbow-green' },
 
     // Transactions
-    { icon: Wallet, label: 'Fund Wallet', href: '/wallets/fund', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW', color: 'rainbow-cyan' },
-    { icon: Wallet, label: 'Income Wallet', href: '/wallets/income', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLETS_VIEW', color: 'rainbow-violet' },
+    { icon: Wallet, label: 'Fund Wallet', href: '/wallets/fund', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLET_ACCOUNTS_VIEW', color: 'rainbow-cyan' },
+    { icon: Wallet, label: 'Income Wallet', href: '/wallets/income', allowedScopes: [1, 2, 3, 4], requiredPermission: 'WALLET_ACCOUNTS_VIEW', color: 'rainbow-violet' },
     { icon: ArrowRightLeft, label: 'Fund Requests', href: '/fund-requests', allowedScopes: [2, 3, 4], requiredPermission: 'FUND_REQUESTS_CREATE', color: 'rainbow-orange' }, // Lower scopes REQUEST funds
     { icon: ArrowRightLeft, label: 'Fund Transfer', href: '/fund-transfer', allowedScopes: [1], requiredPermission: 'FUND_REQUESTS_APPROVE', color: 'rainbow-green' }, // Company TRANSFERS funds
     { icon: FileText, label: 'Invoices', href: '/invoices', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'INVOICES_READ', color: 'rainbow-cyan' },

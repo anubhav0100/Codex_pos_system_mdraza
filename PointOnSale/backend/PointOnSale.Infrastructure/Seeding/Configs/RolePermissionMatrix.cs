@@ -20,7 +20,7 @@ public static class RolePermissionMatrix
         matrix["CompanyAdmin"] = GeneratePermissions(new[] 
         { 
             "USERS", "ROLES_PERMISSIONS", "LOCATIONS", "SCOPES", "PRODUCT_CATEGORIES", "PRODUCTS", 
-            "PRODUCT_ASSIGNMENTS", "INVENTORY", "STOCK_REQUESTS", "WALLET_ACCOUNTS", 
+            "PRODUCT_ASSIGNMENTS", "INVENTORY", "STOCK_REQUESTS", "WALLET_ACCOUNTS", "FUND_REQUESTS",
             "POS_SALES", "INVOICES", "REPORTS", "AUDIT_LOGS", "DASHBOARD"
         });
 
