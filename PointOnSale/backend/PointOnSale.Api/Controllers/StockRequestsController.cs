@@ -39,6 +39,12 @@ public class StockRequestsController(
     public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateStockRequestDto dto)
     {
         int myScopeId = GetUserScopeId();
+        
+        if (dto.FromScopeNodeId == 0 && myScopeId != 0)
+        {
+            dto.FromScopeNodeId = myScopeId;
+        }
+
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, dto.FromScopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Requester Scope"), "Forbidden"));
 

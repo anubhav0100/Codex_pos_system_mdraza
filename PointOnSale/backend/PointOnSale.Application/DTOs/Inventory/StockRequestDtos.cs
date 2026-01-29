@@ -29,7 +29,6 @@ public class StockRequestItemDto
 
 public class CreateStockRequestDto
 {
-    [Required]
     public int FromScopeNodeId { get; set; }
     
     [Required]

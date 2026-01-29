@@ -52,7 +52,19 @@ export const stockRequestsService = {
     return unwrapResponse(response)
   },
   createStockRequest: async (payload: CreateStockRequestDto) => {
-    const response = await apiClient.post<ApiResponse<string> | string>('stock-requests', payload)
+    // Transform frontend payload to backend DTO
+    const apiPayload = {
+      FromScopeNodeId: 0, // Backend will default this to user's scope
+      ToScopeNodeId: Number(payload.supplierScopeNodeId),
+      Items: payload.items.map((item) => ({
+        ProductId: Number(item.productId),
+        Qty: Number(item.quantity),
+      })),
+      // Backend DTO in StockRequestDtos.cs doesn't verify Notes yet in CreateStockRequestDto, 
+      // but adding it won't hurt if we added it to DTO later. 
+      // For now, only Items, FromScopeNodeId, ToScopeNodeId are in the DTO.
+    }
+    const response = await apiClient.post<ApiResponse<string> | string>('stock-requests', apiPayload)
     return unwrapResponse(response)
   },
   approveStockRequest: async (requestId: string) => {

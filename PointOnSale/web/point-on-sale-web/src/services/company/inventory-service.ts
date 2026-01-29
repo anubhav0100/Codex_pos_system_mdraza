@@ -67,7 +67,7 @@ export const inventoryService = {
     })) as InventoryBalanceItem[]
   },
   getLedger: async ({ scopeNodeId, productId }: { scopeNodeId?: string; productId: string }) => {
-    const response = await apiClient.get<ApiResponse<InventoryLedgerEntry[]> | InventoryLedgerEntry[]>(
+    const response = await apiClient.get<ApiResponse<any[]> | any[]>(
       'inventory/ledger',
       {
         params: {
@@ -76,7 +76,18 @@ export const inventoryService = {
         },
       },
     )
-    return unwrapResponse(response)
+    const rawData = unwrapResponse(response)
+    // Transform API response (camelCase/backend properties) to UI properties
+    return rawData.map((item: any) => ({
+      id: item.id,
+      productId: item.productId,
+      movementType: item.txnType,         // Map txnType -> movementType
+      quantity: item.qtyChange,           // Map qtyChange -> quantity
+      balance: 0,                         // Backend doesn't provide running balance yet
+      reference: `${item.refType} #${item.refId}`, // Construct reference
+      scopeNodeId: item.scopeNodeId,
+      createdAt: item.createdAt,
+    })) as InventoryLedgerEntry[]
   },
   adjustInventory: async (payload: InventoryAdjustPayload) => {
     const apiPayload = {
