@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { PermissionGate } from '@/components/auth/permission-gate'
+import { useAuthStore } from '@/store/use-auth-store'
 import { inventoryService, type InventoryAdjustPayload } from '@/services/company/inventory-service'
 import { productsService } from '@/services/company/products-service'
 import { scopesService, type ScopeNode } from '@/services/company/scopes-service'
@@ -32,6 +33,7 @@ const selectClassName =
 
 export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: InventoryBalancePageProps) {
   const navigate = useNavigate()
+  const { userProfile } = useAuthStore()
   const queryClient = useQueryClient()
 
   const [scopeDraft, setScopeDraft] = useState('')
@@ -207,11 +209,13 @@ export default function InventoryBalancePage({ initialAdjustOpen, returnTo }: In
               <RefreshCcw className='h-4 w-4 text-rainbow-blue' />
               Refresh
             </Button>
-            <PermissionGate perm='INVENTORY_ADJUST'>
-              <Button onClick={() => navigate('/inventory/adjust')} className="bg-gradient-to-br from-rainbow-orange to-rainbow-red text-white border-0 vibrant-button shadow-lg shadow-rainbow-orange/20">
-                Adjust Inventory
-              </Button>
-            </PermissionGate>
+            {userProfile?.scopeType === 1 && (
+              <PermissionGate perm='INVENTORY_ADJUST'>
+                <Button onClick={() => navigate('/inventory/adjust')} className="bg-gradient-to-br from-rainbow-orange to-rainbow-red text-white border-0 vibrant-button shadow-lg shadow-rainbow-orange/20">
+                  Adjust Inventory
+                </Button>
+              </PermissionGate>
+            )}
           </div>
         }
       />

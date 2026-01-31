@@ -12,7 +12,8 @@ public class PosService(
     PosDbContext dbContext,
     IPricingService pricingService,
     IInventoryService inventoryService,
-    IScopeRepository scopeRepository
+    IScopeRepository scopeRepository,
+    IWalletService walletService
     ) : IPosService
 {
     public async Task<SalesOrderDto> CreateSaleAsync(CreateSaleDto dto, CancellationToken cancellationToken = default)
@@ -125,6 +126,21 @@ public class PosService(
                 );
             }
 
+            // 3. Credit Income Wallet
+            var incomeWallet = await walletService.GetWalletAsync(order.ScopeNodeId, WalletType.Income, cancellationToken);
+            
+            // For POS Sales, there is no internal "From" wallet (it's external money).
+            // Passing null as fromWalletId credits the target wallet.
+            await walletService.ProcessTransferAsync(
+                null, 
+                incomeWallet.Id, 
+                order.GrandTotal, 
+                "POSSale", 
+                order.Id.ToString(), 
+                $"POS Sale Confirmation: {dto.PaymentMethod}", 
+                cancellationToken: cancellationToken
+            );
+            
             // 2. Update Order
             order.Status = SalesStatus.Completed;
             order.PaymentMethod = dto.PaymentMethod;

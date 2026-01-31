@@ -42,7 +42,7 @@ public class WalletService(
         return wallet!;
     }
 
-    public async Task ProcessTransferAsync(int fromWalletId, int toWalletId, decimal amount, string refType, string refId, string notes = null, decimal adminCharges = 0, decimal tds = 0, decimal commission = 0, CancellationToken cancellationToken = default)
+    public async Task ProcessTransferAsync(int? fromWalletId, int toWalletId, decimal amount, string refType, string refId, string notes = null, decimal adminCharges = 0, decimal tds = 0, decimal commission = 0, CancellationToken cancellationToken = default)
     {
         using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
@@ -65,16 +65,21 @@ public class WalletService(
 
             // 2. Update Balances
             // We need to fetch entities tracked to update them
-            var fromWallet = await dbContext.WalletAccounts.FindAsync(new object[] { fromWalletId }, cancellationToken);
+            WalletAccount? fromWallet = null;
+            if (fromWalletId.HasValue)
+            {
+                fromWallet = await dbContext.WalletAccounts.FindAsync(new object[] { fromWalletId.Value }, cancellationToken);
+                if (fromWallet == null) throw new InvalidOperationException("Source wallet not found");
+                
+                if (fromWallet.Balance < amount)
+                    throw new InvalidOperationException($"Insufficient balance in {fromWallet.WalletType} wallet. Available: {fromWallet.Balance}, Required: {amount}");
+                
+                fromWallet.Balance -= amount;
+            }
+
             var toWallet = await dbContext.WalletAccounts.FindAsync(new object[] { toWalletId }, cancellationToken);
+            if (toWallet == null) throw new InvalidOperationException("Target wallet not found");
 
-            if (fromWallet == null || toWallet == null)
-                throw new InvalidOperationException("One or both wallets not found");
-
-            if (fromWallet.Balance < amount)
-                throw new InvalidOperationException($"Insufficient balance in {fromWallet.WalletType} wallet. Available: {fromWallet.Balance}, Required: {amount}");
-
-            fromWallet.Balance -= amount;
             toWallet.Balance += amount;
 
             await dbContext.SaveChangesAsync(cancellationToken); // Save balance updates

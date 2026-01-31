@@ -88,6 +88,14 @@ public class InventoryController(
     [RequirePermission("INVENTORY_ADJUST")]
     public async Task<ActionResult<ApiResponse<string>>> AdjustStock([FromBody] AdjustInventoryDto dto)
     {
+        // Restriction: Only Company (ScopeType 1) can adjust inventory directly.
+        // Others must use Stock Requests.
+        var claim = User.FindFirst("ScopeType");
+        if (claim == null || !int.TryParse(claim.Value, out int scopeType) || scopeType != 1)
+        {
+             return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Only Company can perform manual adjustments"), "Forbidden"));
+        }
+
         int myScopeId = GetUserScopeId();
         if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, dto.ScopeNodeId))
              return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Scope"), "Forbidden"));
