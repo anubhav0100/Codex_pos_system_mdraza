@@ -1,13 +1,27 @@
 import { PageHeader } from '@/components/ui/page-header'
 import { StatCard } from '@/components/ui/stat-card'
 import { Button } from '@/components/ui/button'
-import { ShoppingCart, Package, Users, BarChart3, Plus, Building2, ShieldCheck } from 'lucide-react'
+import { ShoppingCart, Package, Users, BarChart3, Plus, Building2, ShieldCheck, Wallet, IndianRupee } from 'lucide-react'
 import { useAuthStore } from '@/store/use-auth-store'
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { walletsService } from '@/services/company/wallets-service'
 
 export default function DashboardPage() {
   const { userProfile } = useAuthStore()
   const isSuperAdmin = userProfile?.scopeType === 0
+
+  const { data: wallets = [] } = useQuery({
+    queryKey: ['wallets-mine'],
+    queryFn: () => walletsService.getWalletsMine(),
+    enabled: !isSuperAdmin
+  })
+
+  const fundBalance = wallets.find(w => w.walletType === 'FUND')?.balance ?? 0
+  const incomeBalance = wallets.find(w => w.walletType === 'INCOME')?.balance ?? 0
+
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val)
 
   return (
     <>
@@ -64,12 +78,18 @@ export default function DashboardPage() {
         ) : (
           <>
             <StatCard
-              title='Total Invoices'
-              value='₹24,500'
-              icon={<ShoppingCart className='h-4 w-4 text-white/80' />}
-              trend={{ value: '+12%', positive: true }}
-              description='From last month'
-              className='bg-gradient-to-br from-rainbow-green to-rainbow-cyan text-white hover-scale'
+              title='Fund Wallet'
+              value={formatCurrency(fundBalance)}
+              icon={<Wallet className='h-4 w-4 text-white/80' />}
+              description='Operating funds'
+              className='bg-gradient-to-br from-rainbow-blue to-rainbow-violet text-white hover-scale shadow-lg shadow-rainbow-blue/20'
+            />
+            <StatCard
+              title='Income Wallet'
+              value={formatCurrency(incomeBalance)}
+              icon={<IndianRupee className='h-4 w-4 text-white/80' />}
+              description='Earnings & Commissions'
+              className='bg-gradient-to-br from-rainbow-green to-rainbow-cyan text-white hover-scale shadow-lg shadow-rainbow-green/20'
             />
             <StatCard
               title='Total Pending'
@@ -77,7 +97,7 @@ export default function DashboardPage() {
               icon={<Package className='h-4 w-4 text-white/80' />}
               trend={{ value: '+5%', positive: false }}
               description='Requires attention'
-              className='bg-gradient-to-br from-rainbow-yellow via-rainbow-orange to-rainbow-red text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-yellow via-rainbow-orange to-rainbow-red text-white hover-scale shadow-lg shadow-rainbow-orange/20'
             />
             <StatCard
               title='Overdue'
@@ -85,21 +105,7 @@ export default function DashboardPage() {
               icon={<ShieldCheck className='h-4 w-4 text-white/80' />}
               trend={{ value: '-8%', positive: false }}
               description='Over 30 days'
-              className='bg-gradient-to-br from-rainbow-red via-rainbow-violet to-rainbow-blue text-white hover-scale'
-            />
-            <StatCard
-              title='Avg Days Overdue'
-              value='14'
-              icon={<BarChart3 className='h-4 w-4 text-white/80' />}
-              description='Improving'
-              className='bg-gradient-to-br from-rainbow-violet to-rainbow-blue text-white hover-scale'
-            />
-            <StatCard
-              title='Subcontracting'
-              value='3 Active'
-              icon={<Users className='h-4 w-4 text-white/80' />}
-              description='Work orders'
-              className='bg-gradient-to-br from-rainbow-cyan to-rainbow-blue text-white hover-scale'
+              className='bg-gradient-to-br from-rainbow-red via-rainbow-violet to-rainbow-blue text-white hover-scale shadow-lg shadow-rainbow-red/20'
             />
           </>
         )}
