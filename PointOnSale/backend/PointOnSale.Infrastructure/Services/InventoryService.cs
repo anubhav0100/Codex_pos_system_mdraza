@@ -20,8 +20,9 @@ public class InventoryService(
         bool allowNegative = false,
         CancellationToken cancellationToken = default)
     {
-        // Using ExecutionStrategy for retries if needed, but simple transaction for atomic update of Ledger + Balance.
-        using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        // Check if transaction exists
+        var hasActiveTransaction = dbContext.Database.CurrentTransaction != null;
+        var transaction = hasActiveTransaction ? null : await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
         try
         {
@@ -63,12 +64,16 @@ public class InventoryService(
             };
             await inventoryRepository.AddLedgerEntryAsync(ledger, cancellationToken);
 
-            await transaction.CommitAsync(cancellationToken);
+            if (transaction != null) await transaction.CommitAsync(cancellationToken);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync(cancellationToken);
+            if (transaction != null) await transaction.RollbackAsync(cancellationToken);
             throw;
+        }
+        finally
+        {
+            if (transaction != null) await transaction.DisposeAsync();
         }
     }
 }

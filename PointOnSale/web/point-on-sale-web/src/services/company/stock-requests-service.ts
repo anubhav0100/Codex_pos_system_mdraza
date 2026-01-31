@@ -4,7 +4,9 @@ export type StockRequestStatus = 'DRAFT' | 'SUBMITTED' | 'PENDING' | 'APPROVED' 
 
 export interface StockRequestItem {
   productId: string
-  quantity: number
+  productName?: string // From Backend Read DTO
+  quantity: number // Used in Create DTO
+  qty?: number // From Backend Read DTO
 }
 
 export interface StockRequestSummary {

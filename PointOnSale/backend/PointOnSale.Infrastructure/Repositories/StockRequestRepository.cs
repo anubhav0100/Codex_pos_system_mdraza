@@ -36,10 +36,10 @@ public class StockRequestRepository(PosDbContext dbContext) : IStockRequestRepos
         if (isOutgoing)
         {
             query = query.Where(r => r.FromScopeNodeId == scopeNodeId);
-            if (currentUserId.HasValue)
-            {
-                query = query.Where(r => r.CreatedByUserId == currentUserId.Value);
-            }
+            // if (currentUserId.HasValue)
+            // {
+            //     query = query.Where(r => r.CreatedByUserId == currentUserId.Value || r.CreatedByUserId == null);
+            // }
         }
         else
         {

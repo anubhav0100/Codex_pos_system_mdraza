@@ -17,13 +17,20 @@ public class FundRequestsController(
     private string GetScopeName(PointOnSale.Domain.Entities.ScopeNode node)
     {
         if (node == null) return "Unknown";
-        if (node.Company != null && !string.IsNullOrEmpty(node.Company.Name)) return node.Company.Name;
-        if (node.State != null && !string.IsNullOrEmpty(node.State.Name)) return node.State.Name;
-        if (node.District != null && !string.IsNullOrEmpty(node.District.Name)) return node.District.Name;
-        if (node.Local != null && !string.IsNullOrEmpty(node.Local.Name)) return node.Local.Name;
         
-        // Fallback if specific level names are null
-        return "Unknown";
+        switch (node.ScopeType)
+        {
+            case PointOnSale.Domain.Enums.ScopeType.Company:
+                return node.Company?.Name ?? "Unknown Company";
+            case PointOnSale.Domain.Enums.ScopeType.State:
+                return node.State?.Name ?? "Unknown State";
+            case PointOnSale.Domain.Enums.ScopeType.District:
+                return node.District?.Name ?? "Unknown District";
+            case PointOnSale.Domain.Enums.ScopeType.Local:
+                return node.Local?.Name ?? "Unknown Local";
+            default:
+                return "Unknown";
+        }
     }
 
     private int GetUserScopeId()
@@ -41,11 +48,8 @@ public class FundRequestsController(
     public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateFundRequestDto dto)
     {
         int myScopeId = GetUserScopeId();
-        // User requesting funds MUST be from their own scope
         if (myScopeId == 0) return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No Scope associated with user"), "Bad Request"));
         
-        // Optional: validate user can access fromScope (which is myScopeId) - implicit.
-
         try
         {
             int id = await fundRequestService.CreateRequestAsync(myScopeId, dto);
@@ -55,22 +59,25 @@ public class FundRequestsController(
         {
              return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", ex.Message), "Validation Failed"));
         }
+        catch (Exception ex)
+        {
+             return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<string>.Fail(new ErrorDetail("500", ex.Message), "Server Error"));
+        }
     }
 
     [HttpPost("{id}/approve")]
     [RequirePermission("FUND_REQUESTS_APPROVE")]
     public async Task<ActionResult<ApiResponse<string>>> Approve(int id)
     {
-        var req = await fundRequestRepository.GetByIdAsync(id);
-        if (req == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Request Not Found"), "Not Found"));
-        
-        int myScopeId = GetUserScopeId();
-        // Approver must own the TO scope (the scope being requested from)
-        if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, req.ToScopeNodeId))
-             return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Approver Scope"), "Forbidden"));
-
         try
         {
+            var req = await fundRequestRepository.GetByIdAsync(id);
+            if (req == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Request Not Found"), "Not Found"));
+            
+            int myScopeId = GetUserScopeId();
+            if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, req.ToScopeNodeId))
+                 return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Approver Scope"), "Forbidden"));
+
             await fundRequestService.ApproveRequestAsync(id, req.ToScopeNodeId);
             return Ok(ApiResponse<string>.Ok("Request Approved"));
         }
@@ -81,18 +88,18 @@ public class FundRequestsController(
     }
 
     [HttpPost("{id}/reject")]
-    [RequirePermission("FUND_REQUESTS_APPROVE")] // Same permission as approve
+    [RequirePermission("FUND_REQUESTS_APPROVE")]
     public async Task<ActionResult<ApiResponse<string>>> Reject(int id, [FromBody] RejectFundRequestDto dto)
     {
-        var req = await fundRequestRepository.GetByIdAsync(id);
-        if (req == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Request Not Found"), "Not Found"));
-        
-        int myScopeId = GetUserScopeId();
-        if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, req.ToScopeNodeId))
-             return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Approver Scope"), "Forbidden"));
-
         try
         {
+            var req = await fundRequestRepository.GetByIdAsync(id);
+            if (req == null) return NotFound(ApiResponse<string>.Fail(new ErrorDetail("404", "Request Not Found"), "Not Found"));
+            
+            int myScopeId = GetUserScopeId();
+            if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, req.ToScopeNodeId))
+                 return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied to Approver Scope"), "Forbidden"));
+
             await fundRequestService.RejectRequestAsync(id, req.ToScopeNodeId, dto.Reason);
             return Ok(ApiResponse<string>.Ok("Request Rejected"));
         }
@@ -106,25 +113,32 @@ public class FundRequestsController(
     [RequirePermission("FUND_REQUESTS_VIEW")]
     public async Task<ActionResult<ApiResponse<List<FundRequestDto>>>> GetMyRequests([FromQuery] bool isIncoming = false)
     {
-        int myScopeId = GetUserScopeId();
-        if (myScopeId == 0) return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No Scope associated with user"), "Bad Request"));
-
-        var requests = await fundRequestRepository.GetByScopeAsync(myScopeId, isIncoming);
-        var dtos = requests.Select(r => new FundRequestDto
+        try 
         {
-            Id = r.Id,
-            FromScopeNodeId = r.FromScopeNodeId,
-            FromScopeName = GetScopeName(r.FromScopeNode),
-            ToScopeNodeId = r.ToScopeNodeId,
-            ToScopeName = GetScopeName(r.ToScopeNode),
-            Amount = r.Amount,
-            Status = r.Status,
-            Notes = r.Notes,
-            RejectionReason = r.RejectionReason,
-            RequestedAt = r.RequestedAt,
-            ProcessedAt = r.ProcessedAt
-        }).ToList();
-        
-        return Ok(ApiResponse<List<FundRequestDto>>.Ok(dtos));
+            int myScopeId = GetUserScopeId();
+            if (myScopeId == 0) return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No Scope associated with user"), "Bad Request"));
+
+            var requests = await fundRequestRepository.GetByScopeAsync(myScopeId, isIncoming);
+            var dtos = requests.Select(r => new FundRequestDto
+            {
+                Id = r.Id,
+                FromScopeNodeId = r.FromScopeNodeId,
+                FromScopeName = GetScopeName(r.FromScopeNode),
+                ToScopeNodeId = r.ToScopeNodeId,
+                ToScopeName = GetScopeName(r.ToScopeNode),
+                Amount = r.Amount,
+                Status = r.Status,
+                Notes = r.Notes,
+                RejectionReason = r.RejectionReason,
+                RequestedAt = r.RequestedAt,
+                ProcessedAt = r.ProcessedAt
+            }).ToList();
+            
+            return Ok(ApiResponse<List<FundRequestDto>>.Ok(dtos));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<string>.Fail(new ErrorDetail("500", ex.Message), "Server Error"));
+        }
     }
 }

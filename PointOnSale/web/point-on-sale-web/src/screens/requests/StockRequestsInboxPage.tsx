@@ -115,7 +115,23 @@ export default function StockRequestsInboxPage() {
                   {request.status}
                 </Badge>
               </DataTableCell>
-              <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
+              <DataTableCell className='text-foreground'>
+                <div className="group relative">
+                  <span className="cursor-help border-b border-dotted border-muted-foreground/50">
+                    {request.items.length} items
+                  </span>
+                  <div className="absolute left-0 bottom-full mb-2 hidden w-64 rounded-md border bg-popover p-2 text-sm text-popover-foreground shadow-md group-hover:block z-50">
+                    <div className="space-y-1">
+                      {request.items.map((item, idx) => (
+                        <div key={idx} className="flex justify-between">
+                          <span>{item.productName || `Product ${item.productId}`}</span>
+                          <span className="font-mono">x{item.qty || item.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
               <DataTableCell className='text-right space-x-2'>
                 {(request.status?.toUpperCase() === 'SUBMITTED' || request.status?.toUpperCase() === 'PENDING') && (

@@ -44,7 +44,10 @@ public class WalletService(
 
     public async Task ProcessTransferAsync(int? fromWalletId, int toWalletId, decimal amount, string refType, string refId, string notes = null, decimal adminCharges = 0, decimal tds = 0, decimal commission = 0, CancellationToken cancellationToken = default)
     {
-        using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        // Check if transaction exists
+        var hasActiveTransaction = dbContext.Database.CurrentTransaction != null;
+        var transaction = hasActiveTransaction ? null : await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        
         try
         {
             // 1. Ledger Entry (Ledger First)
@@ -84,12 +87,16 @@ public class WalletService(
 
             await dbContext.SaveChangesAsync(cancellationToken); // Save balance updates
 
-            await transaction.CommitAsync(cancellationToken);
+            if (transaction != null) await transaction.CommitAsync(cancellationToken);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync(cancellationToken);
+            if (transaction != null) await transaction.RollbackAsync(cancellationToken);
             throw;
+        }
+        finally
+        {
+            if (transaction != null) await transaction.DisposeAsync();
         }
     }
 }

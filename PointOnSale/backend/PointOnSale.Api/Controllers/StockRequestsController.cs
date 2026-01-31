@@ -69,6 +69,14 @@ public class StockRequestsController(
         {
              return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", ex.Message), "Validation Failed"));
         }
+        catch (ArgumentException ex)
+        {
+             return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", ex.Message), "Invalid Argument"));
+        }
+        catch (Exception ex)
+        {
+             return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<string>.Fail(new ErrorDetail("500", ex.Message), "Server Error"));
+        }
     }
 
     [HttpPost("{id}/submit")]
@@ -177,6 +185,11 @@ public class StockRequestsController(
         if (!string.IsNullOrEmpty(status))
         {
             requests = requests.Where(r => r.Status.ToString().Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else if (!isOutgoing)
+        {
+            // Inbox: Hide Drafts by default if no specific status requested
+            requests = requests.Where(r => r.Status != PointOnSale.Domain.Enums.RequestStatus.Draft).ToList();
         }
 
         var dtos = requests.Select(r => new StockRequestDto
