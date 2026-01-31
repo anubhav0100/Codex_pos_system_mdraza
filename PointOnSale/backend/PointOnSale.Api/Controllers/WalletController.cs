@@ -26,7 +26,7 @@ public class WalletController(
     }
 
     [HttpGet("mine")]
-    [RequirePermission("WALLETS_VIEW")]
+    [RequirePermission("WALLET_ACCOUNTS_VIEW")]
     public async Task<ActionResult<ApiResponse<List<WalletDto>>>> GetMyWallets()
     {
         int myScopeId = GetUserScopeId();
@@ -47,7 +47,7 @@ public class WalletController(
     }
 
     [HttpGet("{scopeNodeId}")]
-    [RequirePermission("WALLETS_VIEW")]
+    [RequirePermission("WALLET_ACCOUNTS_VIEW")]
     public async Task<ActionResult<ApiResponse<List<WalletDto>>>> GetWalletsByScope(int scopeNodeId)
     {
         int myScopeId = GetUserScopeId();
@@ -69,7 +69,7 @@ public class WalletController(
     }
 
     [HttpGet("ledger")]
-    [RequirePermission("WALLETS_VIEW")]
+    [RequirePermission("WALLET_ACCOUNTS_VIEW")]
     public async Task<ActionResult<ApiResponse<List<WalletLedgerDto>>>> GetLedger([FromQuery] int walletId)
     {
         // Must check if user owns the wallet's scope
@@ -102,7 +102,7 @@ public class WalletController(
     }
 
     [HttpPost("transfer")]
-    [RequirePermission("WALLETS_TRANSFER")]
+    [RequirePermission("WALLET_ACCOUNTS_TRANSFER")]
     [Filters.AuditLog]
     public async Task<ActionResult<ApiResponse<string>>> ManualTransfer([FromBody] WalletTransferDto dto)
     {

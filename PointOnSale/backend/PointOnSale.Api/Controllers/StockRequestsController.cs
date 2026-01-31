@@ -150,21 +150,22 @@ public class StockRequestsController(
         }
     }
     
-    [HttpGet]
-    [RequirePermission("STOCK_REQUESTS_VIEW")]
-    public async Task<ActionResult<ApiResponse<List<StockRequestDto>>>> GetMyRequests([FromQuery] int scopeNodeId, [FromQuery] bool isOutgoing = true)
+    [HttpGet("mine")]
+    [RequirePermission("WALLET_ACCOUNTS_VIEW")]
+    public async Task<ActionResult<ApiResponse<List<StockRequestDto>>>> GetMyRequests([FromQuery] string scope = "mine", [FromQuery] string? status = null)
     {
         int myScopeId = GetUserScopeId();
+        if (myScopeId == 0) return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No Scope associated with user"), "Bad Request"));
 
-        if (scopeNodeId == 0 && myScopeId != 0)
+        bool isOutgoing = scope == "mine";
+        var requests = await stockRequestRepository.GetByScopeAsync(myScopeId, isOutgoing);
+        
+        // Apply status filter if provided
+        if (!string.IsNullOrEmpty(status))
         {
-            scopeNodeId = myScopeId;
+            requests = requests.Where(r => r.Status.ToString().Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        if (myScopeId != 0 && !await scopeAccessService.CanAccessScopeAsync(myScopeId, scopeNodeId))
-             return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<string>.Fail(new ErrorDetail("403", "Access Denied"), "Forbidden"));
-
-        var requests = await stockRequestRepository.GetByScopeAsync(scopeNodeId, isOutgoing);
         var dtos = requests.Select(r => new StockRequestDto
         {
             Id = r.Id,

@@ -47,6 +47,7 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: Layers, label: 'Assignments', href: '/assignments', allowedScopes: [1], requiredPermission: 'PRODUCT_ASSIGNMENTS_VIEW', color: 'rainbow-violet' },
     { icon: Boxes, label: 'Inventory', href: '/inventory/balance', allowedScopes: [1, 2, 3, 4], requiredPermission: 'INVENTORY_VIEW', color: 'rainbow-orange' },
     { icon: Truck, label: 'Stock Requests', href: '/requests/outgoing', allowedScopes: [1, 2, 3, 4], requiredPermission: 'STOCK_REQUESTS_VIEW', color: 'rainbow-green' },
+    { icon: ShieldCheck, label: 'Stock Approval', href: '/requests/inbox', allowedScopes: [1, 2, 3], requiredPermission: 'STOCK_REQUESTS_APPROVE', color: 'rainbow-violet' },
 
     // Transactions
     { icon: Wallet, label: 'Fund Wallet', href: '/wallets/fund', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'WALLET_ACCOUNTS_VIEW', color: 'rainbow-cyan' },
