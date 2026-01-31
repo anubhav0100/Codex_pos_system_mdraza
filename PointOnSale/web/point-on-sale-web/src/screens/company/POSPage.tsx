@@ -64,9 +64,18 @@ export default function POSPage() {
     )
 
     const addToCart = (product: ScopeProductAssignment) => {
+        if (product.stockOnHand <= 0) {
+            toast.error(`${product.name} is out of stock`)
+            return
+        }
+
         setCart(prev => {
             const existing = prev.find(item => item.id === product.id)
             if (existing) {
+                if (existing.qty >= product.stockOnHand) {
+                    toast.warning(`Cannot add more. Only ${product.stockOnHand} items in stock.`)
+                    return prev
+                }
                 return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item)
             }
             return [...prev, { ...product, qty: 1 }]
@@ -77,8 +86,14 @@ export default function POSPage() {
     const updateQty = (id: number, delta: number) => {
         setCart(prev => prev.map(item => {
             if (item.id === id) {
-                const newQty = Math.max(1, item.qty + delta)
-                return { ...item, qty: newQty }
+                const newQty = item.qty + delta
+
+                if (newQty > item.stockOnHand) {
+                    toast.warning(`Only ${item.stockOnHand} items available in stock`)
+                    return item
+                }
+
+                return { ...item, qty: Math.max(1, newQty) }
             }
             return item
         }))
@@ -168,36 +183,57 @@ export default function POSPage() {
                             </div>
                         ) : (
                             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4'>
-                                {filteredProducts.map(product => (
-                                    <div
-                                        key={product.id}
-                                        className='premium-card p-4 hover-scale cursor-pointer group flex flex-col justify-between h-full'
-                                        onClick={() => addToCart(product)}
-                                    >
-                                        <div>
-                                            <div className='flex justify-between items-start mb-2'>
-                                                <Badge variant="outline" className='text-[10px] text-muted-foreground border-muted-foreground/30'>
-                                                    {product.sku}
-                                                </Badge>
-                                                <Badge className='bg-rainbow-green/10 text-rainbow-green border-rainbow-green/20'>
-                                                    {product.categoryName}
-                                                </Badge>
+                                {filteredProducts.map(product => {
+                                    const outOfStock = product.stockOnHand <= 0
+                                    return (
+                                        <div
+                                            key={product.id}
+                                            className={cn(
+                                                'premium-card p-4 group flex flex-col justify-between h-full transition-all duration-300',
+                                                outOfStock ? 'opacity-60 grayscale-[0.5] border-muted' : 'hover-scale cursor-pointer'
+                                            )}
+                                            onClick={() => !outOfStock && addToCart(product)}
+                                        >
+                                            <div>
+                                                <div className='flex justify-between items-start mb-2'>
+                                                    <Badge variant="outline" className='text-[10px] text-muted-foreground border-muted-foreground/30'>
+                                                        {product.sku}
+                                                    </Badge>
+                                                    <Badge className={cn(
+                                                        'border-none font-bold text-[10px]',
+                                                        outOfStock ? 'bg-destructive/10 text-destructive' : 'bg-rainbow-green/10 text-rainbow-green'
+                                                    )}>
+                                                        {outOfStock ? 'OUT OF STOCK' : `STOCK: ${product.stockOnHand}`}
+                                                    </Badge>
+                                                </div>
+                                                <h3 className={cn(
+                                                    'font-bold text-lg mb-1 transition-colors',
+                                                    !outOfStock && 'group-hover:text-rainbow-blue'
+                                                )}>
+                                                    {product.name}
+                                                </h3>
+                                                <p className='text-[10px] text-muted-foreground font-medium uppercase tracking-wider'>{product.categoryName}</p>
                                             </div>
-                                            <h3 className='font-bold text-lg mb-1 group-hover:text-rainbow-blue transition-colors'>
-                                                {product.name}
-                                            </h3>
-                                        </div>
 
-                                        <div className='mt-4 flex items-center justify-between'>
-                                            <span className='text-xl font-black text-foreground'>
-                                                ₹{(product.effectivePrice ?? product.defaultSalePrice).toFixed(2)}
-                                            </span>
-                                            <Button size="icon" variant="ghost" className='rounded-full bg-rainbow-blue/5 text-rainbow-blue hover:bg-rainbow-blue hover:text-white transition-all'>
-                                                <Plus className='h-4 w-4' />
-                                            </Button>
+                                            <div className='mt-4 flex items-center justify-between'>
+                                                <span className='text-xl font-black text-foreground'>
+                                                    ₹{(product.effectivePrice ?? product.defaultSalePrice).toFixed(2)}
+                                                </span>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    disabled={outOfStock}
+                                                    className={cn(
+                                                        'rounded-full transition-all',
+                                                        outOfStock ? 'bg-muted text-muted-foreground' : 'bg-rainbow-blue/5 text-rainbow-blue hover:bg-rainbow-blue hover:text-white'
+                                                    )}
+                                                >
+                                                    <Plus className='h-4 w-4' />
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </div>
                         )}
                     </div>

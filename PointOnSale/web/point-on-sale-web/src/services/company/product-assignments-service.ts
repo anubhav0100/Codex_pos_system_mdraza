@@ -18,6 +18,7 @@ export interface ScopeProductAssignment {
   priceOverride?: number | null
   isAllowed: boolean
   effectivePrice?: number | null
+  stockOnHand: number
 }
 
 export interface AssignProductPayload {

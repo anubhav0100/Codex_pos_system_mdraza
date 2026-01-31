@@ -12,7 +12,8 @@ namespace PointOnSale.Api.Controllers;
 public class ProductAssignmentsController(
     IProductRepository productRepository, 
     IScopeAccessService scopeAccessService,
-    IScopeRepository scopeRepository // Helper to verify scope existence
+    IScopeRepository scopeRepository, // Helper to verify scope existence
+    PointOnSale.Infrastructure.Data.PosDbContext dbContext // Injecting DbContext for stock join if needed or simple fetch
     ) : ControllerBase
 {
     private int GetUserScopeId()
@@ -132,6 +133,11 @@ public class ProductAssignmentsController(
 
         var assignments = await productRepository.GetAssignmentsByScopeAsync(scopeNodeId);
         
+        // Fetch all stock balances for this scope to map to DTOs
+        var stockBalances = await dbContext.StockBalances
+            .Where(sb => sb.ScopeNodeId == scopeNodeId)
+            .ToDictionaryAsync(sb => sb.ProductId, sb => sb.QtyOnHand);
+
         var dtos = assignments.Select(a => new ProductAssignmentDto
         {
             ScopeNodeId = a.ScopeNodeId,
@@ -145,7 +151,8 @@ public class ProductAssignmentsController(
             GstPercent = a.Product?.GstPercent ?? 0,
             IsAllowed = a.IsAllowed,
             PriceOverride = a.PriceOverride,
-            EffectivePrice = a.PriceOverride ?? a.Product?.DefaultSalePrice ?? 0
+            EffectivePrice = a.PriceOverride ?? a.Product?.DefaultSalePrice ?? 0,
+            StockOnHand = stockBalances.GetValueOrDefault(a.ProductId, 0)
         }).ToList();
 
         return Ok(ApiResponse<List<ProductAssignmentDto>>.Ok(dtos));

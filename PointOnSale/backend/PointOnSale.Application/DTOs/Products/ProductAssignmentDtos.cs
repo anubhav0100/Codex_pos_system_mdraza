@@ -24,6 +24,8 @@ public class ProductAssignmentDto
     
     // Computed Effective Price
     public decimal EffectivePrice { get; set; }
+
+    public int StockOnHand { get; set; }
 }
 
 public class AssignProductDto
