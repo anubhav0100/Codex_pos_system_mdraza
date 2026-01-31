@@ -141,6 +141,8 @@ public class ProductAssignmentsController(
             Sku = a.Product?.SKU ?? "",
             ProductMRP = a.Product?.MRP ?? 0,
             DefaultSalePrice = a.Product?.DefaultSalePrice ?? 0,
+            CategoryName = a.Product?.Category?.Name ?? "General",
+            GstPercent = a.Product?.GstPercent ?? 0,
             IsAllowed = a.IsAllowed,
             PriceOverride = a.PriceOverride,
             EffectivePrice = a.PriceOverride ?? a.Product?.DefaultSalePrice ?? 0

@@ -12,6 +12,8 @@ export interface ScopeProductAssignment {
   productId: number
   sku: string
   name: string
+  categoryName: string
+  gstPercent: number
   defaultSalePrice: number
   priceOverride?: number | null
   isAllowed: boolean

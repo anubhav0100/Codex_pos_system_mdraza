@@ -84,7 +84,7 @@ public class PosController(
     }
 
     [HttpPost("sales/{id}/confirm-payment")]
-    [RequirePermission("POS_SALES_CONFIRM_PAYMENT")]
+    [RequirePermission("POS_SALES_CONFIRMPAYMENT")]
     public async Task<ActionResult<ApiResponse<SalesOrderDto>>> ConfirmPayment(int id, [FromBody] ConfirmPaymentDto dto)
     {
         int myScopeId = GetUserScopeId();

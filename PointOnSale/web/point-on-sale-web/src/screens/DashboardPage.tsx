@@ -3,6 +3,7 @@ import { StatCard } from '@/components/ui/stat-card'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, Package, Users, BarChart3, Plus, Building2, ShieldCheck } from 'lucide-react'
 import { useAuthStore } from '@/store/use-auth-store'
+import { Link } from 'react-router-dom'
 
 export default function DashboardPage() {
   const { userProfile } = useAuthStore()
@@ -15,10 +16,12 @@ export default function DashboardPage() {
         description={isSuperAdmin ? 'Manage the entire POS ecosystem.' : 'Welcome back to your POS system.'}
         actions={
           !isSuperAdmin && (
-            <Button className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20 px-6'>
-              <Plus className='h-4 w-4 mr-2' />
-              New Sale
-            </Button>
+            <Link to="/pos">
+              <Button className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20 px-6'>
+                <Plus className='h-4 w-4 mr-2' />
+                New Sale
+              </Button>
+            </Link>
           )
         }
       />

@@ -34,6 +34,7 @@ import FundTransferPage from '@/screens/wallets/FundTransferPage'
 import InvoicesPage from '@/screens/company/InvoicesPage'
 import ReportsPage from '@/screens/company/ReportsPage'
 import AuditLogsPage from '@/screens/company/AuditLogsPage'
+import POSPage from '@/screens/company/POSPage'
 
 const router = createBrowserRouter([
   {
@@ -333,6 +334,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredPermission='AUDIT_LOGS_VIEW'>
             <AuditLogsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'pos',
+        element: (
+          <ProtectedRoute requiredPermission='POS_SALES_VIEW'>
+            <POSPage />
           </ProtectedRoute>
         ),
       },

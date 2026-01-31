@@ -14,10 +14,13 @@ public class ProductAssignmentDto
     public string Sku { get; set; }
     public decimal ProductMRP { get; set; }
     public decimal DefaultSalePrice { get; set; }
+    public decimal GstPercent { get; set; }
     
     // Assignment specific
     public bool IsAllowed { get; set; }
     public decimal? PriceOverride { get; set; }
+    
+    public string CategoryName { get; set; }
     
     // Computed Effective Price
     public decimal EffectivePrice { get; set; }
