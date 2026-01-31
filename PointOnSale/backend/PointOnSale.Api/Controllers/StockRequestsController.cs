@@ -150,8 +150,8 @@ public class StockRequestsController(
         }
     }
     
-    [HttpGet("mine")]
-    [RequirePermission("WALLET_ACCOUNTS_VIEW")]
+    [HttpGet]
+    [RequirePermission("STOCK_REQUESTS_VIEW")]
     public async Task<ActionResult<ApiResponse<List<StockRequestDto>>>> GetMyRequests([FromQuery] string scope = "mine", [FromQuery] string? status = null)
     {
         int myScopeId = GetUserScopeId();

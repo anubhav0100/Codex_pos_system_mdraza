@@ -54,6 +54,7 @@ export const MENU_ITEMS: MenuItem[] = [
     { icon: Wallet, label: 'Income Wallet', href: '/wallets/income', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'WALLET_ACCOUNTS_VIEW', color: 'rainbow-violet' },
     { icon: ArrowRightLeft, label: 'Fund Requests', href: '/fund-requests', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'FUND_REQUESTS_VIEW', color: 'rainbow-orange' }, // Lower scopes REQUEST funds
     { icon: ArrowRightLeft, label: 'Fund Transfer', href: '/fund-transfer', allowedScopes: [0, 1, 2, 3], requiredPermission: 'FUND_REQUESTS_VIEW', color: 'rainbow-green' }, // Company/State/Dist TRANSFERS funds
+    { icon: Wallet, label: 'Sales Incentive', href: '/wallets/incentive', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'WALLET_ACCOUNTS_VIEW', color: 'rainbow-orange' },
     { icon: FileText, label: 'Invoices', href: '/invoices', allowedScopes: [0, 1, 2, 3, 4], requiredPermission: 'INVOICES_VIEW', color: 'rainbow-cyan' },
 
     // Reporting & Logs

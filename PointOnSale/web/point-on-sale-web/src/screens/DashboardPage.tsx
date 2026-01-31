@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/ui/page-header'
 import { StatCard } from '@/components/ui/stat-card'
 import { Button } from '@/components/ui/button'
-import { ShoppingCart, Package, Users, BarChart3, Plus, Building2, ShieldCheck, Wallet, IndianRupee } from 'lucide-react'
+import { Package, Users, BarChart3, Plus, Building2, ShieldCheck, Wallet, IndianRupee, Award } from 'lucide-react'
 import { useAuthStore } from '@/store/use-auth-store'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
@@ -17,8 +17,9 @@ export default function DashboardPage() {
     enabled: !isSuperAdmin
   })
 
-  const fundBalance = wallets.find(w => w.walletType === 'FUND')?.balance ?? 0
-  const incomeBalance = wallets.find(w => w.walletType === 'INCOME')?.balance ?? 0
+  const fundBalance = wallets.find(w => w.walletType.toUpperCase() === 'FUND')?.balance || 0
+  const incomeBalance = wallets.find(w => w.walletType.toUpperCase() === 'INCOME')?.balance || 0
+  const incentiveBalance = wallets.find(w => w.walletType.toUpperCase() === 'SALESINCENTIVE')?.balance || 0
 
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val)
@@ -83,6 +84,13 @@ export default function DashboardPage() {
               icon={<Wallet className='h-4 w-4 text-white/80' />}
               description='Operating funds'
               className='bg-gradient-to-br from-rainbow-blue to-rainbow-violet text-white hover-scale shadow-lg shadow-rainbow-blue/20'
+            />
+            <StatCard
+              title='Incentive Wallet'
+              value={formatCurrency(incentiveBalance)}
+              icon={<Award className='h-4 w-4 text-white/80' />}
+              description='Sales performance'
+              className='bg-gradient-to-br from-rainbow-orange to-rainbow-red text-white hover-scale shadow-lg shadow-rainbow-orange/20'
             />
             <StatCard
               title='Income Wallet'

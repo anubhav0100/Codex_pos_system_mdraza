@@ -29,7 +29,7 @@ export default function FundWalletPage() {
         queryFn: () => walletsService.getWalletsMine(),
     })
 
-    const fundWallet = wallets.find(w => w.walletType === 'FUND')
+    const fundWallet = wallets.find(w => w.walletType.toUpperCase() === 'FUND')
 
     if (!fundWallet && wallets.length > 0) return <div className="p-8 text-center text-muted-foreground font-medium">Fund Wallet not found.</div>
     if (!fundWallet) return <div className="p-12 text-center text-muted-foreground animate-pulse">Loading wallet information...</div>

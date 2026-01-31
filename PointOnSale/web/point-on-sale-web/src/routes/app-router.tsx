@@ -31,6 +31,7 @@ import FundWalletPage from '@/screens/wallets/FundWalletPage'
 import IncomeWalletPage from '@/screens/wallets/IncomeWalletPage'
 import FundRequestsPage from '@/screens/wallets/FundRequestsPage'
 import FundTransferPage from '@/screens/wallets/FundTransferPage'
+import SalesIncentiveWalletPage from '@/screens/wallets/SalesIncentiveWalletPage'
 import InvoicesPage from '@/screens/company/InvoicesPage'
 import ReportsPage from '@/screens/company/ReportsPage'
 import AuditLogsPage from '@/screens/company/AuditLogsPage'
@@ -289,6 +290,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredPermission='WALLET_ACCOUNTS_VIEW'>
             <IncomeWalletPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'wallets/incentive',
+        element: (
+          <ProtectedRoute requiredPermission='WALLET_ACCOUNTS_VIEW'>
+            <SalesIncentiveWalletPage />
           </ProtectedRoute>
         ),
       },

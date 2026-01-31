@@ -22,8 +22,14 @@ public class FundRequestRepository(PosDbContext dbContext) : IFundRequestReposit
     public async Task<List<FundRequest>> GetByScopeAsync(int scopeNodeId, bool isIncoming, CancellationToken cancellationToken = default)
     {
         var query = dbContext.FundRequests
-            .Include(r => r.FromScopeNode)
-            .Include(r => r.ToScopeNode)
+            .Include(r => r.FromScopeNode).ThenInclude(s => s.Company)
+            .Include(r => r.FromScopeNode).ThenInclude(s => s.State)
+            .Include(r => r.FromScopeNode).ThenInclude(s => s.District)
+            .Include(r => r.FromScopeNode).ThenInclude(s => s.Local)
+            .Include(r => r.ToScopeNode).ThenInclude(s => s.Company)
+            .Include(r => r.ToScopeNode).ThenInclude(s => s.State)
+            .Include(r => r.ToScopeNode).ThenInclude(s => s.District)
+            .Include(r => r.ToScopeNode).ThenInclude(s => s.Local)
             .AsNoTracking();
 
         if (isIncoming)
