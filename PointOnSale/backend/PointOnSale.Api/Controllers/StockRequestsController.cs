@@ -22,7 +22,7 @@ public class StockRequestsController(
         if (node.District != null && !string.IsNullOrEmpty(node.District.Name)) return node.District.Name;
         if (node.Local != null && !string.IsNullOrEmpty(node.Local.Name)) return node.Local.Name;
         
-        return node.Name ?? "Unknown";
+        return "Unknown";
     }
 
     private int GetUserScopeId()
@@ -37,7 +37,7 @@ public class StockRequestsController(
 
     private int GetUserId()
     {
-        var claim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        var claim = User.FindFirst("sub");
         if (claim != null && int.TryParse(claim.Value, out int id))
         {
             return id;

@@ -22,8 +22,8 @@ public class FundRequestsController(
         if (node.District != null && !string.IsNullOrEmpty(node.District.Name)) return node.District.Name;
         if (node.Local != null && !string.IsNullOrEmpty(node.Local.Name)) return node.Local.Name;
         
-        // Fallback to node name if specific level names are null
-        return node.Name ?? "Unknown";
+        // Fallback if specific level names are null
+        return "Unknown";
     }
 
     private int GetUserScopeId()

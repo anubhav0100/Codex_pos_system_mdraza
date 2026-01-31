@@ -22,6 +22,7 @@ public class StockRequestRepository(PosDbContext dbContext) : IStockRequestRepos
         var query = dbContext.StockRequests
             .AsNoTracking()
             .Include(r => r.CreatedByUser)
+            .Include(r => r.Items).ThenInclude(i => i.Product)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.Company)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.State)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.District)
