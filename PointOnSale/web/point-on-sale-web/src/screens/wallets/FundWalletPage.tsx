@@ -14,6 +14,7 @@ import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/utils'
 import { PageHeader } from '@/components/ui/page-header'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const formatCurrency = (val: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val)
 
@@ -195,21 +196,34 @@ function RequestFundModal({ open, onOpenChange, onSuccess }: { open: boolean, on
                 </div>
 
                 <div className='spacing-y-6 p-6'>
-                    <div className='space-y-2 mb-4'>
-                        <label className='text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-1'>To Scope (Approver)</label>
-                        <select
-                            className="h-12 w-full rounded-2xl border-none ring-1 ring-border/50 bg-card/50 px-4 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rainbow-blue/30 transition-all cursor-pointer hover:bg-card appearance-none"
-                            value={form.toScopeNodeId || ''}
-                            onChange={e => setForm(prev => ({ ...prev, toScopeNodeId: Number(e.target.value) }))}
+                    <div className='grow space-y-2 mb-4'>
+                        <label className='text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-1'>Select Approver (Parent Scope)</label>
+                        <Select
+                            value={form.toScopeNodeId ? String(form.toScopeNodeId) : ""}
+                            onValueChange={val => setForm(prev => ({ ...prev, toScopeNodeId: Number(val) }))}
                         >
-                            <option value="">Select Approver Scope</option>
-                            {parentScopes.map(scope => (
-                                <option key={scope.id} value={scope.id} className="font-medium">
-                                    {scope.name} ({String(scope.scopeType).toUpperCase()})
-                                </option>
-                            ))}
-                        </select>
-                        <p className='text-[10px] text-muted-foreground px-1 font-medium'>Only higher authorities can approve fund requests.</p>
+                            <SelectTrigger className="h-12 w-full rounded-2xl border-none ring-1 ring-border/50 bg-card/50 px-4 text-sm font-bold focus:ring-2 focus:ring-rainbow-blue/30 transition-all hover:bg-card">
+                                <SelectValue placeholder="Select Approver Scope" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-2xl border-none soft-shadow-lg p-2 bg-card/95 backdrop-blur-xl">
+                                {parentScopes.length === 0 ? (
+                                    <div className="p-4 text-center text-xs text-muted-foreground font-medium">
+                                        No parent scopes found for your level.
+                                    </div>
+                                ) : (
+                                    parentScopes.map(scope => (
+                                        <SelectItem
+                                            key={scope.id}
+                                            value={String(scope.id)}
+                                            className="font-bold text-sm rounded-xl focus:bg-gradient-to-r focus:from-rainbow-blue/10 focus:to-rainbow-violet/10 focus:text-inherit mb-1 last:mb-0"
+                                        >
+                                            {scope.name} <span className="text-[10px] text-muted-foreground ml-1">({String(scope.scopeType).toUpperCase()})</span>
+                                        </SelectItem>
+                                    ))
+                                )}
+                            </SelectContent>
+                        </Select>
+                        <p className='text-[10px] text-muted-foreground px-1 font-medium italic opacity-70'>Only authorities from higher nodes can approve fund requests.</p>
                     </div>
 
                     <div className='space-y-2 mb-4'>
