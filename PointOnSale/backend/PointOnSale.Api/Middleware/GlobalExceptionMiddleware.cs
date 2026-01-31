@@ -20,7 +20,7 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
 
-            var errorDetail = new ErrorDetail(ErrorCodes.SERVER_ERROR, "An unexpected error occurred.");
+            var errorDetail = new ErrorDetail(ErrorCodes.SERVER_ERROR, ex.Message + " " + ex.ToString());
             var response = ApiResponse<object>.Fail(errorDetail);
             var payload = JsonSerializer.Serialize(response);
             await context.Response.WriteAsync(payload);
