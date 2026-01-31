@@ -38,6 +38,8 @@ public static class DependencyInjection
         services.AddScoped<IInvoiceService, Services.InvoiceService>();
         services.AddScoped<IReportsService, Services.ReportsService>();
         services.AddScoped<IAuditLogService, Services.AuditLogService>();
+        services.AddScoped<IFundRequestRepository, FundRequestRepository>();
+        services.AddScoped<IFundRequestService, Services.FundRequestService>();
         services.AddScoped<PointOnSale.Infrastructure.Data.DbInitializer>();
         services.AddScoped<DatabaseSeeder>();
         services.AddScoped<PointOnSale.Infrastructure.Seeding.RbacSeeder>();
