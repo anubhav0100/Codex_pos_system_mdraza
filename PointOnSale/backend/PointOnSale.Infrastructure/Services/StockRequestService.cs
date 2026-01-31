@@ -43,7 +43,7 @@ public class StockRequestService(
             throw new InvalidOperationException($"Invalid request hierarchy: {fromScope.ScopeType} cannot request from {toScope.ScopeType}");
     }
 
-    public async Task<int> CreateRequestAsync(CreateStockRequestDto dto, CancellationToken cancellationToken = default)
+    public async Task<int> CreateRequestAsync(CreateStockRequestDto dto, int? createdByUserId = null, CancellationToken cancellationToken = default)
     {
         await ValidateHierarchy(dto.FromScopeNodeId, dto.ToScopeNodeId);
 
@@ -53,6 +53,7 @@ public class StockRequestService(
             ToScopeNodeId = dto.ToScopeNodeId,
             Status = RequestStatus.Draft,
             RequestedAt = DateTime.UtcNow,
+            CreatedByUserId = createdByUserId,
             Items = dto.Items.Select(i => new StockRequestItem
             {
                 ProductId = i.ProductId,

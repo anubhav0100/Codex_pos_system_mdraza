@@ -18,6 +18,9 @@ public class StockRequestDto
     public DateTime? FulfilledAt { get; set; }
     
     public List<StockRequestItemDto> Items { get; set; }
+    
+    public int? CreatedByUserId { get; set; }
+    public string CreatedByUserName { get; set; }
 }
 
 public class StockRequestItemDto

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ClipboardList, CheckCircle2, XCircle, PackageCheck } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/utils/utils'
 
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
@@ -88,7 +89,7 @@ export default function StockRequestsInboxPage() {
         <thead>
           <DataTableRow>
             <DataTableCell isHeader>Request</DataTableCell>
-            <DataTableCell isHeader>Supplier</DataTableCell>
+            <DataTableCell isHeader>Requester</DataTableCell>
             <DataTableCell isHeader>Status</DataTableCell>
             <DataTableCell isHeader>Items</DataTableCell>
             <DataTableCell isHeader>Requested At</DataTableCell>
@@ -100,17 +101,24 @@ export default function StockRequestsInboxPage() {
             <DataTableRow key={request.id}>
               <DataTableCell className='font-medium text-foreground'>#{request.id}</DataTableCell>
               <DataTableCell className='text-foreground'>
-                {request.supplierName} ({request.supplierScopeType})
+                {request.partyName}
               </DataTableCell>
               <DataTableCell>
-                <Badge variant={request.status === 'PENDING' ? 'secondary' : 'default'}>
+                <Badge className={cn(
+                  'border-none font-bold text-[10px]',
+                  request.status.toUpperCase() === 'PENDING' ? 'bg-rainbow-orange/10 text-rainbow-orange' :
+                    request.status.toUpperCase() === 'APPROVED' ? 'bg-rainbow-green/10 text-rainbow-green' :
+                      request.status.toUpperCase() === 'REJECTED' ? 'bg-destructive/10 text-destructive' :
+                        request.status.toUpperCase() === 'FULFILLED' ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
+                          'bg-secondary'
+                )}>
                   {request.status}
                 </Badge>
               </DataTableCell>
               <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
               <DataTableCell className='text-right space-x-2'>
-                {request.status === 'PENDING' && (
+                {(request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') && (
                   <PermissionGate perm='STOCK_REQUESTS_APPROVE'>
                     <Button
                       variant='ghost'
@@ -123,7 +131,7 @@ export default function StockRequestsInboxPage() {
                     </Button>
                   </PermissionGate>
                 )}
-                {request.status === 'PENDING' && (
+                {(request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') && (
                   <PermissionGate perm='STOCK_REQUESTS_APPROVE'>
                     <Button
                       variant='ghost'
@@ -136,7 +144,7 @@ export default function StockRequestsInboxPage() {
                     </Button>
                   </PermissionGate>
                 )}
-                {request.status === 'APPROVED' && (
+                {request.status.toUpperCase() === 'APPROVED' && (
                   <PermissionGate perm='STOCK_REQUESTS_FULFILL'>
                     <Button
                       variant='ghost'

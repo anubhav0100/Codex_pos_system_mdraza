@@ -17,11 +17,11 @@ public class StockRequestRepository(PosDbContext dbContext) : IStockRequestRepos
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task<List<StockRequest>> GetByScopeAsync(int scopeNodeId, bool isOutgoing, CancellationToken cancellationToken = default)
+    public async Task<List<StockRequest>> GetByScopeAsync(int scopeNodeId, bool isOutgoing, int? currentUserId = null, CancellationToken cancellationToken = default)
     {
         var query = dbContext.StockRequests
             .AsNoTracking()
-            .AsNoTracking()
+            .Include(r => r.CreatedByUser)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.Company)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.State)
             .Include(r => r.FromScopeNode).ThenInclude(s => s.District)
@@ -35,6 +35,10 @@ public class StockRequestRepository(PosDbContext dbContext) : IStockRequestRepos
         if (isOutgoing)
         {
             query = query.Where(r => r.FromScopeNodeId == scopeNodeId);
+            if (currentUserId.HasValue)
+            {
+                query = query.Where(r => r.CreatedByUserId == currentUserId.Value);
+            }
         }
         else
         {

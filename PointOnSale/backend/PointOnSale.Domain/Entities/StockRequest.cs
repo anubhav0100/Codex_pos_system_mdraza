@@ -20,4 +20,7 @@ public class StockRequest
     public DateTime? FulfilledAt { get; set; }
     
     public ICollection<StockRequestItem> Items { get; set; }
+    
+    public int? CreatedByUserId { get; set; }
+    public AppUser CreatedByUser { get; set; }
 }

@@ -35,6 +35,16 @@ public class StockRequestsController(
         return 0; 
     }
 
+    private int GetUserId()
+    {
+        var claim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        if (claim != null && int.TryParse(claim.Value, out int id))
+        {
+            return id;
+        }
+        return 0;
+    }
+
     [HttpPost]
     [RequirePermission("STOCK_REQUESTS_CREATE")]
     public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateStockRequestDto dto)
@@ -51,7 +61,8 @@ public class StockRequestsController(
 
         try
         {
-            int id = await stockRequestService.CreateRequestAsync(dto);
+            int userId = GetUserId();
+            int id = await stockRequestService.CreateRequestAsync(dto, userId);
             return Ok(ApiResponse<int>.Ok(id));
         }
         catch (InvalidOperationException ex)
@@ -158,8 +169,9 @@ public class StockRequestsController(
         int myScopeId = GetUserScopeId();
         if (myScopeId == 0) return BadRequest(ApiResponse<string>.Fail(new ErrorDetail("400", "No Scope associated with user"), "Bad Request"));
 
+        int userId = GetUserId();
         bool isOutgoing = scope == "mine";
-        var requests = await stockRequestRepository.GetByScopeAsync(myScopeId, isOutgoing);
+        var requests = await stockRequestRepository.GetByScopeAsync(myScopeId, isOutgoing, isOutgoing ? userId : null);
         
         // Apply status filter if provided
         if (!string.IsNullOrEmpty(status))
@@ -178,6 +190,8 @@ public class StockRequestsController(
             RequestedAt = r.RequestedAt,
             ApprovedAt = r.ApprovedAt,
             FulfilledAt = r.FulfilledAt,
+            CreatedByUserId = r.CreatedByUserId,
+            CreatedByUserName = r.CreatedByUser?.FullName ?? "Unknown",
             Items = r.Items?.Select(i => new StockRequestItemDto
             {
                 ProductId = i.ProductId,

@@ -9,11 +9,11 @@ export interface StockRequestItem {
 
 export interface StockRequestSummary {
   id: string
-  supplierName: string
-  supplierScopeType: 'company' | 'state' | 'district'
+  partyName: string
   status: StockRequestStatus
   items: StockRequestItem[]
   requestedAt: string
+  createdByUserName?: string
 }
 
 export interface CreateStockRequestDto {
@@ -49,7 +49,20 @@ export const stockRequestsService = {
         },
       },
     )
-    return unwrapResponse(response)
+    const requests = unwrapResponse(response)
+
+    // Transform backend DTO to frontend format
+    // Backend returns FromScopeName and ToScopeName. 
+    // If scope is 'mine' (outgoing), the "party" is ToScopeName (Supplier).
+    // If scope is 'inbox' (incoming), the "party" is FromScopeName (Requester).
+    return (requests as any[]).map(r => ({
+      id: r.id,
+      partyName: scope === 'mine' ? r.toScopeName : r.fromScopeName,
+      status: r.status,
+      items: r.items,
+      requestedAt: r.requestedAt,
+      createdByUserName: r.createdByUserName
+    })) as StockRequestSummary[]
   },
   createStockRequest: async (payload: CreateStockRequestDto) => {
     // Transform frontend payload to backend DTO

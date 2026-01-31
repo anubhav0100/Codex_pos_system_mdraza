@@ -160,7 +160,7 @@ export default function StockRequestsOutgoingPage() {
         <thead>
           <DataTableRow>
             <DataTableCell isHeader>Request</DataTableCell>
-            <DataTableCell isHeader>Supplier</DataTableCell>
+            <DataTableCell isHeader>Supplier Party</DataTableCell>
             <DataTableCell isHeader>Status</DataTableCell>
             <DataTableCell isHeader>Items</DataTableCell>
             <DataTableCell isHeader>Requested At</DataTableCell>
@@ -172,16 +172,16 @@ export default function StockRequestsOutgoingPage() {
             <DataTableRow key={request.id}>
               <DataTableCell className='font-medium text-foreground'>#{request.id}</DataTableCell>
               <DataTableCell className='text-foreground'>
-                {request.supplierName} ({request.supplierScopeType})
+                {request.partyName}
               </DataTableCell>
               <DataTableCell>
                 <Badge className={cn(
                   'border-none font-bold text-[10px]',
-                  (request.status === 'DRAFT' || request.status === 'Draft') ? 'bg-muted text-muted-foreground' :
-                    (request.status === 'SUBMITTED' || request.status === 'Submitted' || request.status === 'PENDING' || request.status === 'Pending') ? 'bg-rainbow-orange/10 text-rainbow-orange' :
-                      (request.status === 'APPROVED' || request.status === 'Approved') ? 'bg-rainbow-green/10 text-rainbow-green' :
-                        (request.status === 'REJECTED' || request.status === 'Rejected') ? 'bg-destructive/10 text-destructive' :
-                          (request.status === 'FULFILLED' || request.status === 'Fulfilled') ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
+                  (request.status.toUpperCase() === 'DRAFT') ? 'bg-muted text-muted-foreground' :
+                    (request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') ? 'bg-rainbow-orange/10 text-rainbow-orange' :
+                      (request.status.toUpperCase() === 'APPROVED') ? 'bg-rainbow-green/10 text-rainbow-green' :
+                        (request.status.toUpperCase() === 'REJECTED') ? 'bg-destructive/10 text-destructive' :
+                          (request.status.toUpperCase() === 'FULFILLED') ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
                             'bg-secondary'
                 )}>
                   {request.status}
@@ -190,7 +190,7 @@ export default function StockRequestsOutgoingPage() {
               <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
               <DataTableCell className="text-right">
-                {(request.status === 'DRAFT' || request.status === 'Draft') && (
+                {request.status.toUpperCase() === 'DRAFT' && (
                   <Button
                     size="sm"
                     variant="ghost"
