@@ -41,7 +41,7 @@ const unwrapResponse = <T,>(response: { data: T | ApiResponse<T> }) => {
 export const stockRequestsService = {
   getStockRequests: async ({ scope, status }: { scope: 'mine' | 'inbox'; status?: string }) => {
     const response = await apiClient.get<ApiResponse<StockRequestSummary[]> | StockRequestSummary[]>(
-      'stock-requests',
+      '/stock-requests',
       {
         params: {
           scope,
@@ -49,20 +49,28 @@ export const stockRequestsService = {
         },
       },
     )
-    const requests = unwrapResponse(response)
+    const requests = unwrapResponse(response) as any
+
+    if (!Array.isArray(requests)) {
+      return []
+    }
 
     // Transform backend DTO to frontend format
     // Backend returns FromScopeName and ToScopeName. 
-    // If scope is 'mine' (outgoing), the "party" is ToScopeName (Supplier).
-    // If scope is 'inbox' (incoming), the "party" is FromScopeName (Requester).
-    return (requests as any[]).map(r => ({
-      id: r.id,
-      partyName: scope === 'mine' ? r.toScopeName : r.fromScopeName,
-      status: r.status,
-      items: r.items,
-      requestedAt: r.requestedAt,
-      createdByUserName: r.createdByUserName
-    })) as StockRequestSummary[]
+    // We handle both PascalCase and camelCase just to be safe.
+    return requests.map((r: any) => {
+      const fromName = r.fromScopeName || r.FromScopeName || 'Unknown'
+      const toName = r.toScopeName || r.ToScopeName || 'Unknown'
+
+      return {
+        id: r.id || r.Id,
+        partyName: scope === 'mine' ? toName : fromName,
+        status: (r.status || r.Status || '').toString(),
+        items: r.items || r.Items || [],
+        requestedAt: r.requestedAt || r.RequestedAt,
+        createdByUserName: r.createdByUserName || r.CreatedByUserName
+      }
+    }) as StockRequestSummary[]
   },
   createStockRequest: async (payload: CreateStockRequestDto) => {
     // Transform frontend payload to backend DTO

@@ -177,11 +177,11 @@ export default function StockRequestsOutgoingPage() {
               <DataTableCell>
                 <Badge className={cn(
                   'border-none font-bold text-[10px]',
-                  (request.status.toUpperCase() === 'DRAFT') ? 'bg-muted text-muted-foreground' :
-                    (request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') ? 'bg-rainbow-orange/10 text-rainbow-orange' :
-                      (request.status.toUpperCase() === 'APPROVED') ? 'bg-rainbow-green/10 text-rainbow-green' :
-                        (request.status.toUpperCase() === 'REJECTED') ? 'bg-destructive/10 text-destructive' :
-                          (request.status.toUpperCase() === 'FULFILLED') ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
+                  (request.status?.toUpperCase() === 'DRAFT') ? 'bg-muted text-muted-foreground' :
+                    (request.status?.toUpperCase() === 'SUBMITTED' || request.status?.toUpperCase() === 'PENDING') ? 'bg-rainbow-orange/10 text-rainbow-orange' :
+                      (request.status?.toUpperCase() === 'APPROVED') ? 'bg-rainbow-green/10 text-rainbow-green' :
+                        (request.status?.toUpperCase() === 'REJECTED') ? 'bg-destructive/10 text-destructive' :
+                          (request.status?.toUpperCase() === 'FULFILLED') ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
                             'bg-secondary'
                 )}>
                   {request.status}
@@ -190,7 +190,7 @@ export default function StockRequestsOutgoingPage() {
               <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
               <DataTableCell className="text-right">
-                {request.status.toUpperCase() === 'DRAFT' && (
+                {request.status?.toUpperCase() === 'DRAFT' && (
                   <Button
                     size="sm"
                     variant="ghost"
@@ -246,19 +246,19 @@ export default function StockRequestsOutgoingPage() {
         />
         <StatCard
           title='Pending'
-          value={requests.filter(r => r.status === 'PENDING').length.toString()}
+          value={requests.filter(r => r.status?.toUpperCase() === 'PENDING').length.toString()}
           icon={<Clock className='h-4 w-4 text-white/80' />}
           className='bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-500 text-white hover-scale'
         />
         <StatCard
           title='Approved'
-          value={requests.filter(r => r.status === 'APPROVED').length.toString()}
+          value={requests.filter(r => r.status?.toUpperCase() === 'APPROVED').length.toString()}
           icon={<CheckCircle2 className='h-4 w-4 text-white/80' />}
           className='bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-500 text-white hover-scale'
         />
         <StatCard
           title='Fulfilled'
-          value={requests.filter(r => r.status === 'FULFILLED').length.toString()}
+          value={requests.filter(r => r.status?.toUpperCase() === 'FULFILLED').length.toString()}
           icon={<Truck className='h-4 w-4 text-white/80' />}
           className='bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 text-white hover-scale'
         />

@@ -106,10 +106,10 @@ export default function StockRequestsInboxPage() {
               <DataTableCell>
                 <Badge className={cn(
                   'border-none font-bold text-[10px]',
-                  request.status.toUpperCase() === 'PENDING' ? 'bg-rainbow-orange/10 text-rainbow-orange' :
-                    request.status.toUpperCase() === 'APPROVED' ? 'bg-rainbow-green/10 text-rainbow-green' :
-                      request.status.toUpperCase() === 'REJECTED' ? 'bg-destructive/10 text-destructive' :
-                        request.status.toUpperCase() === 'FULFILLED' ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
+                  request.status?.toUpperCase() === 'PENDING' ? 'bg-rainbow-orange/10 text-rainbow-orange' :
+                    request.status?.toUpperCase() === 'APPROVED' ? 'bg-rainbow-green/10 text-rainbow-green' :
+                      request.status?.toUpperCase() === 'REJECTED' ? 'bg-destructive/10 text-destructive' :
+                        request.status?.toUpperCase() === 'FULFILLED' ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
                           'bg-secondary'
                 )}>
                   {request.status}
@@ -118,7 +118,7 @@ export default function StockRequestsInboxPage() {
               <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
               <DataTableCell className='text-right space-x-2'>
-                {(request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') && (
+                {(request.status?.toUpperCase() === 'SUBMITTED' || request.status?.toUpperCase() === 'PENDING') && (
                   <PermissionGate perm='STOCK_REQUESTS_APPROVE'>
                     <Button
                       variant='ghost'
@@ -131,7 +131,7 @@ export default function StockRequestsInboxPage() {
                     </Button>
                   </PermissionGate>
                 )}
-                {(request.status.toUpperCase() === 'SUBMITTED' || request.status.toUpperCase() === 'PENDING') && (
+                {(request.status?.toUpperCase() === 'SUBMITTED' || request.status?.toUpperCase() === 'PENDING') && (
                   <PermissionGate perm='STOCK_REQUESTS_APPROVE'>
                     <Button
                       variant='ghost'
@@ -144,7 +144,7 @@ export default function StockRequestsInboxPage() {
                     </Button>
                   </PermissionGate>
                 )}
-                {request.status.toUpperCase() === 'APPROVED' && (
+                {request.status?.toUpperCase() === 'APPROVED' && (
                   <PermissionGate perm='STOCK_REQUESTS_FULFILL'>
                     <Button
                       variant='ghost'
