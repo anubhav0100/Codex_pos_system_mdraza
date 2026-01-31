@@ -1,18 +1,14 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
-
-import { toast } from 'sonner'
-
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Plus, ArrowRightLeft } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { DataTable, DataTableCell, DataTableRow } from '@/components/ui/data-table'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { fundRequestsService, type CreateFundRequestDto } from '@/services/company/fund-requests-service'
+import { fundRequestsService } from '@/services/company/fund-requests-service'
+import { RequestFundModal } from '@/components/wallets/request-fund-modal'
+import { cn } from '@/utils/utils'
 
-// Helper to format currency
 const formatCurrency = (val: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val)
 
@@ -20,95 +16,66 @@ export default function FundRequestsPage() {
     const queryClient = useQueryClient()
     const [createOpen, setCreateOpen] = useState(false)
 
-    // Hardcoded for now: Requesting FROM parent. 
-    // In a real app, we might need a dropdown of parents if multiple exist, or just assume parent.
-    // We'll need the Scope ID of the "To" node. 
-    // Since we don't easily have it here without fetching Scope Tree, 
-    // we might need a helper method or input.
-    // For V1, let's ask user to input ToScopeNodeId or fetch it?
-    // Ideally, valid "To" scopes should be fetched.
-    // Let's use a simple input for ToScopeNodeId ID for now to unblock, or hardcode if simple hierarchy.
-    const [form, setForm] = useState<CreateFundRequestDto>({
-        toScopeNodeId: 0,
-        amount: 0,
-        notes: ''
-    })
-
-    // Fetch OUTGOING requests (requests I made)
     const { data: requests = [], isLoading } = useQuery({
         queryKey: ['fund-requests', 'outgoing'],
         queryFn: () => fundRequestsService.getMyRequests(false),
     })
 
-    // export default function FundRequestsPage() {
-    //     const queryClient = useQueryClient()
-    // ... 
-    // Let's replace the whole function start or just the specific lines.
-    // Step 933 failed because it tried to replace a large chunk and missed context?
-    // I'll replace specific lines.
-
-    const createMutation = useMutation({
-        mutationFn: (payload: CreateFundRequestDto) => fundRequestsService.createRequest(payload),
-        onSuccess: () => {
-            toast.success('Fund request created')
-            setCreateOpen(false)
-            queryClient.invalidateQueries({ queryKey: ['fund-requests'] })
-        },
-        onError: () => toast.error('Failed to create request'),
-    })
-
-    const handleSubmit = () => {
-        if (!form.toScopeNodeId || !form.amount) {
-            toast.error("Please fill required fields")
-            return
-        }
-        createMutation.mutate(form)
-    }
-
     return (
         <div className='space-y-6'>
             <PageHeader
-                title='Fund Requests'
+                title={<span className="gradient-text-rainbow">Fund Requests</span>}
                 description='Track requests for funds sent to higher authorities.'
                 actions={
-                    <Button onClick={() => setCreateOpen(true)} className='gap-2'>
-                        <Plus className='h-4 w-4' /> New Request
+                    <Button
+                        onClick={() => setCreateOpen(true)}
+                        className='vibrant-button bg-gradient-to-r from-rainbow-blue to-rainbow-violet text-white border-0 shadow-lg shadow-rainbow-blue/20 px-6 font-bold'
+                    >
+                        <Plus className='h-4 w-4 mr-2' /> New Request
                     </Button>
                 }
             />
 
-            <div className='rounded-md border bg-card'>
+            <div className='premium-card p-0 overflow-hidden soft-shadow border-none'>
+                <div className="p-6 border-b bg-muted/30 flex items-center justify-between">
+                    <h3 className="font-bold tracking-tight text-lg">Outgoing Requests</h3>
+                    <ArrowRightLeft className="h-5 w-5 text-muted-foreground/50" />
+                </div>
                 <DataTable>
                     <thead>
-                        <DataTableRow>
-                            <DataTableCell isHeader>Date</DataTableCell>
-                            <DataTableCell isHeader>To Scope</DataTableCell>
-                            <DataTableCell isHeader>Amount</DataTableCell>
-                            <DataTableCell isHeader>Status</DataTableCell>
-                            <DataTableCell isHeader>Notes</DataTableCell>
+                        <DataTableRow className="bg-muted/10 hover:bg-muted/10 border-b">
+                            <DataTableCell isHeader className="font-bold">Date</DataTableCell>
+                            <DataTableCell isHeader className="font-bold">To Scope</DataTableCell>
+                            <DataTableCell isHeader className="font-bold">Amount</DataTableCell>
+                            <DataTableCell isHeader className="font-bold">Status</DataTableCell>
+                            <DataTableCell isHeader className="font-bold">Notes</DataTableCell>
                         </DataTableRow>
                     </thead>
                     <tbody>
                         {isLoading ? (
-                            <DataTableRow>
-                                <DataTableCell colSpan={5} className='text-center py-4'>Loading...</DataTableCell>
-                            </DataTableRow>
+                            <DataTableRow><DataTableCell colSpan={5} className="py-20 text-center text-muted-foreground animate-pulse">Loading request history...</DataTableCell></DataTableRow>
                         ) : requests.length === 0 ? (
-                            <DataTableRow>
-                                <DataTableCell colSpan={5} className='text-center py-4'>No requests found</DataTableCell>
-                            </DataTableRow>
+                            <DataTableRow><DataTableCell colSpan={5} className="py-20 text-center text-muted-foreground font-medium">No outgoing fund requests found.</DataTableCell></DataTableRow>
                         ) : (
                             requests.map(r => (
-                                <DataTableRow key={r.id}>
-                                    <DataTableCell>{new Date(r.requestedAt).toLocaleDateString()}</DataTableCell>
-                                    <DataTableCell>{r.toScopeName || r.toScopeNodeId}</DataTableCell>
-                                    <DataTableCell>{formatCurrency(r.amount)}</DataTableCell>
+                                <DataTableRow key={r.id} className="hover:bg-muted/5 transition-colors">
+                                    <DataTableCell className="text-sm font-medium">{new Date(r.requestedAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</DataTableCell>
+                                    <DataTableCell className="text-sm font-bold">{r.toScopeName || `ID: ${r.toScopeNodeId}`}</DataTableCell>
+                                    <DataTableCell className="font-black tracking-tight text-rainbow-blue">{formatCurrency(r.amount)}</DataTableCell>
                                     <DataTableCell>
-                                        <Badge variant={r.status === 'APPROVED' ? 'default' : r.status === 'REJECTED' ? 'destructive' : 'secondary'}>
+                                        <Badge
+                                            variant='outline'
+                                            className={cn(
+                                                "font-black text-[10px] px-2 py-0.5 rounded-full shadow-sm border-0 text-white",
+                                                r.status === 'APPROVED' ? 'bg-gradient-to-r from-rainbow-green to-rainbow-cyan' :
+                                                    r.status === 'REJECTED' ? 'bg-gradient-to-r from-rainbow-orange to-rainbow-red' :
+                                                        'bg-muted text-muted-foreground'
+                                            )}
+                                        >
                                             {r.status}
                                         </Badge>
                                     </DataTableCell>
-                                    <DataTableCell>{r.notes}</DataTableCell>
+                                    <DataTableCell className="text-xs text-muted-foreground/80 max-w-[240px] truncate">{r.notes || '—'}</DataTableCell>
                                 </DataTableRow>
                             ))
                         )}
@@ -116,47 +83,11 @@ export default function FundRequestsPage() {
                 </DataTable>
             </div>
 
-            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Request Funds</DialogTitle>
-                        <DialogDescription>Submit a request for funds from a higher scope.</DialogDescription>
-                    </DialogHeader>
-                    <div className='space-y-4 py-4'>
-                        <div className='space-y-2'>
-                            <label className='text-sm font-medium'>To Scope ID (Parent)</label>
-                            <Input
-                                type='number'
-                                placeholder='Enter Scope ID of Approver'
-                                value={form.toScopeNodeId || ''}
-                                onChange={e => setForm(prev => ({ ...prev, toScopeNodeId: Number(e.target.value) }))}
-                            />
-                            <p className='text-xs text-muted-foreground'>Enter the ID of the Company/State/District node you are requesting from.</p>
-                        </div>
-                        <div className='space-y-2'>
-                            <label className='text-sm font-medium'>Amount</label>
-                            <Input
-                                type='number'
-                                placeholder='0.00'
-                                value={form.amount || ''}
-                                onChange={e => setForm(prev => ({ ...prev, amount: Number(e.target.value) }))}
-                            />
-                        </div>
-                        <div className='space-y-2'>
-                            <label className='text-sm font-medium'>Notes</label>
-                            <Input
-                                placeholder='Reason for funds...'
-                                value={form.notes}
-                                onChange={e => setForm(prev => ({ ...prev, notes: e.target.value }))}
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button variant='outline' onClick={() => setCreateOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSubmit} disabled={createMutation.isPending}>Submit Request</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <RequestFundModal
+                open={createOpen}
+                onOpenChange={setCreateOpen}
+                onSuccess={() => queryClient.invalidateQueries({ queryKey: ['fund-requests'] })}
+            />
         </div>
     )
 }
