@@ -29,6 +29,8 @@ const formatDate = (value: string) =>
 
 const statusOptions: { label: string; value: StockRequestStatus | 'ALL' }[] = [
   { label: 'All', value: 'ALL' },
+  { label: 'Draft', value: 'DRAFT' },
+  { label: 'Submitted', value: 'SUBMITTED' },
   { label: 'Pending', value: 'PENDING' },
   { label: 'Approved', value: 'APPROVED' },
   { label: 'Rejected', value: 'REJECTED' },
@@ -99,6 +101,15 @@ export default function StockRequestsOutgoingPage() {
     onError: () => toast.error('Failed to create stock request'),
   })
 
+  const submitMutation = useMutation({
+    mutationFn: (id: string) => stockRequestsService.submitStockRequest(id),
+    onSuccess: () => {
+      toast.success('Stock request submitted successfully')
+      queryClient.invalidateQueries({ queryKey: ['stock-requests'] })
+    },
+    onError: (err: any) => toast.error(err.response?.data?.message || 'Failed to submit request'),
+  })
+
   const handleSubmit = () => {
     if (!requestForm.productId || !requestForm.quantity) {
       toast.error('Please provide product and quantity details')
@@ -153,6 +164,7 @@ export default function StockRequestsOutgoingPage() {
             <DataTableCell isHeader>Status</DataTableCell>
             <DataTableCell isHeader>Items</DataTableCell>
             <DataTableCell isHeader>Requested At</DataTableCell>
+            <DataTableCell isHeader className="text-right">Actions</DataTableCell>
           </DataTableRow>
         </thead>
         <tbody>
@@ -163,18 +175,33 @@ export default function StockRequestsOutgoingPage() {
                 {request.supplierName} ({request.supplierScopeType})
               </DataTableCell>
               <DataTableCell>
-                <Badge className={
-                  request.status === 'PENDING' ? 'bg-rainbow-orange text-white' :
-                    request.status === 'APPROVED' ? 'bg-rainbow-green text-white' :
-                      request.status === 'REJECTED' ? 'bg-destructive text-white' :
-                        request.status === 'FULFILLED' ? 'bg-rainbow-cyan text-white' :
-                          'bg-secondary'
-                }>
+                <Badge className={cn(
+                  'border-none font-bold text-[10px]',
+                  (request.status === 'DRAFT' || request.status === 'Draft') ? 'bg-muted text-muted-foreground' :
+                    (request.status === 'SUBMITTED' || request.status === 'Submitted' || request.status === 'PENDING' || request.status === 'Pending') ? 'bg-rainbow-orange/10 text-rainbow-orange' :
+                      (request.status === 'APPROVED' || request.status === 'Approved') ? 'bg-rainbow-green/10 text-rainbow-green' :
+                        (request.status === 'REJECTED' || request.status === 'Rejected') ? 'bg-destructive/10 text-destructive' :
+                          (request.status === 'FULFILLED' || request.status === 'Fulfilled') ? 'bg-rainbow-cyan/10 text-rainbow-cyan' :
+                            'bg-secondary'
+                )}>
                   {request.status}
                 </Badge>
               </DataTableCell>
               <DataTableCell className='text-foreground'>{request.items.length} items</DataTableCell>
               <DataTableCell className='text-foreground'>{formatDate(request.requestedAt)}</DataTableCell>
+              <DataTableCell className="text-right">
+                {(request.status === 'DRAFT' || request.status === 'Draft') && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 text-[10px] font-black uppercase tracking-widest text-rainbow-blue hover:bg-rainbow-blue/5"
+                    onClick={() => submitMutation.mutate(request.id)}
+                    disabled={submitMutation.isPending}
+                  >
+                    Send Request
+                  </Button>
+                )}
+              </DataTableCell>
             </DataTableRow>
           ))}
         </tbody>

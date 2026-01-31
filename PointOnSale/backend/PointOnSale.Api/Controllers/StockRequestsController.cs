@@ -16,12 +16,13 @@ public class StockRequestsController(
 {
     private string GetScopeName(PointOnSale.Domain.Entities.ScopeNode node)
     {
-        if (node == null) return "";
-        if (node.Company != null) return node.Company.Name;
-        if (node.State != null) return node.State.Name;
-        if (node.District != null) return node.District.Name;
-        if (node.Local != null) return node.Local.Name;
-        return "Unknown";
+        if (node == null) return "Unknown";
+        if (node.Company != null && !string.IsNullOrEmpty(node.Company.Name)) return node.Company.Name;
+        if (node.State != null && !string.IsNullOrEmpty(node.State.Name)) return node.State.Name;
+        if (node.District != null && !string.IsNullOrEmpty(node.District.Name)) return node.District.Name;
+        if (node.Local != null && !string.IsNullOrEmpty(node.Local.Name)) return node.Local.Name;
+        
+        return node.Name ?? "Unknown";
     }
 
     private int GetUserScopeId()
@@ -180,7 +181,7 @@ public class StockRequestsController(
             Items = r.Items?.Select(i => new StockRequestItemDto
             {
                 ProductId = i.ProductId,
-                ProductName = i.Product?.Name ?? "",
+                ProductName = i.Product?.Name ?? "Unknown Product",
                 Qty = i.Qty
             }).ToList() ?? new List<StockRequestItemDto>()
         }).ToList();

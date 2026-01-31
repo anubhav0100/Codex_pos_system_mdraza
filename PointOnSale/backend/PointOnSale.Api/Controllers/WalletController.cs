@@ -89,10 +89,10 @@ public class WalletController(
             FromWalletId = l.FromWalletId,
             ToWalletId = l.ToWalletId,
             Amount = l.Amount,
-            RefType = l.RefType,
-            RefId = l.RefId,
+            RefType = l.RefType ?? "Unknown",
+            RefId = l.RefId ?? "0",
             CreatedAt = l.CreatedAt,
-            Notes = l.Notes,
+            Notes = l.Notes ?? "",
             AdminCharges = l.AdminCharges,
             TDS = l.TDS,
             Commission = l.Commission

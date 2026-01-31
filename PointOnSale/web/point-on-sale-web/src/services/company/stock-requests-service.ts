@@ -1,6 +1,6 @@
 import apiClient from '@/services/api-client'
 
-export type StockRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'FULFILLED'
+export type StockRequestStatus = 'DRAFT' | 'SUBMITTED' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'FULFILLED'
 
 export interface StockRequestItem {
   productId: string
@@ -82,6 +82,12 @@ export const stockRequestsService = {
   fulfillStockRequest: async (requestId: string) => {
     const response = await apiClient.post<ApiResponse<string> | string>(
       `/stock-requests/${requestId}/fulfill`,
+    )
+    return unwrapResponse(response)
+  },
+  submitStockRequest: async (requestId: string) => {
+    const response = await apiClient.post<ApiResponse<string> | string>(
+      `/stock-requests/${requestId}/submit`,
     )
     return unwrapResponse(response)
   },

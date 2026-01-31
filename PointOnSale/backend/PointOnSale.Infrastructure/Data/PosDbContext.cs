@@ -106,6 +106,19 @@ public class PosDbContext : DbContext
             .HasForeignKey(s => s.ParentScopeNodeId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // FundRequest Relationships
+        modelBuilder.Entity<FundRequest>()
+            .HasOne(fr => fr.FromScopeNode)
+            .WithMany()
+            .HasForeignKey(fr => fr.FromScopeNodeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<FundRequest>()
+            .HasOne(fr => fr.ToScopeNode)
+            .WithMany()
+            .HasForeignKey(fr => fr.ToScopeNodeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // ScopeNode -> Company
         modelBuilder.Entity<ScopeNode>()
             .HasOne(s => s.Company)

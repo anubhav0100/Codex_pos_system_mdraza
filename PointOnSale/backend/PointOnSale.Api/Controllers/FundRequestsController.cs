@@ -16,12 +16,14 @@ public class FundRequestsController(
 {
     private string GetScopeName(PointOnSale.Domain.Entities.ScopeNode node)
     {
-        if (node == null) return "";
-        if (node.Company != null) return node.Company.Name;
-        if (node.State != null) return node.State.Name;
-        if (node.District != null) return node.District.Name;
-        if (node.Local != null) return node.Local.Name;
-        return "Unknown";
+        if (node == null) return "Unknown";
+        if (node.Company != null && !string.IsNullOrEmpty(node.Company.Name)) return node.Company.Name;
+        if (node.State != null && !string.IsNullOrEmpty(node.State.Name)) return node.State.Name;
+        if (node.District != null && !string.IsNullOrEmpty(node.District.Name)) return node.District.Name;
+        if (node.Local != null && !string.IsNullOrEmpty(node.Local.Name)) return node.Local.Name;
+        
+        // Fallback to node name if specific level names are null
+        return node.Name ?? "Unknown";
     }
 
     private int GetUserScopeId()
